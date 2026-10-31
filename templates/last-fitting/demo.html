@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Last Fitting — component reference</title>
+<style>
+	:root {
+		--color-primary: #f3efe6;
+		--color-primary-foreground: #141312;
+		--color-surface: #141312;
+		--color-surface-foreground: #f3efe6;
+		--color-surface-raised: #1c1b19;
+		--color-muted: #a89f94;
+		--color-accent: #d9d0c4;
+		--color-danger: #e7b2a6;
+		--color-border: #6e6860;
+		--shadow-focus: 0 0 0 1px #141312, 0 0 0 2px #d9d0c4;
+		--sans: Inter, "Helvetica Neue", "Liberation Sans", "Noto Sans", sans-serif;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--sans);
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 1.5;
+	}
+	h1, h2, p { margin: 0; }
+	button { font: inherit; cursor: pointer; }
+	.eyebrow {
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+	.cover { min-height: 740px; padding: 64px 8vw 72px; display: flex; flex-direction: column; }
+	.top { display: flex; justify-content: space-between; gap: 24px; }
+	.top p:last-child { color: var(--color-muted); letter-spacing: 0.18em; text-transform: uppercase; font-size: 12px; }
+	h1 {
+		font-weight: 400;
+		font-size: 80px;
+		letter-spacing: -0.04em;
+		line-height: 0.92;
+		margin-top: 72px;
+		max-width: 8ch;
+	}
+	.measures { list-style: none; margin: 64px 0 0; padding: 0; max-width: 640px; }
+	.measures li {
+		display: grid;
+		grid-template-columns: 140px 1fr;
+		gap: 24px;
+		align-items: baseline;
+		padding: 22px 0;
+		border-top: 1px solid var(--color-border);
+	}
+	.measures li:last-child { border-bottom: 1px solid var(--color-border); }
+	.measures span {
+		font-size: 12px;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.measures b { font-weight: 400; font-size: 40px; letter-spacing: -0.03em; }
+	.confirm {
+		margin-top: 48px;
+		align-self: flex-start;
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+		border: 0;
+		padding: 14px 22px;
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+	.confirm:focus-visible, .textish:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.textish {
+		background: none;
+		border: 0;
+		border-bottom: 1px solid var(--color-border);
+		color: var(--color-accent);
+		padding: 0 0 4px;
+		margin-left: 28px;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		font-size: 12px;
+	}
+	.textish:hover { border-bottom-color: var(--color-accent); }
+	.wrap { padding: 0 8vw 96px; max-width: 980px; }
+	.section { margin-top: 88px; }
+	.section h2 { font-weight: 400; font-size: 32px; letter-spacing: -0.03em; margin-top: 10px; }
+	.intro { margin-top: 12px; max-width: 42ch; color: var(--color-muted); }
+	.swatch-row { list-style: none; margin: 28px 0 0; padding: 0; max-width: 520px; }
+	.swatch-row li {
+		display: grid;
+		grid-template-columns: 18px 1fr auto;
+		gap: 16px;
+		align-items: center;
+		padding: 14px 0;
+		border-top: 1px solid var(--color-border);
+		font-size: 13px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.sq { width: 18px; height: 10px; }
+	.mobile { display: grid; gap: 32px; margin-top: 28px; }
+	@media (min-width: 900px) { .mobile { grid-template-columns: 280px 1fr; gap: 56px; } }
+	.phone {
+		width: 280px;
+		max-width: 100%;
+		margin: 0 auto;
+		border: 1px solid var(--color-border);
+		padding: 28px 20px 32px;
+	}
+	.phone h3 { font-weight: 400; font-size: 40px; letter-spacing: -0.03em; line-height: 0.95; margin: 28px 0 8px; }
+	.phone .measures { margin-top: 20px; }
+	.phone .measures li { grid-template-columns: 1fr auto; padding: 14px 0; }
+	.phone .measures b { font-size: 28px; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 16px 0; border-top: 1px solid var(--color-border); color: var(--color-muted); }
+	.rules b { display: block; color: var(--color-surface-foreground); font-weight: 400; margin-bottom: 4px; }
+	.compare { display: grid; gap: 24px; margin-top: 28px; }
+	@media (min-width: 800px) { .compare { grid-template-columns: 1fr 1fr; } }
+	.cmp-off {
+		background: #f7f1f4;
+		border-radius: 36px;
+		padding: 28px 22px;
+		color: #5e4d63;
+	}
+	.cmp-off h3 { font-weight: 500; font-size: 48px; color: #2a2030; letter-spacing: -0.03em; }
+	.cmp-off .pill {
+		display: inline-block;
+		margin-top: 16px;
+		background: #c2186a;
+		color: #fff5f9;
+		border-radius: 999px;
+		padding: 10px 18px;
+		font-weight: 600;
+	}
+	.cmp-on h3 { font-weight: 400; font-size: 40px; letter-spacing: -0.03em; }
+	@media (max-width: 720px) {
+		.cover { min-height: 0; padding: 36px 24px 56px; }
+		h1 { font-size: 52px; margin-top: 40px; }
+		.measures li { grid-template-columns: 1fr auto; }
+		.confirm { width: 100%; }
+		.textish { margin: 20px 0 0; }
+	}
+</style>
+</head>
+<body>
+<header class="cover">
+	<div class="top">
+		<p class="eyebrow">Atelier</p>
+		<p>Thursday</p>
+	</div>
+	<h1>The last fitting</h1>
+	<ol class="measures">
+		<li><span>Shoulder</span><b>42</b></li>
+		<li><span>Sleeve</span><b>62</b></li>
+		<li><span>Cloth</span><b>Hopsack</b></li>
+	</ol>
+	<div>
+		<button class="confirm" type="button">Confirm</button>
+		<button class="textish" type="button">Change the cloth</button>
+	</div>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="eyebrow">01 — Cloth</p>
+		<h2>Wool, ivory, a thread</h2>
+		<p class="intro">No metal. The lighter tone is undyed cloth, used for a label and a focus ring.</p>
+		<ul class="swatch-row">
+			<li><i class="sq" style="background:var(--color-surface);border:1px solid var(--color-border)"></i>Surface<span>Wool</span></li>
+			<li><i class="sq" style="background:var(--color-primary)"></i>Primary<span>Ivory</span></li>
+			<li><i class="sq" style="background:var(--color-accent)"></i>Accent<span>Thread</span></li>
+			<li><i class="sq" style="background:var(--color-muted)"></i>Muted<span>The unit</span></li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="eyebrow">02 — Measure</p>
+		<h2>A number, then nothing else</h2>
+		<p class="intro">The figure is the same face as the title, only smaller. It does not sit in a chip.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">03 — Type</p>
+		<h2>One grotesque, two jobs</h2>
+		<p class="intro">Weight 400 for the title and the numbers. The tracked capitals are 12px. There is no serif display.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">04 — Confirm</p>
+		<h2>Ivory, square, once</h2>
+		<button class="confirm" type="button">Confirm</button>
+	</section>
+	<section class="section">
+		<p class="eyebrow">05 — Mobile</p>
+		<h2>The column was already the layout</h2>
+		<div class="mobile">
+			<div class="phone">
+				<p class="eyebrow">Atelier</p>
+				<h3>The last fitting</h3>
+				<ol class="measures">
+					<li><span>Shoulder</span><b>42</b></li>
+					<li><span>Sleeve</span><b>62</b></li>
+					<li><span>Cloth</span><b>Hopsack</b></li>
+				</ol>
+				<button class="confirm" type="button" style="width:100%;margin-top:24px">Confirm</button>
+			</div>
+			<ul class="rules">
+				<li><b>The title steps from 80 to 52</b>It may break to two lines. Weight stays 400. It does not grow bolder to compensate.</li>
+				<li><b>Numbers move to the right edge</b>The label stays left. The pair is one row, at least 48px tall.</li>
+				<li><b>Confirm becomes full width</b>Still square, still ivory, still a single word. The text action drops below it.</li>
+				<li><b>Rules stay one pixel</b>They do not thicken into bars. The wool ground does not lighten.</li>
+				<li><b>No new chrome</b>The thin frame in the specimen is a device edge. Inside it, radius stays 0.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="eyebrow">06 — Off-style</p>
+		<h2>Color fog is not cloth</h2>
+		<div class="compare">
+			<div class="cmp-off">
+				<p style="letter-spacing:.16em;text-transform:uppercase;font-size:12px">Drop 03</p>
+				<h3>Veil</h3>
+				<p>A pink pill on a pale fog.</p>
+				<span class="pill">Hold</span>
+			</div>
+			<div class="cmp-on">
+				<p class="eyebrow">Atelier</p>
+				<h3>Hopsack</h3>
+				<p class="intro">The cloth, named. Ivory on wool.</p>
+			</div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

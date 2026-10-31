@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "last-fitting",
+	"name": "Last Fitting",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 145,
+	"category": "fashion",
+	"vibe": "dark",
+	"tags": ["fashion", "tailoring", "wool", "quiet", "dark"],
+	"blurb": "A tailoring appointment on dark wool: ivory grotesque, cloth-colored rules, and three measurements. Tactile and exact, with no metal shine.",
+	"tagline": {
+		"en": "Ivory on wool, three quiet measures",
+		"zh": "象牙色落在羊毛上，三次安静的量体"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://saintandsofia.com/blogs/features/is-this-the-end-of-quiet-luxury",
+		"note": "Authored by Grok Bot. Original system distilled from 2026 reporting on tactile luxury after cold minimalism: wool, suede, and hand-finish as the refinement (Saint + Sofia; Krystal Hudson on quiet-luxury materials). No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

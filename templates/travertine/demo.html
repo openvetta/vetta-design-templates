@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Travertine — component reference</title>
+<style>
+	:root {
+		--color-primary: #2c2824;
+		--color-primary-foreground: #f6f1ea;
+		--color-surface: #e7e1d6;
+		--color-surface-foreground: #2c2824;
+		--color-surface-raised: #f6f1ea;
+		--color-muted: #5c564e;
+		--color-accent: #6f5640;
+		--color-danger: #8a3c32;
+		--color-border: #7d7468;
+		--shadow-focus: 0 0 0 1px #e7e1d6, 0 0 0 2px #6f5640;
+		--serif: "Iowan Old Style", Palatino, "Palatino Linotype", "Liberation Serif", Georgia, serif;
+		--sans: Inter, "Helvetica Neue", "Liberation Sans", "Noto Sans", sans-serif;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--serif);
+		font-size: 18px;
+		line-height: 1.6;
+		font-weight: 400;
+	}
+	h1, h2, p { margin: 0; }
+	button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+	.eyebrow {
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+	.cover {
+		min-height: 720px;
+		padding: 72px 8vw 80px;
+		display: flex;
+		flex-direction: column;
+	}
+	.stage {
+		flex: 1;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: 48px;
+		padding-bottom: 12px;
+	}
+	h1 {
+		font-weight: 400;
+		font-size: 104px;
+		letter-spacing: -0.035em;
+		line-height: 0.88;
+		margin-top: 28px;
+	}
+	.bronze {
+		width: 72px;
+		height: 1px;
+		background: var(--color-accent);
+		margin: 32px 0 28px;
+		border: 0;
+	}
+	.lede { max-width: 28ch; font-size: 18px; }
+	.link {
+		margin-top: 40px;
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		border-bottom: 1px solid var(--color-border);
+		padding-bottom: 6px;
+	}
+	.link:hover { border-bottom-color: var(--color-accent); color: var(--color-accent); }
+	.link:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.dims { text-align: right; font-family: var(--sans); }
+	.dims p { font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-muted); }
+	.dims p + p { margin-top: 10px; }
+	.wrap { padding: 0 8vw 96px; max-width: 1100px; }
+	.section { margin-top: 88px; }
+	.section h2 { font-weight: 400; font-size: 36px; letter-spacing: -0.02em; margin-top: 12px; }
+	.intro { margin-top: 12px; max-width: 36ch; color: var(--color-muted); font-size: 17px; }
+	.rows { list-style: none; margin: 28px 0 0; padding: 0; max-width: 560px; }
+	.rows li {
+		display: grid;
+		grid-template-columns: 18px 1fr auto;
+		gap: 16px;
+		align-items: baseline;
+		padding: 16px 0;
+		border-top: 1px solid var(--color-border);
+		font-family: var(--sans);
+		font-size: 14px;
+	}
+	.chip { width: 18px; height: 10px; align-self: center; }
+	.rows b { font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; font-size: 12px; }
+	.rows span { color: var(--color-muted); }
+	.mobile { display: grid; gap: 36px; margin-top: 28px; align-items: start; }
+	@media (min-width: 900px) { .mobile { grid-template-columns: 280px 1fr; gap: 64px; } }
+	.phone {
+		width: 280px;
+		max-width: 100%;
+		margin: 0 auto;
+		border: 1px solid var(--color-border);
+		padding: 28px 22px 32px;
+		background: var(--color-surface);
+	}
+	.phone h3 { font-weight: 400; font-size: 48px; letter-spacing: -0.03em; line-height: 0.9; margin-top: 20px; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 16px 0; border-top: 1px solid var(--color-border); color: var(--color-muted); font-size: 16px; }
+	.rules b { display: block; color: var(--color-surface-foreground); font-weight: 400; font-size: 17px; margin-bottom: 4px; }
+	.compare { display: grid; gap: 28px; margin-top: 28px; }
+	@media (min-width: 800px) { .compare { grid-template-columns: 1fr 1fr; gap: 40px; } }
+	.cmp-off {
+		background: #d7f2fb;
+		border-radius: 28px;
+		padding: 28px 24px;
+		font-family: var(--sans);
+		color: #24556e;
+		box-shadow: 0 16px 32px rgb(8 70 100 / 0.18);
+	}
+	.cmp-off h3 { font-family: var(--sans); font-weight: 750; font-weight: 700; font-size: 56px; letter-spacing: -0.04em; color: #083047; }
+	.cmp-off .pill {
+		display: inline-block;
+		margin-top: 16px;
+		background: #0a6288;
+		color: white;
+		border-radius: 999px;
+		padding: 10px 16px;
+		font-size: 14px;
+		font-weight: 700;
+	}
+	.cmp-on h3 { font-weight: 400; font-size: 48px; letter-spacing: -0.03em; }
+	.cmp-on p { margin-top: 12px; max-width: 28ch; }
+	@media (max-width: 720px) {
+		.cover { min-height: 0; padding: 36px 24px 48px; }
+		.stage { flex-direction: column; align-items: flex-start; }
+		h1 { font-size: 64px; }
+		.dims { text-align: left; margin-top: 36px; }
+	}
+</style>
+</head>
+<body>
+<header class="cover">
+	<p class="eyebrow">Private viewing · 04</p>
+	<div class="stage">
+		<div>
+			<h1>Halden</h1>
+			<div class="bronze"></div>
+			<p class="lede">A single vessel in honed limestone. Shown Thursday, by appointment.</p>
+			<button class="link" type="button">Request the hour</button>
+		</div>
+		<aside class="dims">
+			<p>Height 42 cm</p>
+			<p>Diameter 18</p>
+			<p>One of twelve</p>
+		</aside>
+	</div>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="eyebrow">01 — Stone</p>
+		<h2>Ivory, charcoal, bronze</h2>
+		<p class="intro">The ground is the material. Bronze appears once, as a short line and as this eyebrow.</p>
+		<ul class="rows">
+			<li><i class="chip" style="background:var(--color-surface);border:1px solid var(--color-border)"></i><b>Surface</b><span>Honed ground</span></li>
+			<li><i class="chip" style="background:var(--color-surface-raised);border:1px solid var(--color-border)"></i><b>Raised</b><span>A lighter slab</span></li>
+			<li><i class="chip" style="background:var(--color-primary)"></i><b>Primary</b><span>Charcoal</span></li>
+			<li><i class="chip" style="background:var(--color-accent)"></i><b>Accent</b><span>Bronze, once</span></li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="eyebrow">02 — The line</p>
+		<h2>Seventy-two pixels of bronze</h2>
+		<p class="intro">Not a border around a card. A pause under the name.</p>
+		<div class="bronze"></div>
+	</section>
+	<section class="section">
+		<p class="eyebrow">03 — Type</p>
+		<h2>A serif for the object</h2>
+		<p class="intro">Weight 400. The grotesque is reserved for the small tracked line, so it never competes.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">04 — The ask</p>
+		<h2>An underline, not a pill</h2>
+		<button class="link" type="button">Request the hour</button>
+	</section>
+	<section class="section">
+		<p class="eyebrow">05 — Mobile</p>
+		<h2>The column stacks, the stone does not</h2>
+		<div class="mobile">
+			<div class="phone">
+				<p class="eyebrow">Viewing · 04</p>
+				<h3>Halden</h3>
+				<div class="bronze"></div>
+				<p style="font-size:16px">Thursday, by appointment.</p>
+				<button class="link" type="button">Request the hour</button>
+			</div>
+			<ul class="rules">
+				<li><b>The side caption moves under the name</b>Height and diameter follow the sentence. They do not squeeze into a corner.</li>
+				<li><b>The name steps from 104 to 64</b>Weight stays 400. Tracking stays slightly tight. It does not become a bold sans.</li>
+				<li><b>Padding falls to 24, not to the edge</b>The stone still has a margin. A full-bleed bar would be another system.</li>
+				<li><b>The ask stays an underline</b>Full width of its own word, 44px of tap height from padding, never a rounded fill.</li>
+				<li><b>The bronze rule stays 72px</b>It does not grow to the screen width on a phone.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="eyebrow">06 — Off-style</p>
+		<h2>Gloss is the wrong material</h2>
+		<div class="compare">
+			<div class="cmp-off">
+				<p class="eyebrow" style="color:#0e6a40">Clear</p>
+				<h3>22°</h3>
+				<p>A glossy bead on a sky card.</p>
+				<span class="pill">Open</span>
+			</div>
+			<div class="cmp-on">
+				<p class="eyebrow">Viewing</p>
+				<h3>Halden</h3>
+				<div class="bronze"></div>
+				<p>The same hour, said quietly, on stone.</p>
+			</div>
+		</div>
+	</section>
+</main>
+</body>
+</html>
