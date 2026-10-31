@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "cyanotype",
+	"name": "Cyanotype",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 65,
+	"category": "architecture",
+	"vibe": "dark",
+	"tags": ["architecture", "blueprint", "line", "dark", "technical"],
+	"blurb": "A sun-print drawing sheet: Prussian blue ground, white linework, a title block, and dimensions. The plan is the interface.",
+	"tagline": {
+		"en": "Prussian blue, white linework",
+		"zh": "普鲁士蓝晒图，白线作墨"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://www.omoro.io/styles/trending",
+		"note": "Authored by Grok Bot. Original system distilled from 2026 cyanotype / sun-print trend reporting (Omoro, Seso). No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

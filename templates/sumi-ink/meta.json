@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "sumi-ink",
+	"name": "Sumi Ink",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 35,
+	"category": "craft",
+	"vibe": "light",
+	"tags": ["craft", "ink", "wabi-sabi", "quiet", "light"],
+	"blurb": "A tea-room book: rice paper, sumi black, vast margin, and one cinnabar seal. Quiet on purpose, with no chrome to hide behind.",
+	"tagline": {
+		"en": "Rice paper, ink, one red seal",
+		"zh": "宣纸留白，浓墨，一枚朱印"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://designmd.app/library/wabi-sabi-anti-ux",
+		"note": "Authored by Grok Bot. Original system distilled from 2025–2026 wabi-sabi / anti-AI handmade reporting. No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

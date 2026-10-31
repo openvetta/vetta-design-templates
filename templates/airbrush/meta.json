@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "airbrush",
+	"name": "Airbrush",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 145,
+	"category": "beauty",
+	"vibe": "light",
+	"tags": ["beauty", "haze", "color", "light", "soft"],
+	"blurb": "Studio color fog: hot pink, cyan, and saffron haze on a pale ground. Edges dissolve. Nothing is glossy plastic and nothing is clay.",
+	"tagline": {
+		"en": "Color fog, no hard edge",
+		"zh": "色雾喷枪，边缘化开"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://www.omoro.io/styles/trending",
+		"note": "Authored by Grok Bot. Original system distilled from the 2026 chromatic-airbrush trend (Omoro). No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

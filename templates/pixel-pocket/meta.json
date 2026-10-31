@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "pixel-pocket",
+	"name": "Pixel Pocket",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 25,
+	"category": "playful",
+	"vibe": "dark",
+	"tags": ["pixel", "playful", "grid", "dark", "game"],
+	"blurb": "A pocket inventory on a 4px grid: flat blocks, stepped corners, and a small bright palette. Pixel structure without desktop chrome.",
+	"tagline": {
+		"en": "A pocket inventory on a 4px grid",
+		"zh": "四像素网格上的口袋背包"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://din-studio.com/graphic-design-trends-in-2026-11-visual-styles-for-modern-design/",
+		"note": "Authored by Grok Bot. Original system distilled from 2026 pixel-art revival reporting (Din Studio, Digital Synopsis). No third-party assets or game sprites."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

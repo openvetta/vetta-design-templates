@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cyanotype — component reference</title>
+<style>
+	:root {
+		--color-primary: #f5f8fc;
+		--color-primary-foreground: #0c3d7a;
+		--color-surface: #0c3d7a;
+		--color-surface-foreground: #f5f8fc;
+		--color-surface-raised: #0a3268;
+		--color-muted: #c9daf0;
+		--color-accent: #8ecbff;
+		--color-danger: #ffb1a3;
+		--color-border: #d7e7f8;
+		--grid-line: rgb(215 231 248 / 0.28);
+		--font: Inter, "Liberation Sans", "Noto Sans", sans-serif;
+		--mono: "JetBrains Mono", "Cascadia Mono", ui-monospace, monospace;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body {
+		margin: 0; color: var(--color-surface-foreground); font-family: var(--font);
+		background-color: var(--color-surface);
+		background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+		background-size: 24px 24px;
+	}
+	h1, h2, p { margin: 0; }
+	button { font: inherit; color: inherit; }
+	.cover { padding: 20px; }
+	.sheet { max-width: 980px; margin: 0 auto; min-height: 520px; border: 2px solid var(--color-border); position: relative; padding: 24px 24px 120px; }
+	.sheet h1 { font-weight: 600; font-size: 36px; letter-spacing: 0.08em; text-transform: uppercase; }
+	.plan { margin-top: 28px; width: min(100%, 460px); height: 220px; border: 2px solid var(--color-border); position: relative; }
+	.room { position: absolute; border: 2px solid var(--color-border); }
+	.room.a { left: 16px; top: 16px; width: 54%; height: 70%; background: var(--color-surface-raised); }
+	.room.b { right: 16px; top: 40px; width: 28%; height: 48%; }
+	.tag { position: absolute; left: 12px; bottom: 8px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; }
+	.dim { font-family: var(--mono); font-size: 12px; color: var(--color-accent); letter-spacing: 0.06em; }
+	.block { position: absolute; right: 16px; bottom: 16px; width: min(280px, calc(100% - 32px)); border: 1px solid var(--color-border); background: var(--color-surface-raised); font-family: var(--mono); font-size: 12px; }
+	.block div { display: flex; justify-content: space-between; gap: 12px; padding: 6px 8px; border-bottom: 1px solid var(--color-border); }
+	.block div:last-child { border-bottom: 0; }
+	.btn { min-height: 40px; padding: 0 12px; border: 1px solid var(--color-border); background: var(--color-primary); color: var(--color-primary-foreground); font-family: var(--mono); letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+	.btn:focus-visible { outline: none; box-shadow: 0 0 0 1px #0c3d7a, 0 0 0 2px #f5f8fc; }
+	.wrap { max-width: 980px; margin: 0 auto; padding: 8px 20px 72px; }
+	.section { margin-top: 48px; }
+	.kicker { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent); }
+	.section h2 { font-size: 28px; letter-spacing: 0.04em; text-transform: uppercase; margin-top: 6px; font-weight: 600; }
+	.intro { color: var(--color-muted); margin-top: 8px; max-width: 60ch; }
+	.swatches { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; list-style: none; padding: 0; margin: 16px 0 0; }
+	@media (min-width: 720px) { .swatches { grid-template-columns: repeat(4, 1fr); } }
+	.swatch { min-height: 80px; border: 1px solid var(--color-border); padding: 8px; font-family: var(--mono); font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; }
+	.mobile { display: grid; gap: 16px; margin-top: 16px; }
+	@media (min-width: 860px) { .mobile { grid-template-columns: 280px 1fr; } }
+	.phone { width: 280px; max-width: 100%; margin: 0 auto; border: 2px solid var(--color-border); padding: 10px; background: var(--color-surface-raised); }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 10px 0; border-bottom: 1px solid var(--color-border); color: var(--color-muted); }
+	.rules b { display: block; color: var(--color-surface-foreground); }
+	.compare { display: grid; gap: 12px; margin-top: 16px; }
+	@media (min-width: 760px) { .compare { grid-template-columns: 1fr 1fr; } }
+	.cmp-off { background: #f8fafc; color: #64748b; border-radius: 12px; padding: 16px; font-family: Inter, sans-serif; }
+	.cmp-off h3 { color: #0f172a; font-size: 20px; text-transform: none; letter-spacing: 0; }
+	.cmp-on { border: 1px solid var(--color-border); padding: 12px; background: var(--color-surface-raised); }
+	.cmp-on h3 { font-size: 18px; letter-spacing: 0.08em; text-transform: uppercase; }
+	@media (max-width: 720px) {
+		.sheet { min-height: 0; padding: 16px 16px 20px; }
+		.block { position: static; width: 100%; margin-top: 16px; }
+		.plan { width: 100%; }
+		.sheet h1 { font-size: 28px; }
+	}
+</style>
+</head>
+<body>
+<header class="cover">
+	<article class="sheet">
+		<p class="kicker">Sheet 04 · scale 1:100</p>
+		<h1>North room</h1>
+		<p class="dim" style="margin-top:8px">REV B · 31 OCT</p>
+		<div class="plan">
+			<div class="room a"><span class="tag">READING</span></div>
+			<div class="room b"><span class="tag">ENTRY</span></div>
+		</div>
+		<p class="dim" style="margin-top:8px">4.20 m →</p>
+		<div class="block">
+			<div><span>PROJECT</span><span>NORTH ROOM</span></div>
+			<div><span>SHEET</span><span>04 / 12</span></div>
+			<div><span>DATE</span><span>31 OCT</span></div>
+		</div>
+	</article>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="kicker">01 — Chemistry</p>
+		<h2>White on blue</h2>
+		<p class="intro">The ground is the print. Lines are white. A lighter cyan is a witness, not a fill.</p>
+		<ul class="swatches">
+			<li class="swatch" style="background:var(--color-surface)"><b>SURFACE</b>Sheet</li>
+			<li class="swatch" style="background:var(--color-primary);color:var(--color-primary-foreground)"><b>PRIMARY</b>Line</li>
+			<li class="swatch" style="background:var(--color-surface-raised)"><b>RAISED</b>Title block</li>
+			<li class="swatch"><b style="color:var(--color-accent)">ACCENT</b>Witness</li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="kicker">02 — Lines</p>
+		<h2>Walls, not cards</h2>
+		<p class="intro">A room is a rectangle of 2px line. The grid stays fainter than the wall.</p>
+	</section>
+	<section class="section">
+		<p class="kicker">03 — Type</p>
+		<h2>Grotesque title, mono dimensions</h2>
+		<p class="intro">Sentences are rare. The sheet speaks in labels and numbers.</p>
+	</section>
+	<section class="section">
+		<p class="kicker">04 — Controls</p>
+		<h2>Inverted white</h2>
+		<button class="btn" type="button">Issue rev C</button>
+	</section>
+	<section class="section">
+		<p class="kicker">05 — Mobile</p>
+		<h2>The title block moves under the plan</h2>
+		<div class="mobile">
+			<div class="phone">
+				<p class="kicker">Sheet 04</p>
+				<h3 style="letter-spacing:.08em;text-transform:uppercase;font-size:22px">North</h3>
+				<div class="plan" style="width:100%;height:120px">
+					<div class="room a"></div>
+				</div>
+				<button class="btn" type="button" style="width:100%;margin-top:10px">Issue rev C</button>
+			</div>
+			<ul class="rules">
+				<li><b>The sheet inset stays</b>The grid still runs to the edge. The drawing keeps a 16px margin.</li>
+				<li><b>Title block leaves the corner</b>Under 720px it stacks under the plan instead of overlapping it.</li>
+				<li><b>Type stays uppercase for labels</b>The sheet name may drop from 36 to 22. Dimensions stay 12px mono.</li>
+				<li><b>The button is full width</b>White fill, blue type, square. No radius appears.</li>
+				<li><b>Grid pitch stays 24px</b>It does not coarsen. Walls stay 2px.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="kicker">06 — Off-style</p>
+		<h2>A gray app is not a drawing</h2>
+		<div class="compare">
+			<div class="cmp-off"><h3>North room</h3><p>Rounded card on a light page.</p></div>
+			<div class="cmp-on"><h3>North room</h3><p class="dim">SHEET 04 · WHITE LINE</p></div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

@@ -1,0 +1,32 @@
+/* Lamp Room — a night library. Oxblood dark, candle amber, book-spine dyes.
+   Dark academia as a hold desk, not a cream literary homepage.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #e07a3d;
+	--color-primary-foreground: #1a1210;
+	--color-surface: #1a1210;
+	--color-surface-foreground: #f3e6d4;
+	--color-surface-raised: #261a16;
+	--color-muted: #c4b09a;
+	--color-accent: #e6c27a;
+	--color-danger: #e15a4a;
+	--color-border: #6b4a38;
+
+	--color-spine-wine: #6e2430;
+	--color-spine-forest: #24362c;
+	--color-spine-navy: #1c3048;
+
+	--radius-sm: 2px;
+	--radius-md: 2px;
+	--radius-lg: 3px;
+	--radius-xl: 4px;
+	--radius-2xl: 4px;
+	--radius-full: 9999px;
+
+	--shadow-sm: 0 6px 16px rgb(0 0 0 / 0.35);
+	--shadow-md: 0 12px 28px rgb(0 0 0 / 0.45);
+	--shadow-lg: 0 20px 40px rgb(0 0 0 / 0.55);
+	--shadow-focus: 0 0 0 2px #1a1210, 0 0 0 4px #e6c27a;
+
+	--duration-lamp: 160ms;
+}

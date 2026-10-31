@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "site-stencil",
+	"name": "Site Stencil",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 15,
+	"category": "industrial",
+	"vibe": "light",
+	"tags": ["industrial", "utilitarian", "stencil", "hazard", "light"],
+	"blurb": "A site-office board: concrete ground, one hazard yellow, black stencil type, and diagonal caution stripes. Function is the decoration.",
+	"tagline": {
+		"en": "Concrete, hazard yellow, stencil type",
+		"zh": "混凝土底，警示黄，模板大字"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://digitalsynopsis.com/design/graphic-design-trends-2026/",
+		"note": "Authored by Grok Bot. Original system distilled from 2026 utilitarian / wayfinding reporting (Digital Synopsis, Din Studio). No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sumi Ink — component reference</title>
+<style>
+	:root {
+		--color-primary: #1c1b19;
+		--color-primary-foreground: #f2eee6;
+		--color-surface: #f2eee6;
+		--color-surface-foreground: #1c1b19;
+		--color-surface-raised: #faf8f3;
+		--color-muted: #5f5b55;
+		--color-accent: #c4372c;
+		--color-danger: #8e1d16;
+		--color-border: #1c1b19;
+		--radius-sm: 0px; --radius-md: 0px; --radius-lg: 0px; --radius-xl: 0px; --radius-2xl: 2px; --radius-full: 9999px;
+		--shadow-focus: 0 0 0 1px #f2eee6, 0 0 0 3px #c4372c;
+		--font: "Iowan Old Style", Palatino, "Palatino Linotype", "Liberation Serif", Georgia, serif;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body { margin: 0; background: var(--color-surface); color: var(--color-surface-foreground); font-family: var(--font); font-size: 17px; line-height: 1.6; }
+	h1, h2, p { margin: 0; }
+	button { font: inherit; color: inherit; }
+	.cover { padding: 48px 24px 8px; }
+	@media (min-width: 800px) { .cover { padding: 72px 48px 8px; } }
+	.page { max-width: 720px; margin: 0 auto; position: relative; }
+	.seal { position: absolute; right: 0; top: 0; width: 56px; height: 56px; border: 3px solid var(--color-accent); color: var(--color-accent); display: grid; place-items: center; font-size: 28px; transform: rotate(-8deg); }
+	.kana { letter-spacing: 0.2em; font-size: 13px; color: var(--color-muted); }
+	h1 { font-size: 56px; font-weight: 500; letter-spacing: 0.04em; margin-top: 12px; }
+	.lede { max-width: 36ch; margin-top: 16px; }
+	.seat { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-top: 1px solid var(--color-border); }
+	.seat .when { color: var(--color-muted); }
+	.btn { min-height: 44px; padding: 0 18px; background: var(--color-primary); color: var(--color-primary-foreground); border: 1px solid var(--color-border); cursor: pointer; }
+	.btn.quiet { background: transparent; color: var(--color-surface-foreground); }
+	.btn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.wrap { max-width: 720px; margin: 0 auto; padding: 24px 24px 80px; }
+	@media (min-width: 800px) { .wrap { padding: 24px 48px 96px; } }
+	.section { margin-top: 64px; }
+	.kicker { color: var(--color-accent); font-size: 13px; letter-spacing: 0.14em; }
+	.section h2 { font-weight: 500; font-size: 32px; margin-top: 8px; }
+	.intro { color: var(--color-muted); margin-top: 8px; max-width: 42ch; }
+	.swatches { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; list-style: none; padding: 0; margin: 20px 0 0; }
+	@media (min-width: 640px) { .swatches { grid-template-columns: repeat(4, 1fr); } }
+	.swatch { min-height: 96px; border: 1px solid var(--color-border); padding: 10px; display: flex; flex-direction: column; justify-content: space-between; font-size: 14px; }
+	.mobile { display: grid; gap: 24px; margin-top: 20px; }
+	@media (min-width: 860px) { .mobile { grid-template-columns: 280px 1fr; } }
+	.phone { width: 280px; max-width: 100%; margin: 0 auto; border: 1px solid var(--color-border); padding: 16px 14px 20px; background: var(--color-surface-raised); }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 12px 0; border-bottom: 1px solid var(--color-border); color: var(--color-muted); }
+	.rules b { display: block; color: var(--color-surface-foreground); font-weight: 500; }
+	.compare { display: grid; gap: 16px; margin-top: 16px; }
+	@media (min-width: 720px) { .compare { grid-template-columns: 1fr 1fr; } }
+	.cmp-off { background: white; border-radius: 12px; padding: 16px; color: #6b7280; font-family: Inter, sans-serif; box-shadow: 0 10px 24px rgb(0 0 0 / 0.08); }
+	.cmp-off h3 { color: #111; font-family: Inter, sans-serif; font-size: 22px; }
+	.cmp-on { border-top: 1px solid var(--color-border); padding-top: 12px; }
+	.cmp-on h3 { font-weight: 500; font-size: 28px; }
+</style>
+</head>
+<body>
+<header class="cover">
+	<article class="page">
+		<span class="seal" aria-hidden="true">印</span>
+		<p class="kana">茶席 · 第三席</p>
+		<h1>Kama</h1>
+		<p class="lede">Two seats this afternoon. The seal is the confirmation. Nothing else is red.</p>
+		<div style="margin-top:28px">
+			<div class="seat"><span>North window</span><span class="when">14:00</span></div>
+			<div class="seat"><span>Inner room</span><span class="when">16:30</span></div>
+		</div>
+		<div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap">
+			<button class="btn" type="button">Hold the seat</button>
+			<button class="btn quiet" type="button">Decline</button>
+		</div>
+	</article>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="kicker">01 — Ink</p>
+		<h2>Paper, sumi, cinnabar</h2>
+		<p class="intro">Black does almost all the work. Red is one seal.</p>
+		<ul class="swatches">
+			<li class="swatch" style="background:var(--color-surface)"><b>surface</b>Rice paper</li>
+			<li class="swatch" style="background:var(--color-primary);color:var(--color-primary-foreground)"><b>primary</b>Sumi</li>
+			<li class="swatch" style="background:var(--color-accent);color:#fff6f3"><b>accent</b>Seal</li>
+			<li class="swatch" style="background:var(--color-surface-raised)"><b>muted</b><span style="color:var(--color-muted)">Diluted</span></li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="kicker">02 — The seal</p>
+		<h2>One square, slightly turned</h2>
+		<p class="intro">It is not a badge system. A second seal means the page has lost its quiet.</p>
+		<span class="seal" style="position:static;margin-top:16px">印</span>
+	</section>
+	<section class="section">
+		<p class="kicker">03 — Type</p>
+		<h2>A text face, a short measure</h2>
+		<p class="intro">Serif, regular weight, about forty characters wide. No ticket mono, no poster black.</p>
+	</section>
+	<section class="section">
+		<p class="kicker">04 — Controls</p>
+		<h2>Ink block or a hairline</h2>
+		<button class="btn" type="button">Hold the seat</button>
+		<button class="btn quiet" type="button">Decline</button>
+	</section>
+	<section class="section">
+		<p class="kicker">05 — Mobile</p>
+		<h2>The margin shrinks, the quiet does not</h2>
+		<div class="mobile">
+			<div class="phone">
+				<span class="seal" style="position:static;width:40px;height:40px;font-size:20px">印</span>
+				<h3 style="font-weight:500;font-size:36px;margin-top:12px">Kama</h3>
+				<div class="seat"><span>North</span><span class="when">14:00</span></div>
+				<button class="btn" type="button" style="width:100%;margin-top:14px">Hold the seat</button>
+			</div>
+			<ul class="rules">
+				<li><b>Padding falls 64 → 24, not to the edge</b>The page still breathes. A full-bleed bar would be another system.</li>
+				<li><b>The name steps 56 → 36</b>Weight stays 500. It does not become a bold grotesque.</li>
+				<li><b>The seal shrinks to 40px</b>It stays square, still turned, still the only red.</li>
+				<li><b>The button is full width and 44px</b>Black fill, square corners. No pill appears for the thumb.</li>
+				<li><b>Seatings remain a hairline list</b>They do not become cards. Time stays muted.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="kicker">06 — Off-style</p>
+		<h2>Chrome is the mistake</h2>
+		<div class="compare">
+			<div class="cmp-off"><h3>Your table</h3><p>White card, shadow, app type.</p></div>
+			<div class="cmp-on"><h3>Your table</h3><p>A line, a name, ink.</p></div>
+		</div>
+	</section>
+</main>
+</body>
+</html>
