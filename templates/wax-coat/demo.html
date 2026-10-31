@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wax Coat — Putty</title>
+<style>
+	:root {
+		--color-primary: #1c1b19;
+		--color-primary-foreground: #f4f1eb;
+		--color-surface: #e6e7e4;
+		--color-surface-foreground: #1c1b19;
+		--color-surface-raised: #f4f2ec;
+		--color-muted: #5c635e;
+		--color-accent: #8a5340;
+		--color-danger: #8e3830;
+		--color-border: #c5cbc6;
+		--color-plaster: #d2c4ae;
+		--color-wax: #4e3228;
+		--color-pit: #6a5344;
+		--shadow-md: 0 16px 32px rgb(28 27 25 / 0.08);
+		--shadow-focus: 0 0 0 1px #e6e7e4, 0 0 0 3px #8a5340;
+		--duration-still: 160ms;
+		--serif: "Iowan Old Style", Palatino, "Palatino Linotype", "Liberation Serif", Georgia, serif;
+		--sans: Inter, "Helvetica Neue", "Liberation Sans", "Noto Sans", sans-serif;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--serif);
+		font-weight: 400;
+	}
+	button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+	h1, h2, p { margin: 0; }
+	.board {
+		min-height: 100vh;
+		display: grid;
+		grid-template-columns: minmax(320px, 1.35fr) minmax(280px, 0.65fr);
+		gap: 56px;
+		padding: 48px;
+		align-items: stretch;
+	}
+	.plate {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		min-height: 640px;
+		background: var(--color-plaster);
+		border: 1px solid var(--color-border);
+		box-shadow: var(--shadow-md);
+		overflow: hidden;
+	}
+	.tooth { flex: 1; position: relative; background: var(--color-plaster); }
+	.grain { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+	.grain rect { width: 100%; height: 100%; }
+	.impressed {
+		position: absolute;
+		z-index: 1;
+		top: 28px;
+		left: 28px;
+		font-size: 22px;
+		letter-spacing: 0.08em;
+		color: color-mix(in srgb, var(--color-pit) 88%, transparent);
+	}
+	.coat {
+		height: 56px;
+		flex: none;
+		display: flex;
+		align-items: center;
+		padding: 0 22px;
+		background: var(--color-wax);
+		color: var(--color-primary-foreground);
+		box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-primary-foreground) 35%, transparent);
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+	.aside {
+		display: flex;
+		flex-direction: column;
+		padding: 8px 8px 4px 0;
+		min-width: 0;
+	}
+	.eyebrow {
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+	h1 {
+		font-weight: 400;
+		font-size: 104px;
+		letter-spacing: -0.04em;
+		line-height: 0.88;
+		margin-top: 18px;
+	}
+	.lede {
+		margin-top: 28px;
+		max-width: 22ch;
+		font-size: 18px;
+		line-height: 1.45;
+	}
+	.facts {
+		list-style: none;
+		margin: auto 0 0;
+		padding: 0;
+	}
+	.facts li {
+		display: grid;
+		grid-template-columns: 88px 1fr;
+		gap: 16px;
+		align-items: baseline;
+		padding: 16px 0;
+		border-top: 1px solid var(--color-border);
+		font-family: var(--sans);
+		font-size: 13px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+	.facts span { color: var(--color-muted); }
+	.facts b { font-weight: 500; letter-spacing: 0.08em; }
+	.ask {
+		align-self: flex-start;
+		margin-top: 28px;
+		min-height: 48px;
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		border-bottom: 1px solid var(--color-border);
+		padding-bottom: 6px;
+		transition: color var(--duration-still) linear, border-color var(--duration-still) linear;
+	}
+	.ask:hover { border-bottom-color: var(--color-accent); color: var(--color-accent); }
+	.ask:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.ask:active { color: var(--color-accent); }
+	.wrap { padding: 8px 48px 96px; max-width: 980px; }
+	.section { margin-top: 88px; }
+	.section h2 {
+		font-weight: 400;
+		font-size: 36px;
+		letter-spacing: -0.03em;
+		margin-top: 10px;
+	}
+	.intro { margin-top: 12px; max-width: 38ch; color: var(--color-muted); font-size: 18px; line-height: 1.45; }
+	.swatches { list-style: none; margin: 22px 0 0; padding: 0; max-width: 480px; }
+	.swatches li {
+		display: grid;
+		grid-template-columns: 22px 1fr auto;
+		gap: 14px;
+		align-items: center;
+		min-height: 44px;
+		border-top: 1px solid var(--color-border);
+		font-family: var(--sans);
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.chip { width: 22px; height: 14px; }
+	.refused { margin-top: 18px; font-family: var(--sans); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-danger); }
+	.mobile { display: grid; gap: 28px; margin-top: 22px; align-items: start; }
+	.phone {
+		width: 280px;
+		max-width: 100%;
+		margin: 0 auto;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		padding: 16px;
+	}
+	.phone .plate { min-height: 0; height: 210px; box-shadow: none; }
+	.phone .coat { height: 36px; font-size: 10px; letter-spacing: 0.14em; }
+	.phone .impressed { top: 12px; left: 12px; font-size: 16px; }
+	.phone .eyebrow { margin-top: 16px; }
+	.phone h3 { font-weight: 400; font-size: 48px; letter-spacing: -0.04em; line-height: 0.9; margin: 8px 0; }
+	.phone .lede { font-size: 15px; margin-top: 0; }
+	.phone .facts li { padding: 10px 0; font-size: 11px; grid-template-columns: 64px 1fr; }
+	.phone .ask { margin-top: 16px; min-height: 48px; display: inline-flex; align-items: center; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 14px 0; border-top: 1px solid var(--color-border); color: var(--color-muted); font-size: 17px; line-height: 1.45; }
+	.rules b { display: block; color: var(--color-surface-foreground); font-weight: 400; font-size: 18px; margin-bottom: 4px; }
+	.compare { display: grid; gap: 22px; margin-top: 22px; }
+	.cmp-off {
+		background: linear-gradient(160deg, #d7f3ff, #c8e6ff 60%, #efe7ff);
+		color: #16324a;
+		border-radius: 28px;
+		padding: 22px;
+		box-shadow: 0 12px 24px rgb(40 80 120 / 0.18);
+		font-family: var(--sans);
+	}
+	.cmp-off strong { display: block; font-size: 28px; letter-spacing: -0.04em; }
+	.cmp-off i {
+		display: inline-block;
+		margin-top: 16px;
+		background: #fff;
+		color: #16324a;
+		border-radius: 999px;
+		padding: 10px 18px;
+		font-style: normal;
+		font-size: 14px;
+		font-weight: 600;
+	}
+	.cmp-on { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: stretch; }
+	.cmp-mini {
+		position: relative;
+		background: var(--color-plaster);
+		border: 1px solid var(--color-border);
+		display: flex;
+		flex-direction: column;
+		min-height: 140px;
+		overflow: hidden;
+	}
+	.cmp-mini span {
+		position: relative;
+		z-index: 1;
+		margin-top: auto;
+		height: 28px;
+		background: var(--color-wax);
+	}
+	.cmp-copy { align-self: end; }
+	.cmp-copy p { font-size: 28px; letter-spacing: -0.03em; line-height: 1; }
+	.cmp-copy small {
+		display: block;
+		margin-top: 10px;
+		font-family: var(--sans);
+		font-size: 12px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	@media (min-width: 860px) {
+		.mobile { grid-template-columns: 280px 1fr; gap: 48px; }
+		.compare { grid-template-columns: 1fr 1fr; align-items: stretch; }
+	}
+	@media (max-width: 960px) {
+		.board {
+			min-height: 0;
+			grid-template-columns: 1fr;
+			gap: 28px;
+			padding: 20px 18px 32px;
+		}
+		.plate { min-height: 300px; }
+		h1 { font-size: 64px; }
+		.lede { margin-top: 16px; }
+		.facts { margin-top: 28px; }
+		.facts li { min-height: 48px; }
+		.wrap { padding: 8px 18px 64px; }
+		.section h2 { font-size: 28px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.ask { transition: none; }
+	}
+</style>
+</head>
+<body>
+<svg width="0" height="0" aria-hidden="true" style="position:absolute">
+	<filter id="mineral" x="0" y="0" width="100%" height="100%">
+		<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch"/>
+		<feColorMatrix type="matrix" values="0 0 0 0 0.35  0 0 0 0 0.27  0 0 0 0 0.2  0 0 0 0.55 0"/>
+	</filter>
+</svg>
+<header class="board">
+	<article class="plate">
+		<div class="tooth">
+			<svg class="grain" aria-hidden="true"><rect filter="url(#mineral)"/></svg>
+			<p class="impressed">07</p>
+		</div>
+		<p class="coat">Wax coat</p>
+	</article>
+	<div class="aside">
+		<p class="eyebrow">Plate 07 · North wall</p>
+		<h1>Putty</h1>
+		<p class="lede">A mineral coat, waxed once. The tooth stays visible.</p>
+		<ul class="facts">
+			<li><span>Body</span><b>Lime putty</b></li>
+			<li><span>Coat</span><b>Beeswax</b></li>
+			<li><span>Room</span><b>North wall</b></li>
+		</ul>
+		<button class="ask" type="button">Request this plate</button>
+	</div>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="eyebrow">01 — Paper</p>
+		<h2>Cool index, warm mineral</h2>
+		<p class="intro">The page is green-gray paper. The plate is the only warm field. Wax is the dark band and the small eyebrow.</p>
+		<ul class="swatches">
+			<li><i class="chip" style="background:var(--color-surface)"></i><b>Surface</b><span>Index paper</span></li>
+			<li><i class="chip" style="background:var(--color-plaster)"></i><b>Plaster</b><span>The plate</span></li>
+			<li><i class="chip" style="background:var(--color-wax)"></i><b>Wax</b><span>The coat</span></li>
+			<li><i class="chip" style="background:var(--color-accent)"></i><b>Accent</b><span>Eyebrow</span></li>
+			<li><i class="chip" style="background:var(--color-primary)"></i><b>Ink</b><span>The name</span></li>
+		</ul>
+		<p class="refused">Refused · this plate is not for the south wall</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">02 — Tooth</p>
+		<h2>The plate is the picture</h2>
+		<p class="intro">Speck the mineral. Keep the coat at the foot, 56px, full width. A sheen belongs on that lip, not across the page.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">03 — Name</p>
+		<h2>Serif for the finish, grotesque for the spec</h2>
+		<p class="intro">Putty is large and roman. Body, coat, and room are small capitals in the margin.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">04 — Request</p>
+		<h2>An underline, not a shape</h2>
+		<p class="intro">The whole phrase is the target. It stays on the paper. The plate is not a control.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">05 — Mobile</p>
+		<h2>The plate stacks, the coat stays</h2>
+		<div class="mobile">
+			<div class="phone">
+				<article class="plate">
+					<div class="tooth">
+						<svg class="grain" aria-hidden="true"><rect filter="url(#mineral)"/></svg>
+						<p class="impressed">07</p>
+					</div>
+					<p class="coat">Wax coat</p>
+				</article>
+				<p class="eyebrow">Plate 07</p>
+				<h3>Putty</h3>
+				<p class="lede">Waxed once. Tooth visible.</p>
+				<ul class="facts">
+					<li><span>Body</span><b>Lime putty</b></li>
+					<li><span>Coat</span><b>Beeswax</b></li>
+					<li><span>Room</span><b>North wall</b></li>
+				</ul>
+				<button class="ask" type="button">Request this plate</button>
+			</div>
+			<ul class="rules">
+				<li><b>At 960px the margin drops under the plate</b>The plate remains first. Nothing stays in a side column.</li>
+				<li><b>The plate holds near 300px</b>It does not collapse into a color chip, and it does not keep the desktop height.</li>
+				<li><b>The name steps from 104 to 64</b>It stays a serif at weight 400.</li>
+				<li><b>The coat stays 56px on the page, 36px in this frame</b>It remains a band along the foot. It does not become a pill.</li>
+				<li><b>The request is at least 48px tall</b>Hover is absent on touch. Press colors the phrase with the wax accent.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="eyebrow">06 — Off-style</p>
+		<h2>A soft pill is not a finish</h2>
+		<div class="compare">
+			<div class="cmp-off">
+				<strong>Soft wash</strong>
+				<p>Round, glossy, a floating pill.</p>
+				<i>Open</i>
+			</div>
+			<div class="cmp-on">
+				<div class="cmp-mini" aria-hidden="true"><svg class="grain"><rect filter="url(#mineral)"/></svg><span></span></div>
+				<div class="cmp-copy">
+					<p>Putty</p>
+					<small>Wax coat along the foot</small>
+				</div>
+			</div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

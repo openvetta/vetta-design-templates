@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tape Diary — Thursday</title>
+<style>
+	:root {
+		--color-primary: #2a211c;
+		--color-primary-foreground: #f6f0e4;
+		--color-surface: #c9ad86;
+		--color-surface-foreground: #2a211c;
+		--color-surface-raised: #f6f1e6;
+		--color-muted: #4e3b30;
+		--color-accent: #c83e68;
+		--color-danger: #9d2e2e;
+		--color-border: #2a211c;
+		--color-ticket: #f4efc8;
+		--color-print: #d7e0d4;
+		--color-print-ink: #35503f;
+		--color-kraft-deep: #a8845c;
+		--shadow-md: 0 8px 16px rgb(80 50 20 / 0.12);
+		--shadow-focus: 0 0 0 2px #c9ad86, 0 0 0 4px #2a211c;
+		--serif: "Iowan Old Style", Palatino, "Palatino Linotype", "Liberation Serif", Georgia, serif;
+		--mono: "Cascadia Mono", "JetBrains Mono", "Liberation Mono", ui-monospace, monospace;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--serif);
+		background-image: radial-gradient(rgb(90 55 25 / 0.06) 0.6px, transparent 0.7px);
+		background-size: 3px 3px;
+	}
+	button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+	h1, h2, p { margin: 0; }
+	.desk {
+		min-height: 100vh;
+		padding: 40px 5.5vw 36px;
+		display: flex;
+		flex-direction: column;
+	}
+	.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+	.kicker { font-size: 14px; color: var(--color-muted); }
+	.desk h1 { font-weight: 400; font-size: 84px; letter-spacing: -0.03em; line-height: 0.92; margin-top: 6px; }
+	.stamp {
+		border: 2px solid var(--color-border);
+		outline: 1px solid var(--color-border);
+		outline-offset: 3px;
+		padding: 8px 10px;
+		font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+		transform: rotate(-8deg);
+		background: rgb(246 241 230 / 0.35);
+	}
+	.cluster {
+		flex: 1;
+		margin-top: 28px;
+		display: grid;
+		grid-template-columns: minmax(380px, 1.35fr) minmax(260px, 0.72fr);
+		grid-template-rows: minmax(360px, 1fr) auto;
+		row-gap: 22px;
+		align-items: stretch;
+	}
+	.print {
+		background: var(--color-surface-raised);
+		padding: 14px 14px 32px;
+		transform: rotate(-3.5deg);
+		box-shadow: var(--shadow-md);
+		position: relative;
+		grid-column: 1;
+		grid-row: 1;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+	}
+	.desk .note {
+		grid-column: 2;
+		grid-row: 1;
+		align-self: stretch;
+		margin-top: 12px;
+		margin-bottom: 8px;
+		margin-left: -84px;
+		width: calc(100% + 28px);
+		max-width: none;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		z-index: 1;
+	}
+	.cluster > .ticket { grid-column: 1 / -1; grid-row: 2; justify-self: end; width: min(860px, 100%); margin-top: -6px; position: relative; z-index: 2; }
+	.tape {
+		position: absolute; top: -12px; left: 28px; right: 36px; height: 26px;
+		transform: rotate(-2deg);
+		background: repeating-linear-gradient(-18deg, rgb(200 62 104 / 0.88) 0 8px, rgb(232 154 174 / 0.72) 8px 13px);
+		box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
+	}
+	.print-in { background: var(--color-print); flex: 1; min-height: 300px; display: grid; place-items: center; }
+	.print-in svg { width: min(52%, 280px); height: auto; }
+	.print figcaption {
+		margin-top: 10px; text-align: center;
+		font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.note {
+		background: var(--color-surface-raised);
+		box-shadow: var(--shadow-md), inset 3px 0 0 var(--color-accent);
+		padding: 28px 28px 28px 24px;
+		transform: rotate(2deg);
+		margin-left: -48px;
+	}
+	.note p { font-style: italic; font-size: 26px; line-height: 1.4; }
+	.note p + p { margin-top: 14px; }
+	.ticket {
+		display: flex; text-align: left; transform: rotate(-1deg);
+		margin-top: 12px; min-height: 84px; width: 100%;
+	}
+	.ticket:hover { transform: rotate(0deg); }
+	.ticket:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.ticket:active .ticket-body { background: #efe8b4; }
+	.holes {
+		width: 16px; flex: none;
+		background-image: radial-gradient(circle at 0 12px, transparent 7px, var(--color-ticket) 7.5px);
+		background-size: 16px 22px; background-repeat: repeat-y;
+	}
+	.ticket-body {
+		flex: 1; background: var(--color-ticket);
+		display: flex; justify-content: space-between; align-items: center; gap: 12px;
+		padding: 12px 16px 12px 10px;
+		font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+	}
+	.ticket-body b { display: block; font-weight: 400; font-size: 18px; letter-spacing: 0.08em; margin-top: 4px; }
+	.wrap { padding: 8px 7vw 96px; max-width: 980px; }
+	.section { margin-top: 80px; }
+	.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-muted); }
+	.section h2 { font-weight: 400; font-size: 36px; letter-spacing: -0.02em; margin-top: 8px; }
+	.intro { margin-top: 10px; max-width: 42ch; color: var(--color-muted); font-size: 18px; line-height: 1.45; }
+	.swatches { list-style: none; margin: 22px 0 0; padding: 0; max-width: 480px; }
+	.swatches li {
+		display: grid; grid-template-columns: 22px 1fr auto; gap: 14px; align-items: center;
+		min-height: 44px; border-top: 1px solid rgb(42 33 28 / 0.35); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+	}
+	.chip { width: 22px; height: 14px; }
+	.mobile { display: grid; gap: 28px; margin-top: 22px; align-items: start; }
+	.phone {
+		width: 280px; max-width: 100%; margin: 0 auto;
+		background: var(--color-surface); padding: 18px 14px 20px;
+		box-shadow: var(--shadow-md);
+	}
+	.phone h3 { font-weight: 400; font-size: 40px; line-height: 0.95; margin: 4px 0 12px; }
+	.phone .print { transform: rotate(-1deg); display: block; min-height: 0; margin-top: 8px; }
+	.phone .print-in { height: 120px; min-height: 0; flex: none; }
+	.phone .print-in svg { width: 110px; }
+	.phone .note { margin-left: 0; width: auto; max-width: none; }
+	.phone .note { transform: rotate(1deg); margin: 16px 0 0; }
+	.phone .note p { font-size: 16px; }
+	.phone .ticket { transform: none; margin-top: 16px; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 14px 0; border-top: 1px solid rgb(42 33 28 / 0.35); color: var(--color-muted); font-size: 17px; line-height: 1.45; }
+	.rules b { display: block; color: var(--color-surface-foreground); font-weight: 400; font-size: 18px; margin-bottom: 4px; }
+	.compare { display: grid; gap: 22px; margin-top: 22px; }
+	.cmp-off {
+		background: #d6f437; color: #111; border: 4px solid #111;
+		box-shadow: 6px 6px 0 #111; padding: 18px; font-family: var(--mono);
+	}
+	.cmp-off strong { display: block; font-size: 28px; letter-spacing: -0.04em; text-transform: uppercase; }
+	.cmp-on { background: var(--color-surface-raised); box-shadow: inset 3px 0 0 var(--color-accent), var(--shadow-md); padding: 18px 18px 18px 16px; }
+	.cmp-on p { font-style: italic; font-size: 20px; }
+	@media (min-width: 860px) {
+		.mobile { grid-template-columns: 280px 1fr; gap: 48px; }
+		.compare { grid-template-columns: 1fr 1fr; }
+	}
+	@media (max-width: 720px) {
+		.desk { min-height: 0; display: block; padding: 28px 18px 36px; }
+		.top { display: block; }
+		.desk h1 { font-size: 48px; }
+		.stamp { display: inline-block; margin-top: 16px; }
+		.cluster { display: grid; grid-template-columns: 1fr; grid-template-rows: none; margin-top: 20px; }
+		.desk .print, .desk .note, .cluster > .ticket { grid-column: 1; grid-row: auto; }
+		.desk .print { display: block; transform: rotate(-1deg); }
+		.desk .print-in { height: 180px; min-height: 0; flex: none; }
+		.desk .note { display: block; align-self: auto; margin: 16px 0 0; width: auto; max-width: none; transform: rotate(1deg); }
+		.desk .note p { font-size: 20px; }
+		.cluster > .ticket { width: 100%; justify-self: stretch; transform: none; min-height: 48px; }
+		.wrap { padding: 8px 18px 64px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.ticket:hover { transform: rotate(-1deg); }
+	}
+</style>
+</head>
+<body>
+<header class="desk">
+	<div class="top">
+		<div>
+			<p class="kicker">Week 44 · personal</p>
+			<h1>Thursday</h1>
+		</div>
+		<p class="stamp">31 Oct</p>
+	</div>
+	<div class="cluster">
+		<figure class="print">
+			<span class="tape" aria-hidden="true"></span>
+			<div class="print-in">
+				<svg viewBox="0 0 150 160" aria-hidden="true">
+					<rect x="28" y="18" width="94" height="78" fill="none" stroke="#35503f" stroke-width="2"/>
+					<line x1="75" y1="18" x2="75" y2="96" stroke="#35503f" stroke-width="2"/>
+					<line x1="28" y1="56" x2="122" y2="56" stroke="#35503f" stroke-width="2"/>
+					<rect x="18" y="96" width="114" height="8" fill="#35503f"/>
+					<path d="M75 118c0-16 14-22 14-34 0 12 14 18 14 34H75z" fill="#35503f"/>
+					<path d="M75 122c0-14-12-18-12-30 0 12-12 16-12 30h24z" fill="#5f7d68"/>
+					<rect x="71" y="122" width="8" height="22" fill="#6a5338"/>
+				</svg>
+			</div>
+			<figcaption>Corner window</figcaption>
+		</figure>
+		<article class="note">
+			<p>Leave at four. The bakery keeps the corner table if we are not late.</p>
+			<p>The light in the window is already on.</p>
+		</article>
+		<button class="ticket" type="button">
+			<span class="holes" aria-hidden="true"></span>
+			<span class="ticket-body"><span>Hold<b>4:30</b></span><span>Corner table</span></span>
+		</button>
+	</div>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="eyebrow">01 — Kraft</p>
+		<h2>Paper, tape, one ink</h2>
+		<p class="intro">The desk is the ground. Berry is the tape and the notebook rule. Walnut is every word that is not a caption.</p>
+		<ul class="swatches">
+			<li><i class="chip" style="background:var(--color-surface)"></i><b>Surface</b><span>Kraft</span></li>
+			<li><i class="chip" style="background:var(--color-surface-raised);border:1px solid var(--color-border)"></i><b>Raised</b><span>Note paper</span></li>
+			<li><i class="chip" style="background:var(--color-accent)"></i><b>Accent</b><span>One washi</span></li>
+			<li><i class="chip" style="background:var(--color-ticket);border:1px solid var(--color-border)"></i><b>Ticket</b><span>Stub stock</span></li>
+			<li><i class="chip" style="background:var(--color-print)"></i><b>Print</b><span>A drawn field</span></li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="eyebrow">02 — Tilt</p>
+		<h2>Three objects, under six degrees</h2>
+		<p class="intro">The print leans left, the note leans right, the ticket barely moves. Overlap is about the width of a thumb, not a pile.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">03 — Voices</p>
+		<h2>Serif for the day, italic for the pencil</h2>
+		<p class="intro">The stamp and the ticket are monospace capitals. No script face is loaded. The slant is the handwriting.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">04 — The stub</p>
+		<h2>Holes along the left edge</h2>
+		<p class="intro">The whole ticket is the target. It is stock and type, not a pill.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">05 — Mobile</p>
+		<h2>The column stacks, the tape stays</h2>
+		<div class="mobile">
+			<div class="phone">
+				<p class="kicker">Week 44</p>
+				<h3>Thursday</h3>
+				<p class="stamp">31 Oct</p>
+				<figure class="print">
+					<span class="tape" aria-hidden="true"></span>
+					<div class="print-in">
+						<svg viewBox="0 0 150 160" aria-hidden="true">
+							<rect x="28" y="18" width="94" height="78" fill="none" stroke="#35503f" stroke-width="3"/>
+							<line x1="75" y1="18" x2="75" y2="96" stroke="#35503f" stroke-width="3"/>
+							<rect x="18" y="96" width="114" height="8" fill="#35503f"/>
+							<path d="M75 120c0-14 12-18 12-28 0 10 12 14 12 28H75z" fill="#35503f"/>
+						</svg>
+					</div>
+					<figcaption>Corner window</figcaption>
+				</figure>
+				<article class="note"><p>Leave at four. The corner table is ours.</p></article>
+				<button class="ticket" type="button">
+					<span class="holes" aria-hidden="true"></span>
+					<span class="ticket-body"><span>Hold<b>4:30</b></span><span>Corner</span></span>
+				</button>
+			</div>
+			<ul class="rules">
+				<li><b>At 720px the note drops under the print</b>The ticket drops last. Nothing stays in a second column.</li>
+				<li><b>Tilts fall to about one degree</b>A six-degree lean clips the tape on a narrow screen. The tape itself stays across the print.</li>
+				<li><b>The day steps from 84 to 48</b>It stays a serif at weight 400. It does not become a bold grotesque.</li>
+				<li><b>The stamp leaves the corner</b>It sits under the day, still rotated, before the print. It does not become a pill.</li>
+				<li><b>The ticket is the full width and at least 48px</b>Hover cannot un-tilt it on touch. Press darkens the stock instead.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="eyebrow">06 — Off-style</p>
+		<h2>A sticker is not a diary</h2>
+		<div class="compare">
+			<div class="cmp-off">
+				<strong>Thu!</strong>
+				<p>Lime board, black frame, hard shadow.</p>
+			</div>
+			<div class="cmp-on">
+				<p>Leave at four. The corner table is ours.</p>
+			</div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

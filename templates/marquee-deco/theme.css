@@ -1,0 +1,27 @@
+/* Marquee Deco — a supper-club night bill. Black lacquer, one gold,
+   a fan, a sunburst, a stepped frame. Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #e4c78a;
+	--color-primary-foreground: #16130f;
+	--color-surface: #12100e;
+	--color-surface-foreground: #f4ecdf;
+	--color-surface-raised: #1c1914;
+	--color-muted: #cbbba4;
+	--color-accent: #1e6b4a;
+	--color-danger: #a54545;
+	--color-border: #8a7044;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 1px #12100e, 0 0 0 2px #e4c78a;
+
+	--duration-still: 160ms;
+}

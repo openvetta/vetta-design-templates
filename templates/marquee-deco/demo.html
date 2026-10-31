@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marquee Deco — The Marlowe</title>
+<style>
+	:root {
+		--color-primary: #e4c78a;
+		--color-primary-foreground: #16130f;
+		--color-surface: #12100e;
+		--color-surface-foreground: #f4ecdf;
+		--color-surface-raised: #1c1914;
+		--color-muted: #cbbba4;
+		--color-accent: #1e6b4a;
+		--color-danger: #a54545;
+		--color-border: #8a7044;
+		--shadow-focus: 0 0 0 1px #12100e, 0 0 0 2px #e4c78a;
+		--serif: "Iowan Old Style", Palatino, "Palatino Linotype", "Liberation Serif", Georgia, serif;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body { margin: 0; background: var(--color-surface); color: var(--color-surface-foreground); font-family: var(--serif); }
+	button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+	h1, h2, p { margin: 0; }
+	.bill {
+		min-height: 900px; height: 100vh;
+		display: grid; place-items: center;
+		position: relative; overflow: hidden;
+		padding: 48px 24px;
+	}
+	.burst {
+		position: absolute; left: 50%; top: 50%; width: 140vmax; height: 140vmax;
+		transform: translate(-50%, -50%);
+		background: repeating-conic-gradient(from 0deg, rgb(228 199 138 / 0.55) 0deg 1.15deg, transparent 1.15deg 8deg);
+		-webkit-mask-image: radial-gradient(circle, #000 0 12%, transparent 58%);
+		mask-image: radial-gradient(circle, #000 0 12%, transparent 58%);
+		pointer-events: none;
+	}
+	.frame {
+		position: relative; z-index: 1;
+		width: min(680px, 100%);
+		border: 1px solid var(--color-primary);
+		background: var(--color-surface-raised);
+		padding: 36px 40px 32px;
+		text-align: center;
+	}
+	.frame::before {
+		content: ""; position: absolute; inset: 8px;
+		border: 1px solid var(--color-primary); pointer-events: none;
+	}
+	.corner {
+		position: absolute; width: 14px; height: 14px; z-index: 2;
+		background: var(--color-surface); border: 1px solid var(--color-primary);
+	}
+	.nw { top: -8px; left: -8px; }
+	.ne { top: -8px; right: -8px; }
+	.sw { bottom: -8px; left: -8px; }
+	.se { bottom: -8px; right: -8px; }
+	.fan {
+		width: 220px; height: 72px; margin: 8px auto 4px;
+		background: repeating-conic-gradient(from -90deg at 50% 100%, var(--color-primary) 0deg 1.4deg, transparent 1.4deg 10deg);
+		border-radius: 220px 220px 0 0;
+		border-top: 1px solid var(--color-primary);
+	}
+	.chevs { display: flex; gap: 10px; justify-content: center; margin: 12px 0 16px; }
+	.chevs i {
+		width: 8px; height: 8px; display: block;
+		border-right: 1px solid var(--color-primary);
+		border-bottom: 1px solid var(--color-primary);
+		transform: rotate(-45deg);
+	}
+	.eyebrow {
+		display: flex; align-items: center; justify-content: center; gap: 10px;
+		font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-primary);
+	}
+	.jewel { width: 12px; height: 12px; background: var(--color-accent); display: block; }
+	.bill h1, .cmp-on h3, .phone h3 {
+		font-weight: 400; text-transform: uppercase; color: var(--color-primary); line-height: 1;
+	}
+	.bill h1 { font-size: 68px; letter-spacing: 0.18em; padding-left: 0.18em; margin-top: 16px; }
+	.rule { display: flex; align-items: center; gap: 12px; width: 200px; margin: 18px auto; }
+	.rule::before, .rule::after { content: ""; flex: 1; height: 1px; background: var(--color-primary); }
+	.rule span { width: 7px; height: 7px; background: var(--color-primary); transform: rotate(45deg); }
+	.lede { font-size: 18px; max-width: 28ch; margin: 0 auto; }
+	.facts {
+		display: flex; justify-content: center; gap: 0; margin-top: 22px;
+		font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+	}
+	.facts p { padding: 0 18px; }
+	.facts p + p { border-left: 1px solid var(--color-border); color: var(--color-muted); }
+	.hold {
+		margin-top: 26px; height: 48px; min-width: 220px; padding: 0 22px;
+		border: 1px solid var(--color-primary); color: var(--color-primary);
+		letter-spacing: 0.2em; text-transform: uppercase; font-size: 12px;
+	}
+	.hold:hover, .hold:active { background: var(--color-primary); color: var(--color-primary-foreground); }
+	.hold:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.wrap { padding: 8px 8vw 96px; max-width: 980px; }
+	.section { margin-top: 80px; }
+	.section .eyebrow { justify-content: flex-start; }
+	.section h2 { font-weight: 400; font-size: 36px; margin-top: 8px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-primary); }
+	.intro { margin-top: 12px; max-width: 40ch; color: var(--color-muted); font-size: 18px; line-height: 1.5; }
+	.swatches { list-style: none; margin: 22px 0 0; padding: 0; max-width: 480px; }
+	.swatches li {
+		display: grid; grid-template-columns: 22px 1fr auto; gap: 14px; align-items: center;
+		min-height: 44px; border-top: 1px solid var(--color-border);
+		font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
+	}
+	.chip { width: 22px; height: 14px; }
+	.swatches span { color: var(--color-muted); }
+	.mobile { display: grid; gap: 28px; margin-top: 22px; align-items: start; }
+	.phone {
+		width: 280px; max-width: 100%; margin: 0 auto;
+		background: var(--color-surface); border: 1px solid var(--color-primary);
+		padding: 22px 16px 18px; text-align: center; position: relative;
+	}
+	.phone .fan { width: 140px; height: 48px; }
+	.phone h3 { font-size: 32px; letter-spacing: 0.12em; padding-left: 0.12em; margin-top: 8px; }
+	.phone .lede { font-size: 15px; }
+	.phone .facts { flex-direction: column; gap: 8px; }
+	.phone .facts p + p { border-left: 0; }
+	.phone .hold { width: 100%; min-width: 0; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 14px 0; border-top: 1px solid var(--color-border); color: var(--color-muted); font-size: 17px; line-height: 1.45; }
+	.rules b { display: block; color: var(--color-surface-foreground); font-weight: 400; margin-bottom: 4px; }
+	.compare { display: grid; gap: 22px; margin-top: 22px; }
+	.cmp-off { background: #e7e1d6; color: #2c2824; padding: 28px 22px; }
+	.cmp-off h3 { font-weight: 400; font-size: 42px; letter-spacing: -0.03em; }
+	.cmp-off .line { width: 64px; height: 1px; background: #6f5640; margin: 14px 0; border: 0; }
+	.cmp-on { border: 1px solid var(--color-primary); padding: 28px 22px; text-align: center; background: var(--color-surface-raised); }
+	.cmp-on h3 { font-size: 28px; letter-spacing: 0.16em; padding-left: 0.16em; }
+	@media (min-width: 860px) {
+		.mobile { grid-template-columns: 280px 1fr; gap: 48px; }
+		.compare { grid-template-columns: 1fr 1fr; }
+	}
+	@media (max-width: 720px) {
+		.bill { height: auto; min-height: 100vh; padding: 20px 16px; }
+		.frame { padding: 26px 16px 22px; }
+		.fan { width: 140px; height: 48px; }
+		.bill h1 { font-size: 40px; letter-spacing: 0.1em; padding-left: 0.1em; }
+		.facts { flex-direction: column; gap: 8px; }
+		.facts p + p { border-left: 0; }
+		.hold { width: 100%; }
+		.wrap { padding: 8px 18px 64px; }
+		.section h2 { font-size: 28px; }
+	}
+</style>
+</head>
+<body>
+<header class="bill">
+	<div class="burst" aria-hidden="true"></div>
+	<div class="frame">
+		<i class="corner nw" aria-hidden="true"></i>
+		<i class="corner ne" aria-hidden="true"></i>
+		<i class="corner sw" aria-hidden="true"></i>
+		<i class="corner se" aria-hidden="true"></i>
+		<div class="fan" aria-hidden="true"></div>
+		<div class="chevs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+		<p class="eyebrow"><i class="jewel" aria-hidden="true"></i> Tonight · second seating</p>
+		<h1>Marlowe</h1>
+		<div class="rule" aria-hidden="true"><span></span></div>
+		<p class="lede">A table kept past eight, for two.</p>
+		<div class="facts">
+			<p>Half past eight</p>
+			<p>Party of two</p>
+		</div>
+		<button class="hold" type="button">Hold the table</button>
+	</div>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="eyebrow">01 — Lacquer</p>
+		<h2>Black, one gold, one jewel</h2>
+		<p class="intro">Gold draws every line that matters. Emerald is a single square beside the eyebrow. It never becomes type.</p>
+		<ul class="swatches">
+			<li><i class="chip" style="background:var(--color-surface);border:1px solid var(--color-primary)"></i><b>Surface</b><span>Lacquer</span></li>
+			<li><i class="chip" style="background:var(--color-surface-raised);border:1px solid var(--color-primary)"></i><b>Raised</b><span>The plaque</span></li>
+			<li><i class="chip" style="background:var(--color-primary)"></i><b>Primary</b><span>Gold line</span></li>
+			<li><i class="chip" style="background:var(--color-accent)"></i><b>Accent</b><span>One emerald</span></li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="eyebrow">02 — Frame</p>
+		<h2>Two rules and a step at each corner</h2>
+		<p class="intro">Radius stays zero. The step is a square of lacquer sitting on the corner, not a rounded cut.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">03 — Type</p>
+		<h2>Capitals, tracked, weight 400</h2>
+		<p class="intro">The sentence under the diamond is the only line in sentence case. A heavy grotesque would be another bill.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">04 — The ask</p>
+		<h2>An outline that fills</h2>
+		<p class="intro">The action is a gold rule around tracked capitals. Hover and press fill it with gold and set the word in lacquer.</p>
+		<button class="hold" type="button">Hold the table</button>
+	</section>
+	<section class="section">
+		<p class="eyebrow">05 — Mobile</p>
+		<h2>The center line holds</h2>
+		<div class="mobile">
+			<div class="phone">
+				<div class="fan" aria-hidden="true"></div>
+				<p class="eyebrow"><i class="jewel" aria-hidden="true"></i> Tonight</p>
+				<h3>Marlowe</h3>
+				<div class="rule" aria-hidden="true"><span></span></div>
+				<p class="lede">A table for two.</p>
+				<div class="facts"><p>Half past eight</p><p>Party of two</p></div>
+				<button class="hold" type="button">Hold the table</button>
+			</div>
+			<ul class="rules">
+				<li><b>Facts stack, still centered</b>The side-by-side pair becomes two lines on the center axis. The bill does not go flush left.</li>
+				<li><b>The name steps from 68 to 40</b>Tracking tightens from 0.18em to 0.1em so the capitals fit. Weight stays 400.</li>
+				<li><b>The fan shrinks from 220 to 140</b>The sunburst stays outside the type. The corner steps stay square.</li>
+				<li><b>The action takes the plaque width</b>Height stays 48px. On touch, the gold fill replaces the hover, with no glow.</li>
+				<li><b>Padding falls to 16</b>The frame still has two rules. It does not bleed to the screen edge.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="eyebrow">06 — Off-style</p>
+		<h2>Quiet stone is the wrong luxury</h2>
+		<div class="compare">
+			<div class="cmp-off">
+				<p style="letter-spacing:0.18em;text-transform:uppercase;font-size:12px;color:#6f5640">Viewing</p>
+				<h3>Halden</h3>
+				<div class="line"></div>
+				<p>One bronze hairline on ivory.</p>
+			</div>
+			<div class="cmp-on">
+				<p class="eyebrow" style="justify-content:center"><i class="jewel" aria-hidden="true"></i> Tonight</p>
+				<h3>Marlowe</h3>
+				<div class="rule" aria-hidden="true"><span></span></div>
+				<p>The same evening, said in gold.</p>
+			</div>
+		</div>
+	</section>
+</main>
+</body>
+</html>
