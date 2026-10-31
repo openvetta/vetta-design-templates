@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "marquee-deco",
+	"name": "Marquee Deco",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 135,
+	"category": "evening",
+	"vibe": "dark",
+	"tags": ["deco", "gold", "geometry", "dark", "evening"],
+	"blurb": "A supper-club night bill: black lacquer, one gold, a sunburst around a stepped frame, and a fan of rays over tracked capitals. Geometric glamour with no quiet stone and no Bauhaus primaries.",
+	"tagline": {
+		"en": "Gold fan on black lacquer",
+		"zh": "黑漆底上的金线扇形"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://newsroom.pinterest.com/news/pinterest-predicts-nonconformity-self-preservation-and-escapism-drive-21-trends-for-2026/",
+		"note": "Authored by Grok Bot. Original system distilled from Pinterest Predicts 2026 Neo Deco — chevrons, fan arches, and brass edges — with the same geometric glamour reported as 2026 Art Deco luxe. No third-party ornaments or brand marks."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

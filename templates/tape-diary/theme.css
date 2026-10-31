@@ -1,0 +1,32 @@
+/* Tape Diary — a Thursday assembled on kraft. One washi strip, a tilted
+   print, a pencil note, a perforated ticket. Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #2a211c;
+	--color-primary-foreground: #f6f0e4;
+	--color-surface: #c9ad86;
+	--color-surface-foreground: #2a211c;
+	--color-surface-raised: #f6f1e6;
+	--color-muted: #4e3b30;
+	--color-accent: #c83e68;
+	--color-danger: #9d2e2e;
+	--color-border: #2a211c;
+
+	--color-ticket: #f4efc8;
+	--color-print: #d7e0d4;
+	--color-print-ink: #35503f;
+	--color-kraft-deep: #a8845c;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 2px;
+	--radius-xl: 2px;
+	--radius-2xl: 2px;
+	--radius-full: 999px;
+
+	--shadow-sm: 0 4px 10px rgb(80 50 20 / 0.1);
+	--shadow-md: 0 8px 16px rgb(80 50 20 / 0.12);
+	--shadow-lg: 0 14px 24px rgb(80 50 20 / 0.14);
+	--shadow-focus: 0 0 0 2px #c9ad86, 0 0 0 4px #2a211c;
+
+	--duration-still: 160ms;
+}

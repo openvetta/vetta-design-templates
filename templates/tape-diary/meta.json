@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "tape-diary",
+	"name": "Tape Diary",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 95,
+	"category": "diary",
+	"vibe": "light",
+	"tags": ["collage", "scrapbook", "kraft", "analog", "light"],
+	"blurb": "A personal Thursday assembled on kraft: one washi strip, a tilted print, an italic note, and a perforated ticket. Collage as a diary page, not a print shop and not a sticker game.",
+	"tagline": {
+		"en": "A Thursday taped to kraft paper",
+		"zh": "牛皮纸上，胶带粘着这一周四"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://www.canva.com/newsroom/news/design-trends-2026/",
+		"note": "Authored by Grok Bot. Original system distilled from 2026 collage reporting: Canva's Notes App Chic, Figma's collage web trend, and Adobe's layered mixed-media layouts. No third-party scans, photos, or sticker art."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

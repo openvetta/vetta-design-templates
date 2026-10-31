@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "aero-dew",
+	"name": "Aero Dew",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 75,
+	"category": "weather",
+	"vibe": "light",
+	"tags": ["weather", "gloss", "aqua", "skeuomorphic", "light"],
+	"blurb": "A glossy afternoon weather station: open sky, opaque gel controls with a white top highlight, water beads, and one grass horizon. Optimistic skeuomorphism without frosted night glass or matte clay.",
+	"tagline": {
+		"en": "Sky, gel, and a grass horizon",
+		"zh": "晴空凝胶，草地作地平线"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://aigoodies.substack.com/p/aesthetics-in-the-ai-era-visual-web",
+		"note": "Authored by Grok Bot. Original system distilled from 2026 Frutiger Aero / Neo-Aero reporting (AI Goodies on interface nostalgia and glossy aqua; vocab.design names the same mid-2000s gloss). No third-party wallpapers, brand UI, or assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}
