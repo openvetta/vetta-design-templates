@@ -37,27 +37,36 @@ All colors come from `theme.css` tokens — never hardcode hex in frames.
 System stacks only. No webfonts. There is no script face.
 - The day is a text serif, weight 400, 64–84px, tight line-height. It is the
   diary's date, not a campaign headline.
-- The note is the same serif in italic, 20–22px, the pencil voice. One note
-  per page.
+- The note is the same serif in italic, 22–26px, the pencil voice. One note
+  per page, two short sentences at most: one at the top of the sheet, one
+  at the foot.
 - The stamp, the ticket, and the caption are a monospace, 12px, uppercase,
   tracking near 0.12em.
 - The small date above the day is the serif, 14px, `muted`.
-- Scale: day 48/84, note 20/22, stamp 12, caption 12, section 32.
+- Scale: day 48/84, note 22/26, stamp 12, caption 12, section 32.
 
 ## Spacing & layout
-- The cover is a desk, not a centered card. Padding 48 → 72. The day sits top
-  left. The stamp sits top right, rotated about −8 degrees.
-- The cluster is the print, the note, and the ticket. The print tilts about
-  −3.5 degrees, the note about +2, the ticket about −1. Tilts stay under 6
-  degrees.
-- The note may overlap the print by about 32px. The ticket sits below both,
-  clear of the overlap.
+- The cover is one spread and it fills the first viewport. Padding 40px 5.5vw
+  36px. The day and the stamp occupy the top band. Everything under them is
+  the cluster, stretched to the bottom margin.
+- The print is the tall object in the left column. Its drawn field grows with
+  the viewport and stays at least 300px, so the lower half of the spread is
+  paper and print, not bare kraft.
+- The note is a sheet, not a label. It overlaps the print by about 84px,
+  stretches the height of the print, and tilts about +2 degrees. One
+  sentence sits at the top of the sheet and a second, shorter sentence sits
+  at the foot, so the paper between them is part of the note.
+- The ticket is the bottom band, up to 860px wide, aligned to the right,
+  tilted about −1 degree. It tucks just under the print. Tilts stay under
+  6 degrees.
+- The stamp sits in the top band at the right, rotated about −8 degrees. It
+  is not pinned over the print.
 - One tape, across the upper third of the print, extending past both sides.
-- At 720px the cluster becomes one column. The note drops first, then the
-  ticket. Tilts fall to about 1 degree so nothing clips. The tape stays.
-  Objects take the full content width. The day steps down to 48px. The stamp
-  moves under the day, still rotated, before the print. The ticket stays at
-  least 48px tall.
+- At 720px the spread stops stretching with the viewport and becomes one
+  column. The note drops first, then the ticket. Tilts fall to about 1 degree
+  so nothing clips. The tape stays. Objects take the full content width. The
+  day steps down to 48px. The stamp moves under the day, still rotated, before
+  the print. The ticket stays at least 48px tall.
 
 ## Components
 - **Print:** a warm-white border, 12px at the sides and top, 36px at the

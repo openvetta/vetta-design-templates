@@ -35,11 +35,16 @@
 	}
 	button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 	h1, h2, p { margin: 0; }
-	.desk { min-height: 900px; padding: 56px 7vw 64px; position: relative; }
+	.desk {
+		min-height: 100vh;
+		padding: 40px 5.5vw 36px;
+		display: flex;
+		flex-direction: column;
+	}
+	.top { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
 	.kicker { font-size: 14px; color: var(--color-muted); }
 	.desk h1 { font-weight: 400; font-size: 84px; letter-spacing: -0.03em; line-height: 0.92; margin-top: 6px; }
 	.stamp {
-		position: absolute; top: 64px; right: 8vw;
 		border: 2px solid var(--color-border);
 		outline: 1px solid var(--color-border);
 		outline-offset: 3px;
@@ -49,12 +54,13 @@
 		background: rgb(246 241 230 / 0.35);
 	}
 	.cluster {
+		flex: 1;
 		margin-top: 28px;
 		display: grid;
-		grid-template-columns: 340px minmax(420px, 620px);
-		gap: 40px 0;
-		align-items: start;
-		max-width: 1080px;
+		grid-template-columns: minmax(380px, 1.35fr) minmax(260px, 0.72fr);
+		grid-template-rows: minmax(360px, 1fr) auto;
+		row-gap: 22px;
+		align-items: stretch;
 	}
 	.print {
 		background: var(--color-surface-raised);
@@ -64,17 +70,33 @@
 		position: relative;
 		grid-column: 1;
 		grid-row: 1;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
 	}
-	.note { grid-column: 2; grid-row: 1; align-self: center; }
-	.cluster > .ticket { grid-column: 1 / -1; justify-self: start; width: min(680px, 100%); margin-top: 4px; }
+	.desk .note {
+		grid-column: 2;
+		grid-row: 1;
+		align-self: stretch;
+		margin-top: 12px;
+		margin-bottom: 8px;
+		margin-left: -84px;
+		width: calc(100% + 28px);
+		max-width: none;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		z-index: 1;
+	}
+	.cluster > .ticket { grid-column: 1 / -1; grid-row: 2; justify-self: end; width: min(860px, 100%); margin-top: -6px; position: relative; z-index: 2; }
 	.tape {
 		position: absolute; top: -12px; left: 28px; right: 36px; height: 26px;
 		transform: rotate(-2deg);
 		background: repeating-linear-gradient(-18deg, rgb(200 62 104 / 0.88) 0 8px, rgb(232 154 174 / 0.72) 8px 13px);
 		box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
 	}
-	.print-in { background: var(--color-print); height: 268px; display: grid; place-items: center; }
-	.print-in svg { width: 180px; height: 190px; }
+	.print-in { background: var(--color-print); flex: 1; min-height: 300px; display: grid; place-items: center; }
+	.print-in svg { width: min(52%, 280px); height: auto; }
 	.print figcaption {
 		margin-top: 10px; text-align: center;
 		font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
@@ -88,9 +110,10 @@
 		margin-left: -48px;
 	}
 	.note p { font-style: italic; font-size: 26px; line-height: 1.4; }
+	.note p + p { margin-top: 14px; }
 	.ticket {
 		display: flex; text-align: left; transform: rotate(-1deg);
-		margin-top: 12px; min-height: 72px; width: 100%;
+		margin-top: 12px; min-height: 84px; width: 100%;
 	}
 	.ticket:hover { transform: rotate(0deg); }
 	.ticket:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
@@ -125,8 +148,10 @@
 		box-shadow: var(--shadow-md);
 	}
 	.phone h3 { font-weight: 400; font-size: 40px; line-height: 0.95; margin: 4px 0 12px; }
-	.phone .print { transform: rotate(-1deg); grid-row: auto; margin-top: 8px; }
-	.phone .print-in { height: 120px; }
+	.phone .print { transform: rotate(-1deg); display: block; min-height: 0; margin-top: 8px; }
+	.phone .print-in { height: 120px; min-height: 0; flex: none; }
+	.phone .print-in svg { width: 110px; }
+	.phone .note { margin-left: 0; width: auto; max-width: none; }
 	.phone .note { transform: rotate(1deg); margin: 16px 0 0; }
 	.phone .note p { font-size: 16px; }
 	.phone .ticket { transform: none; margin-top: 16px; }
@@ -146,16 +171,17 @@
 		.compare { grid-template-columns: 1fr 1fr; }
 	}
 	@media (max-width: 720px) {
-		.desk { min-height: 100vh; padding: 28px 18px 36px; }
+		.desk { min-height: 0; display: block; padding: 28px 18px 36px; }
+		.top { display: block; }
 		.desk h1 { font-size: 48px; }
-		.stamp { position: static; display: inline-block; margin-top: 16px; }
-		.cluster { grid-template-columns: 1fr; max-width: none; }
-		.print, .note, .cluster > .ticket { grid-column: 1; grid-row: auto; }
-		.print { transform: rotate(-1deg); }
-		.note { margin-left: 0; transform: rotate(1deg); }
+		.stamp { display: inline-block; margin-top: 16px; }
+		.cluster { display: grid; grid-template-columns: 1fr; grid-template-rows: none; margin-top: 20px; }
+		.desk .print, .desk .note, .cluster > .ticket { grid-column: 1; grid-row: auto; }
+		.desk .print { display: block; transform: rotate(-1deg); }
+		.desk .print-in { height: 180px; min-height: 0; flex: none; }
+		.desk .note { display: block; align-self: auto; margin: 16px 0 0; width: auto; max-width: none; transform: rotate(1deg); }
 		.desk .note p { font-size: 20px; }
-		.ticket { transform: none; }
-		.print-in { height: 160px; }
+		.cluster > .ticket { width: 100%; justify-self: stretch; transform: none; min-height: 48px; }
 		.wrap { padding: 8px 18px 64px; }
 	}
 	@media (prefers-reduced-motion: reduce) {
@@ -165,9 +191,13 @@
 </head>
 <body>
 <header class="desk">
-	<p class="kicker">Week 44 · personal</p>
-	<h1>Thursday</h1>
-	<p class="stamp">31 Oct</p>
+	<div class="top">
+		<div>
+			<p class="kicker">Week 44 · personal</p>
+			<h1>Thursday</h1>
+		</div>
+		<p class="stamp">31 Oct</p>
+	</div>
 	<div class="cluster">
 		<figure class="print">
 			<span class="tape" aria-hidden="true"></span>
@@ -186,6 +216,7 @@
 		</figure>
 		<article class="note">
 			<p>Leave at four. The bakery keeps the corner table if we are not late.</p>
+			<p>The light in the window is already on.</p>
 		</article>
 		<button class="ticket" type="button">
 			<span class="holes" aria-hidden="true"></span>

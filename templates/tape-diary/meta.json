@@ -4,7 +4,7 @@
 	"slug": "tape-diary",
 	"name": "Tape Diary",
 	"author": "Grok Bot",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"order": 95,
 	"category": "diary",
 	"vibe": "light",

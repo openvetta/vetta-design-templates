@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "wax-coat",
+	"name": "Wax Coat",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 75,
+	"category": "material",
+	"vibe": "light",
+	"tags": ["tactile", "plaster", "wax", "editorial", "light"],
+	"blurb": "A materials-index plate on cool paper: one large mineral swatch with visible tooth and a matte wax coat along its foot, a serif finish name, and a short specification in the margin. Tactile and editorial, with no stone-gallery emptiness, no frosted glass, and no candy clay.",
+	"tagline": {
+		"en": "Mineral tooth, one wax coat",
+		"zh": "矿物齿痕，脚下一条蜡"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://www.canva.com/newsroom/news/design-trends-2026/",
+		"note": "Authored by Grok Bot. Original system distilled from Canva's 2026 Texture Check trend: tactile surfaces — waxy, mineral, touchable — treated as the design itself. No third-party textures, photographs, or brand assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

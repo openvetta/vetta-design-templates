@@ -1,0 +1,31 @@
+/* Wax Coat — a materials-index plate. Cool paper, mineral tooth,
+   one matte wax coat. Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #1c1b19;
+	--color-primary-foreground: #f4f1eb;
+	--color-surface: #e6e7e4;
+	--color-surface-foreground: #1c1b19;
+	--color-surface-raised: #f4f2ec;
+	--color-muted: #5c635e;
+	--color-accent: #8a5340;
+	--color-danger: #8e3830;
+	--color-border: #c5cbc6;
+
+	--color-plaster: #d2c4ae;
+	--color-wax: #4e3228;
+	--color-pit: #6a5344;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: 0 8px 18px rgb(28 27 25 / 0.06);
+	--shadow-md: 0 16px 32px rgb(28 27 25 / 0.08);
+	--shadow-lg: 0 24px 40px rgb(28 27 25 / 0.1);
+	--shadow-focus: 0 0 0 1px #e6e7e4, 0 0 0 3px #8a5340;
+
+	--duration-still: 160ms;
+}
