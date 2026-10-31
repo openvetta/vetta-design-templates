@@ -1,0 +1,972 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riso Press — component reference</title>
+<style>
+	/* Mirrors theme.css. Plain custom properties so this file opens standalone. */
+	:root {
+		--color-primary: #1e3fae;
+		--color-primary-foreground: #f7f3ea;
+		--color-surface: #efe6d4;
+		--color-surface-foreground: #1c1712;
+		--color-surface-raised: #f7f1e4;
+		--color-muted: #5c5348;
+		--color-accent: #c20d62;
+		--color-danger: #b42318;
+		--color-border: #1c1712;
+
+		--color-ink-yellow: #f2d230;
+		--color-ink-yellow-foreground: #1c1712;
+		--color-accent-foreground: #f7f3ea;
+
+		--radius-sm: 0px;
+		--radius-md: 2px;
+		--radius-lg: 2px;
+		--radius-xl: 4px;
+		--radius-2xl: 4px;
+		--radius-full: 9999px;
+
+		--shadow-sm: 2px 1px 0 #c20d62;
+		--shadow-md: 3px 2px 0 #c20d62;
+		--shadow-lg: 5px 3px 0 #c20d62;
+		--shadow-press: 0 0 0 #c20d62;
+		--shadow-focus: 0 0 0 2px #efe6d4, 0 0 0 4px #1c1712;
+
+		--misregister-x: 3px;
+		--misregister-y: 2px;
+
+		--halftone: radial-gradient(circle, rgb(247 243 234 / 0.5) 0.55px, transparent 0.72px);
+		--halftone-size: 4px 4px;
+		--paper-tooth: radial-gradient(circle, rgb(28 23 18 / 0.18) 0.4px, transparent 0.55px);
+		--paper-tooth-size: 3px 3px;
+
+		--duration-shift: 120ms;
+		--ease-press: cubic-bezier(0.2, 0, 0, 1);
+
+		--font-display: "Arial Black", Impact, Inter, "Liberation Sans", "Noto Sans", sans-serif;
+		--font-body: Inter, "Liberation Sans", "Noto Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+		--font-mono: "JetBrains Mono", "Cascadia Mono", "Liberation Mono", ui-monospace, monospace;
+	}
+
+	*, *::before, *::after { box-sizing: border-box; }
+	body {
+		margin: 0;
+		background-color: var(--color-surface);
+		background-image: var(--paper-tooth);
+		background-size: var(--paper-tooth-size);
+		color: var(--color-surface-foreground);
+		font-family: var(--font-body);
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 1.5;
+		-webkit-font-smoothing: antialiased;
+	}
+	h1, h2, h3, p { margin: 0; }
+	button, input { font: inherit; color: inherit; }
+	::selection { background: var(--color-ink-yellow); color: var(--color-ink-yellow-foreground); }
+
+	.display {
+		font-family: var(--font-display);
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: -0.035em;
+		line-height: 0.84;
+	}
+	.mono {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+	.muted { color: var(--color-muted); }
+
+	/* ── COVER: the press desk ─────────────────────────────────────── */
+	.desk { padding: 28px 24px 8px; }
+	@media (min-width: 800px) { .desk { padding: 36px 36px 8px; } }
+
+	.sheet {
+		position: relative;
+		max-width: 1080px;
+		margin: 0 auto;
+		padding: 36px 36px 22px;
+		background: var(--color-surface-raised);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		box-shadow: var(--shadow-lg);
+	}
+	.crop {
+		position: absolute;
+		width: 14px;
+		height: 14px;
+		border: 0 solid var(--color-border);
+	}
+	.crop.tl { top: 12px; left: 12px; border-top-width: 1px; border-left-width: 1px; }
+	.crop.tr { top: 12px; right: 12px; border-top-width: 1px; border-right-width: 1px; }
+	.crop.bl { bottom: 12px; left: 12px; border-bottom-width: 1px; border-left-width: 1px; }
+	.crop.br { bottom: 12px; right: 12px; border-bottom-width: 1px; border-right-width: 1px; }
+
+	.reg {
+		width: 18px;
+		height: 18px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-full);
+		position: relative;
+		flex: none;
+	}
+	.reg::before, .reg::after {
+		content: "";
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		background: var(--color-border);
+		transform: translate(-50%, -50%);
+	}
+	.reg::before { width: 1px; height: 26px; }
+	.reg::after { width: 26px; height: 1px; }
+
+	.mast {
+		display: flex;
+		align-items: center;
+		gap: 16px 28px;
+		flex-wrap: wrap;
+	}
+	.brand { display: flex; align-items: center; gap: 12px; }
+	.brand-name {
+		font-family: var(--font-display);
+		font-weight: 800;
+		font-size: 18px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		line-height: 1;
+	}
+	.brand-sub { margin-top: 3px; }
+	.jobno { margin-left: auto; }
+	.drums { display: flex; gap: 14px; list-style: none; margin: 0; padding: 0; }
+	.drums li { display: flex; align-items: center; gap: 6px; }
+	.drum {
+		width: 22px;
+		height: 22px;
+		border-radius: var(--radius-full);
+		border: 1px solid var(--color-border);
+		display: block;
+		background-size: var(--halftone-size);
+	}
+	.drum-blue { background-color: var(--color-primary); background-image: var(--halftone); }
+	.drum-pink { background-color: var(--color-accent); background-image: var(--halftone); }
+	.drum-yellow {
+		background-color: var(--color-ink-yellow);
+		background-image: radial-gradient(circle, rgb(28 23 18 / 0.28) 0.55px, transparent 0.72px);
+	}
+
+	.hero {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 28px;
+		margin-top: 28px;
+		align-items: stretch;
+	}
+	@media (min-width: 860px) {
+		.hero { grid-template-columns: 1.05fr 0.95fr; gap: 36px; }
+	}
+	.kicker { color: var(--color-accent); }
+	.hero h1 {
+		margin-top: 10px;
+		font-size: 64px;
+		color: var(--color-primary);
+		text-shadow: 5px 3px 0 var(--color-accent);
+	}
+	@media (min-width: 860px) { .hero h1 { font-size: 76px; } }
+	.hero-lede {
+		margin-top: 16px;
+		max-width: 42ch;
+		color: var(--color-surface-foreground);
+	}
+	.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 22px; }
+
+	.poster {
+		position: relative;
+		min-height: 280px;
+		background: var(--color-surface-raised);
+		border: 1px solid var(--color-border);
+		overflow: hidden;
+		isolation: isolate;
+	}
+	.plate {
+		position: absolute;
+		mix-blend-mode: multiply;
+		background-size: var(--halftone-size);
+	}
+	.plate-blue {
+		left: 0;
+		top: 0;
+		width: 78%;
+		height: 100%;
+		background-color: var(--color-primary);
+		background-image: var(--halftone);
+	}
+	.plate-pink {
+		left: 62%;
+		top: 14%;
+		width: 32%;
+		height: 72%;
+		background-color: var(--color-accent);
+		background-image: var(--halftone);
+	}
+	.sun {
+		position: absolute;
+		right: 7%;
+		top: 10%;
+		width: 86px;
+		height: 86px;
+		border-radius: var(--radius-full);
+		background-color: var(--color-ink-yellow);
+		background-image: radial-gradient(circle, rgb(28 23 18 / 0.22) 0.6px, transparent 0.8px);
+		background-size: 4px 4px;
+		mix-blend-mode: multiply;
+	}
+	.poster-copy {
+		position: relative;
+		z-index: 1;
+		padding: 28px 24px;
+		max-width: 74%;
+		color: var(--color-primary-foreground);
+	}
+	.poster-kicker { color: var(--color-ink-yellow); }
+	.poster-title {
+		margin-top: 28px;
+		font-size: 52px;
+		color: var(--color-primary-foreground);
+		text-shadow: 4px 3px 0 var(--color-accent);
+	}
+	.poster-meta { margin-top: 16px; color: var(--color-primary-foreground); }
+	.stamp {
+		position: absolute;
+		z-index: 2;
+		right: 16px;
+		bottom: 16px;
+		transform: rotate(-8deg);
+		padding: 6px 8px;
+		background: var(--color-surface-raised);
+		color: var(--color-accent);
+		border: 2px solid var(--color-accent);
+		border-radius: var(--radius-sm);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.queue {
+		list-style: none;
+		margin: 26px 0 0;
+		padding: 0;
+		border-top: 1px solid var(--color-border);
+	}
+	.queue li {
+		display: grid;
+		grid-template-columns: 36px minmax(0, 1fr) auto auto;
+		gap: 12px 16px;
+		align-items: center;
+		min-height: 52px;
+		border-bottom: 1px solid var(--color-border);
+	}
+	.idx { color: var(--color-muted); }
+	.q-title { font-weight: 600; }
+	.q-inks { display: flex; gap: 6px; }
+	.dot {
+		width: 12px;
+		height: 12px;
+		border-radius: var(--radius-full);
+		border: 1px solid var(--color-border);
+		display: block;
+	}
+	.dot.blue { background: var(--color-primary); }
+	.dot.pink { background: var(--color-accent); }
+	.dot.yellow { background: var(--color-ink-yellow); }
+
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		min-height: 28px;
+		padding: 4px 8px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-surface-raised);
+		color: var(--color-surface-foreground);
+		white-space: nowrap;
+	}
+	.chip-press { background: var(--color-primary); color: var(--color-primary-foreground); }
+	.chip-dry { background: var(--color-ink-yellow); color: var(--color-ink-yellow-foreground); }
+	.chip-jam { background: var(--color-danger); color: var(--color-primary-foreground); }
+
+	/* ── Buttons, fields ───────────────────────────────────────────── */
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 44px;
+		padding: 10px 16px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+		font-family: var(--font-display);
+		font-weight: 800;
+		font-size: 13px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		line-height: 1;
+		box-shadow: var(--shadow-md);
+		cursor: pointer;
+		transition: transform var(--duration-shift) var(--ease-press), box-shadow var(--duration-shift) var(--ease-press);
+	}
+	.btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 3px 0 var(--color-accent); }
+	.btn:active { transform: translate(3px, 2px); box-shadow: var(--shadow-press); }
+	.btn:focus-visible { outline: none; box-shadow: var(--shadow-md), var(--shadow-focus); }
+	.btn-quiet { background: var(--color-surface-raised); color: var(--color-surface-foreground); }
+	.btn-danger { background: var(--color-danger); color: var(--color-primary-foreground); }
+	.btn.is-shifted { transform: translate(-1px, -1px); box-shadow: 5px 3px 0 var(--color-accent); }
+	.btn.is-pressed { transform: translate(3px, 2px); box-shadow: var(--shadow-press); }
+	.btn.is-focused { box-shadow: var(--shadow-md), var(--shadow-focus); }
+	.btn:disabled, .btn.is-disabled {
+		background: transparent;
+		color: var(--color-muted);
+		border-style: dashed;
+		box-shadow: none;
+		transform: none;
+		cursor: not-allowed;
+	}
+
+	.field {
+		display: block;
+		width: 100%;
+		min-height: 44px;
+		padding: 10px 12px;
+		background: var(--color-surface-raised);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-sm);
+	}
+	.field:focus {
+		outline: none;
+		background: var(--color-ink-yellow);
+		color: var(--color-ink-yellow-foreground);
+		box-shadow: var(--shadow-md);
+	}
+	.field.is-focused {
+		background: var(--color-ink-yellow);
+		color: var(--color-ink-yellow-foreground);
+		box-shadow: var(--shadow-md);
+	}
+	.field.is-error {
+		background: var(--color-surface-raised);
+		color: var(--color-surface-foreground);
+		border-color: var(--color-danger);
+		box-shadow: 3px 2px 0 var(--color-danger);
+	}
+
+	/* ── Spec sections ─────────────────────────────────────────────── */
+	.wrap { max-width: 1080px; margin: 0 auto; padding: 8px 24px 96px; }
+	@media (min-width: 800px) { .wrap { padding: 8px 36px 112px; } }
+	.section { margin-top: 72px; }
+	.section h2 {
+		font-family: var(--font-display);
+		font-weight: 800;
+		font-size: 32px;
+		letter-spacing: -0.03em;
+		text-transform: uppercase;
+		line-height: 0.9;
+		margin-top: 8px;
+	}
+	.section .intro { margin-top: 12px; max-width: 62ch; color: var(--color-muted); }
+	.section-label { color: var(--color-accent); }
+
+	.swatches {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 12px;
+		margin: 24px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	@media (min-width: 720px) { .swatches { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+	.swatch {
+		min-height: 112px;
+		padding: 12px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		box-shadow: var(--shadow-sm);
+	}
+	.swatch b { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+	.swatch span { font-size: 13px; }
+	.sw-desk { background: var(--color-surface); }
+	.sw-sheet { background: var(--color-surface-raised); }
+	.sw-blue { background-color: var(--color-primary); background-image: var(--halftone); background-size: var(--halftone-size); color: var(--color-primary-foreground); }
+	.sw-pink { background-color: var(--color-accent); background-image: var(--halftone); background-size: var(--halftone-size); color: var(--color-accent-foreground); }
+	.sw-yellow { background-color: var(--color-ink-yellow); color: var(--color-ink-yellow-foreground); }
+	.sw-danger { background: var(--color-danger); color: var(--color-primary-foreground); }
+	.sw-muted { background: var(--color-surface-raised); color: var(--color-muted); }
+	.sw-ink { background: var(--color-surface-foreground); color: var(--color-primary-foreground); }
+
+	.pair {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 16px;
+		margin-top: 24px;
+	}
+	@media (min-width: 800px) { .pair { grid-template-columns: 1fr 1fr; gap: 24px; } }
+	.panel {
+		background: var(--color-surface-raised);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		padding: 16px;
+		box-shadow: var(--shadow-sm);
+	}
+	.panel h3 {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		margin-bottom: 14px;
+	}
+	.overprint {
+		position: relative;
+		height: 168px;
+		background: var(--color-surface-raised);
+		border: 1px solid var(--color-border);
+		isolation: isolate;
+		overflow: hidden;
+	}
+	.op {
+		position: absolute;
+		mix-blend-mode: multiply;
+		background-size: var(--halftone-size);
+	}
+	.op-blue {
+		width: 110px; height: 110px; left: 24px; top: 28px;
+		background-color: var(--color-primary);
+		background-image: var(--halftone);
+	}
+	.op-pink {
+		width: 110px; height: 110px; left: 78px; top: 40px;
+		background-color: var(--color-accent);
+		background-image: var(--halftone);
+	}
+	.op-yellow {
+		width: 78px; height: 78px; left: 168px; top: 18px;
+		border-radius: var(--radius-full);
+		background-color: var(--color-ink-yellow);
+	}
+	.op-blue.aligned { left: 48px; top: 28px; }
+	.op-pink.aligned { left: 48px; top: 28px; }
+	.ghost {
+		font-size: 42px;
+		color: var(--color-primary);
+		text-shadow: 4px 3px 0 var(--color-accent);
+	}
+	.ghost.flat { text-shadow: none; color: var(--color-surface-foreground); }
+
+	.type-row { padding: 14px 0; border-bottom: 1px solid var(--color-border); }
+	.type-row:last-child { border-bottom: 0; }
+	.type-display { font-size: 48px; color: var(--color-primary); text-shadow: 3px 2px 0 var(--color-accent); }
+	.type-h1 { font-family: var(--font-display); font-weight: 800; font-size: 36px; letter-spacing: -0.03em; text-transform: uppercase; line-height: 0.9; }
+	.type-h2 { font-family: var(--font-display); font-weight: 800; font-size: 24px; letter-spacing: -0.03em; text-transform: uppercase; }
+	.type-body { font-size: 16px; max-width: 62ch; }
+	.marks { display: flex; gap: 28px; align-items: center; margin-top: 8px; }
+	.mark-card {
+		width: 88px;
+		height: 72px;
+		position: relative;
+		border: 1px solid transparent;
+	}
+
+	.control-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+	.stack { display: grid; gap: 10px; margin-top: 14px; }
+	.note { margin-top: 12px; font-size: 14px; color: var(--color-muted); max-width: 68ch; }
+	.empty {
+		margin-top: 14px;
+		padding: 18px;
+		border: 1px dashed var(--color-border);
+		border-radius: var(--radius-md);
+		color: var(--color-muted);
+	}
+	.space-list { list-style: none; margin: 20px 0 0; padding: 0; }
+	.space-list li { display: flex; align-items: center; gap: 14px; min-height: 40px; }
+	.gap-demo { display: flex; align-items: center; }
+	.gap-demo i {
+		width: 28px;
+		height: 28px;
+		background: var(--color-primary);
+		box-shadow: var(--shadow-sm);
+		display: block;
+	}
+	.gap-demo.g12 { gap: 12px; }
+	.gap-demo.g16 { gap: 16px; }
+	.gap-demo.g24 { gap: 24px; }
+	.gap-demo.g32 { gap: 32px; }
+
+	/* ── Mobile ────────────────────────────────────────────────────── */
+	.mobile {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 28px;
+		margin-top: 28px;
+		align-items: start;
+	}
+	@media (min-width: 880px) { .mobile { grid-template-columns: 300px 1fr; gap: 40px; } }
+	.phone {
+		width: 300px;
+		max-width: 100%;
+		margin: 0 auto;
+		padding: 10px;
+		background: var(--color-surface-foreground);
+		border-radius: 28px;
+		box-shadow: var(--shadow-lg);
+	}
+	.phone-inner {
+		background-color: var(--color-surface);
+		background-image: var(--paper-tooth);
+		background-size: var(--paper-tooth-size);
+		border-radius: 20px;
+		overflow: hidden;
+		padding: 12px;
+	}
+	.phone-status {
+		display: flex;
+		justify-content: space-between;
+		padding: 4px 6px 8px;
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: 0.08em;
+	}
+	.phone-sheet {
+		position: relative;
+		background: var(--color-surface-raised);
+		border: 1px solid var(--color-border);
+		padding: 22px 16px 12px;
+	}
+	.phone-sheet .crop { width: 8px; height: 8px; }
+	.phone-sheet .crop.tl { top: 6px; left: 6px; }
+	.phone-sheet .crop.tr { top: 6px; right: 6px; }
+	.phone-sheet .crop.bl { bottom: 6px; left: 6px; }
+	.phone-sheet .crop.br { bottom: 6px; right: 6px; }
+	.phone-sheet h4 {
+		margin-top: 8px;
+		font-size: 34px;
+		color: var(--color-primary);
+		text-shadow: 2px 2px 0 var(--color-accent);
+	}
+	.m-poster {
+		position: relative;
+		height: 72px;
+		margin-top: 12px;
+		border: 1px solid var(--color-border);
+		overflow: hidden;
+		isolation: isolate;
+		background: var(--color-surface-raised);
+	}
+	.m-poster .plate-blue { left: 6%; top: 10%; width: 70%; height: 80%; }
+	.m-poster .plate-pink { left: 28%; top: 22%; width: 48%; height: 60%; }
+	.m-poster .sun { width: 36px; height: 36px; top: 8px; right: 8px; }
+	.m-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		min-height: 48px;
+		border-bottom: 1px solid var(--color-border);
+	}
+	.m-row b { font-weight: 600; font-size: 14px; flex: 1; }
+	.m-btn {
+		width: 100%;
+		margin-top: 12px;
+		min-height: 48px;
+	}
+	.rules { margin: 0; padding: 0; list-style: none; }
+	.rules li {
+		padding: 14px 0;
+		border-bottom: 1px solid var(--color-border);
+		font-size: 15px;
+		color: var(--color-muted);
+	}
+	.rules li:last-child { border-bottom: 0; }
+	.rules b {
+		display: block;
+		color: var(--color-surface-foreground);
+		font-size: 15px;
+		font-weight: 700;
+		margin-bottom: 2px;
+	}
+
+	/* ── Off-style ─────────────────────────────────────────────────── */
+	.compare {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 16px;
+		margin-top: 24px;
+	}
+	@media (min-width: 800px) { .compare { grid-template-columns: 1fr 1fr; gap: 24px; } }
+	.cmp-off {
+		padding: 22px;
+		border-radius: 16px;
+		background: #f8fafc;
+		color: #64748b;
+		font-weight: 400;
+		box-shadow: 0 18px 40px rgb(15 23 42 / 0.12);
+		font-family: Inter, "Segoe UI", sans-serif;
+	}
+	.cmp-off .off-kicker {
+		font-size: 12px;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: #94a3b8;
+	}
+	.cmp-off h3 {
+		margin-top: 8px;
+		font-size: 22px;
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		color: #0f172a;
+		text-transform: none;
+	}
+	.cmp-off p { margin-top: 8px; font-size: 14px; line-height: 1.5; }
+	.cmp-off .off-btn {
+		display: inline-block;
+		margin-top: 16px;
+		padding: 10px 18px;
+		border-radius: 999px;
+		background: linear-gradient(180deg, #6366f1, #4f46e5);
+		color: white;
+		font-size: 14px;
+		font-weight: 600;
+		box-shadow: 0 8px 16px rgb(79 70 229 / 0.35);
+	}
+	.cmp-on {
+		position: relative;
+		padding: 28px 22px 18px;
+		background: var(--color-surface-raised);
+		color: var(--color-surface-foreground);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		box-shadow: var(--shadow-lg);
+	}
+	.cmp-on h3 {
+		margin-top: 8px;
+		font-family: var(--font-display);
+		font-weight: 800;
+		font-size: 28px;
+		letter-spacing: -0.03em;
+		text-transform: uppercase;
+		line-height: 0.9;
+		color: var(--color-primary);
+		text-shadow: 3px 2px 0 var(--color-accent);
+	}
+	.cmp-on p { margin-top: 10px; font-size: 14px; }
+	.cmp-on .btn { margin-top: 16px; }
+
+		@media (max-width: 640px) {
+		.hero h1 { font-size: 46px; text-shadow: 3px 2px 0 var(--color-accent); }
+		.hero-actions { display: grid; grid-template-columns: 1fr; }
+		.hero-actions .btn { width: 100%; min-height: 48px; }
+		.queue li { grid-template-columns: 28px minmax(0, 1fr) auto; min-height: 48px; }
+		.q-inks { display: none; }
+		.jobno { margin-left: 0; }
+		.sheet { padding: 28px 16px 14px; }
+		.crop { width: 10px; height: 10px; }
+		.crop.tl, .crop.tr { top: 8px; }
+		.crop.bl, .crop.br { bottom: 8px; }
+		.crop.tl, .crop.bl { left: 8px; }
+		.crop.tr, .crop.br { right: 8px; }
+		.phone-sheet .crop.tl { top: 6px; left: 6px; }
+		.phone-sheet .crop.tr { top: 6px; right: 6px; }
+		.phone-sheet .crop.bl { bottom: 6px; left: 6px; }
+		.phone-sheet .crop.br { bottom: 6px; right: 6px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.btn, .btn:hover, .btn:active { transition: none; transform: none; }
+	}
+</style>
+</head>
+<body>
+
+<header class="desk">
+	<article class="sheet">
+		<span class="crop tl"></span>
+		<span class="crop tr"></span>
+		<span class="crop bl"></span>
+		<span class="crop br"></span>
+
+		<div class="mast">
+			<div class="brand">
+				<span class="reg" aria-hidden="true"></span>
+				<div>
+					<p class="brand-name">Third Plate</p>
+					<p class="brand-sub mono">Riso press desk</p>
+				</div>
+			</div>
+			<p class="jobno mono">Job 184 · 31 Oct · 3 plates</p>
+			<ul class="drums">
+				<li><i class="drum drum-blue"></i><span class="mono">Blue</span></li>
+				<li><i class="drum drum-pink"></i><span class="mono">Pink</span></li>
+				<li><i class="drum drum-yellow"></i><span class="mono">Yellow</span></li>
+			</ul>
+		</div>
+
+		<div class="hero">
+			<div>
+				<p class="kicker mono">On press now</p>
+				<h1 class="display">Night<br>Market</h1>
+				<p class="hero-lede">Edition of 80. Blue, pink, and yellow on uncoated stock. The pink plate sits a few pixels off, on purpose.</p>
+				<div class="hero-actions">
+					<button class="btn" type="button">Send to press</button>
+					<button class="btn btn-quiet" type="button">Hold the run</button>
+				</div>
+			</div>
+			<div class="poster" aria-hidden="true">
+				<div class="plate plate-blue"></div>
+				<div class="plate plate-pink"></div>
+				<div class="sun"></div>
+				<div class="poster-copy">
+					<p class="poster-kicker mono">Plate 02 · Pink</p>
+					<p class="poster-title display">Night<br>Market</p>
+					<p class="poster-meta mono">Sat 31 Oct · Door 7</p>
+				</div>
+				<span class="stamp mono">Ed. 80</span>
+			</div>
+		</div>
+
+		<ol class="queue">
+			<li>
+				<span class="idx mono">01</span>
+				<span class="q-title">Night Market</span>
+				<span class="q-inks" aria-hidden="true"><i class="dot blue"></i><i class="dot pink"></i><i class="dot yellow"></i></span>
+				<span class="chip chip-press mono">On press</span>
+			</li>
+			<li>
+				<span class="idx mono">02</span>
+				<span class="q-title">Harbor Notes</span>
+				<span class="q-inks" aria-hidden="true"><i class="dot blue"></i><i class="dot pink"></i></span>
+				<span class="chip chip-dry mono">Drying</span>
+			</li>
+			<li>
+				<span class="idx mono">03</span>
+				<span class="q-title">Late Tram</span>
+				<span class="q-inks" aria-hidden="true"><i class="dot blue"></i><i class="dot yellow"></i></span>
+				<span class="chip mono">Queued</span>
+			</li>
+		</ol>
+	</article>
+</header>
+
+<main class="wrap">
+
+	<section class="section">
+		<p class="section-label mono">01 — Spot inks</p>
+		<h2>Three drums, then stop</h2>
+		<p class="intro">Blue is the action. Pink is the ghost plate and the stamp. Yellow is a fill that only soy black can sit on. The red drum is for a jam, not for decoration. Paper and soy black are the shop, not extra colors.</p>
+		<ul class="swatches">
+			<li class="swatch sw-desk"><b>surface</b><span>Uncoated desk</span></li>
+			<li class="swatch sw-sheet"><b>surface-raised</b><span>The sheet</span></li>
+			<li class="swatch sw-ink"><b>surface-foreground</b><span>Soy black</span></li>
+			<li class="swatch sw-muted"><b>muted</b><span>Captions only</span></li>
+			<li class="swatch sw-blue"><b>primary</b><span>Blue drum</span></li>
+			<li class="swatch sw-pink"><b>accent</b><span>Pink drum</span></li>
+			<li class="swatch sw-yellow"><b>ink-yellow</b><span>Yellow drum</span></li>
+			<li class="swatch sw-danger"><b>danger</b><span>Jam, not pink</span></li>
+		</ul>
+	</section>
+
+	<section class="section">
+		<p class="section-label mono">02 — Misregistration</p>
+		<h2>The shadow is another plate</h2>
+		<p class="intro">Offset, zero blur, pink ink. Where plates cross, multiply darkens them. Lining the plates up is the pressed state of a control, not the look of the page at rest.</p>
+		<div class="pair">
+			<div class="panel">
+				<h3>Off register · at rest</h3>
+				<div class="overprint">
+					<div class="op op-blue"></div>
+					<div class="op op-pink"></div>
+					<div class="op op-yellow"></div>
+				</div>
+				<p class="ghost display" style="margin-top:16px">Night</p>
+			</div>
+			<div class="panel">
+				<h3>In register · pressed</h3>
+				<div class="overprint">
+					<div class="op op-blue aligned"></div>
+					<div class="op op-pink aligned"></div>
+					<div class="op op-yellow" style="left:150px"></div>
+				</div>
+				<p class="ghost display flat" style="margin-top:16px">Night</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<p class="section-label mono">03 — Type and marks</p>
+		<h2>Poster voice, ticket voice</h2>
+		<p class="intro">Heavy grotesque for the job name and the buttons. A plain grotesque for sentences. Mono, tracked out, for everything a printer would write in the margin.</p>
+		<div class="panel" style="margin-top:20px">
+			<div class="type-row">
+				<p class="mono muted">Display · 64 / 76</p>
+				<p class="display type-display">Night Market</p>
+			</div>
+			<div class="type-row">
+				<p class="mono muted">H1 · uppercase grotesque</p>
+				<p class="type-h1">Harbor Notes</p>
+			</div>
+			<div class="type-row">
+				<p class="mono muted">H2</p>
+				<p class="type-h2">Late Tram</p>
+			</div>
+			<div class="type-row">
+				<p class="mono muted">Body · 16 / 1.5</p>
+				<p class="type-body">Count the sheets, name the drums, and leave a margin for the crop. This is a job ticket, so the paragraph stays short and the measure stays narrow.</p>
+			</div>
+			<div class="type-row">
+				<p class="mono muted">Registration · 12</p>
+				<p class="mono">Job 184 · Plate 02 · Pink · 80%</p>
+			</div>
+		</div>
+		<div class="marks">
+			<div class="mark-card">
+				<span class="crop tl"></span>
+				<span class="crop tr"></span>
+				<span class="crop bl"></span>
+				<span class="crop br"></span>
+			</div>
+			<span class="reg" aria-hidden="true"></span>
+			<p class="mono muted">Crop arms and one registration cross per sheet</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<p class="section-label mono">04 — Controls</p>
+		<h2>Press the plate into register</h2>
+		<p class="intro">Hover lengthens the pink ghost. Active lines it up with the blue. Focus is a hard soy ring. Disabled is an empty drum: dashed rule, no ghost, muted type.</p>
+		<div class="control-row" style="margin-top:20px">
+			<button class="btn" type="button">Send to press</button>
+			<button class="btn is-shifted" type="button">Hover</button>
+			<button class="btn is-pressed" type="button">Pressed</button>
+			<button class="btn is-focused" type="button">Focused</button>
+			<button class="btn btn-quiet" type="button">Hold the run</button>
+			<button class="btn btn-danger" type="button">Clear jam</button>
+			<button class="btn" type="button" disabled>Empty drum</button>
+		</div>
+		<div class="pair">
+			<div>
+				<label class="mono muted" for="edition">Edition size</label>
+				<input class="field" id="edition" type="text" value="80 sheets" style="margin-top:8px">
+				<label class="mono muted" for="edition-on" style="display:block;margin-top:14px">Focused · yellow plate</label>
+				<input class="field is-focused" id="edition-on" type="text" value="80 sheets" style="margin-top:8px">
+				<label class="mono muted" for="edition-bad" style="display:block;margin-top:14px">Error · red drum</label>
+				<input class="field is-error" id="edition-bad" type="text" value="0" aria-invalid="true" style="margin-top:8px">
+				<p class="note">Drum jam — pink. The red plate is the error. Pink stays the ghost.</p>
+			</div>
+			<div>
+				<div class="panel">
+					<h3>Queue</h3>
+					<ol class="queue" style="margin-top:0">
+						<li>
+							<span class="idx mono">04</span>
+							<span class="q-title">Soup Sunday</span>
+							<span class="q-inks"><i class="dot yellow"></i><i class="dot pink"></i></span>
+							<span class="chip chip-jam mono">Jam</span>
+						</li>
+					</ol>
+					<div class="empty mono">No sheet on the bed</div>
+				</div>
+				<ul class="space-list">
+					<li><span class="mono muted">12</span><span class="gap-demo g12"><i></i><i></i></span></li>
+					<li><span class="mono muted">16</span><span class="gap-demo g16"><i></i><i></i></span></li>
+					<li><span class="mono muted">24</span><span class="gap-demo g24"><i></i><i></i></span></li>
+					<li><span class="mono muted">32</span><span class="gap-demo g32"><i></i><i></i></span></li>
+				</ul>
+				<p class="note">Gaps stay wide enough that the pink plate, which hangs right and down, does not land on the next row.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<p class="section-label mono">05 — Mobile</p>
+		<h2>The same desk, one column</h2>
+		<p class="intro">The phone shows the press desk, not a different product. The poster stacks above the queue, the job number wraps under the wordmark, and the primary action becomes a full-width plate.</p>
+		<div class="mobile">
+			<div class="phone">
+				<div class="phone-inner">
+					<div class="phone-status"><span>9:41</span><span>JOB 184</span></div>
+					<div class="phone-sheet">
+						<span class="crop tl"></span>
+						<span class="crop tr"></span>
+						<span class="crop bl"></span>
+						<span class="crop br"></span>
+						<div class="brand">
+							<span class="reg" aria-hidden="true"></span>
+							<div>
+								<p class="brand-name" style="font-size:14px">Third Plate</p>
+								<p class="mono muted">3 plates</p>
+							</div>
+						</div>
+						<p class="kicker mono" style="margin-top:12px">On press now</p>
+						<h4 class="display">Night<br>Market</h4>
+						<div class="m-poster" aria-hidden="true">
+							<div class="plate plate-blue"></div>
+							<div class="plate plate-pink"></div>
+							<div class="sun"></div>
+						</div>
+						<div class="m-row">
+							<span class="idx mono">01</span>
+							<b>Night Market</b>
+							<span class="chip chip-press mono">On press</span>
+						</div>
+						<div class="m-row">
+							<span class="idx mono">02</span>
+							<b>Harbor Notes</b>
+							<span class="chip chip-dry mono">Drying</span>
+						</div>
+						<button class="btn m-btn" type="button">Send to press</button>
+					</div>
+				</div>
+			</div>
+			<ul class="rules">
+				<li><b>One column under 720px</b>The poster stacks above the queue. Ink dots on a queue row drop away before the title does. The job number wraps under the wordmark instead of squeezing it.</li>
+				<li><b>Type steps down, the ghost shrinks with it</b>Display goes from 76px to 46px. The pink offset goes from 5px/3px to 3px/2px so the second plate does not collide with the next line.</li>
+				<li><b>Crop marks stay, smaller</b>Arms go from 14px to about 10px and sit closer to the corner. They are still 1px soy rules. The sheet never loses them to save space.</li>
+				<li><b>Targets grow, radius does not</b>Buttons become full width at 48px. Queue rows are at least 48px. Drums, if they remain targets, grow from 22px to 36px. Corners stay at radius-xl or sharper.</li>
+				<li><b>The shell is the device</b>The phone frame is rounded because it is a phone. Everything inside the sheet stays on the print radius. A pill button does not appear just because the screen is small.</li>
+				<li><b>Press replaces hover</b>There is no hover on a thumb. Active snaps the ghost to zero — the plates in register — and that is the whole touch response. No label exists only in a hover state.</li>
+				<li><b>Halftone pitch is fixed</b>Dots stay at 4px. They stay inside the poster plates. They are not enlarged, and they are not drawn behind type under 16px.</li>
+			</ul>
+		</div>
+	</section>
+
+	<section class="section">
+		<p class="section-label mono">06 — Off-style, for contrast</p>
+		<h2>What leaves the shop</h2>
+		<div class="compare">
+			<div class="cmp-off">
+				<p class="off-kicker">Dashboard</p>
+				<h3>Your run is ready</h3>
+				<p>Soft card, pill button, blurred shadow, cool gray type. The default look this system is built against.</p>
+				<span class="off-btn">Continue</span>
+			</div>
+			<div class="cmp-on">
+				<span class="crop tl"></span>
+				<span class="crop tr"></span>
+				<span class="crop bl"></span>
+				<span class="crop br"></span>
+				<p class="mono" style="color:var(--color-accent)">Job 184 · on press</p>
+				<h3>Your run is ready</h3>
+				<p>Same words on a sheet: soy rule, crop marks, blue plate, pink ghost, mono ticket label.</p>
+				<button class="btn" type="button">Send to press</button>
+			</div>
+		</div>
+		<p class="note">Also out: glass blur, clay sheen, a 4px black poster frame, lime sticker borders, beveled silver chrome, and a white serif magazine column.</p>
+	</section>
+
+</main>
+</body>
+</html>

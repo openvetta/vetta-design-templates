@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "riso-press",
+	"name": "Riso Press",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 125,
+	"category": "print",
+	"vibe": "light",
+	"tags": [
+		"print",
+		"tactile",
+		"paper",
+		"halftone",
+		"light",
+		"craft"
+	],
+	"blurb": "A risograph press desk: warm uncoated paper, three flat spot inks, halftone plates, crop marks, and a hard misregistered second plate where other systems would put a shadow.",
+	"tagline": {
+		"en": "Uncoated paper, three inks, a shifted plate",
+		"zh": "未涂布纸、三色油墨、错位套印"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://www.creativebloq.com/design/graphic-design/texture-warmth-and-tactile-rebellion-the-big-graphic-design-trends-for-2026",
+		"note": "Authored by Grok Bot. Original Vetta system distilled from 2026 reporting on anti-AI craft and risograph print texture. No third-party screenshots, markup, or brand assets. Not affiliated with Riso Kagaku."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}
