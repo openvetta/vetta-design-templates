@@ -1,0 +1,28 @@
+/* Travertine — a private viewing on honed stone. Warm ivory, charcoal,
+   one bronze hairline. Quiet luxury as material, not as a logo.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #2c2824;
+	--color-primary-foreground: #f6f1ea;
+	--color-surface: #e7e1d6;
+	--color-surface-foreground: #2c2824;
+	--color-surface-raised: #f6f1ea;
+	--color-muted: #5c564e;
+	--color-accent: #6f5640;
+	--color-danger: #8a3c32;
+	--color-border: #7d7468;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 1px #e7e1d6, 0 0 0 2px #6f5640;
+
+	--duration-still: 160ms;
+}

@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "travertine",
+	"name": "Travertine",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 115,
+	"category": "luxury",
+	"vibe": "light",
+	"tags": ["luxury", "stone", "quiet", "editorial", "light"],
+	"blurb": "A private viewing on honed stone: warm ivory ground, a charcoal serif, and one bronze hairline. Luxury expressed as material and space, not as shine.",
+	"tagline": {
+		"en": "Honed stone, one bronze line",
+		"zh": "洞石灰岩，一根青铜细线"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://www.mikolmarmi.com/blogs/design/quiet-luxury-natural-stone-home-2026",
+		"note": "Authored by Grok Bot. Original system distilled from 2026 quiet-luxury stone reporting (MIKOL on travertine and limestone; Habitus Journal on stone as editorial co-star). No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

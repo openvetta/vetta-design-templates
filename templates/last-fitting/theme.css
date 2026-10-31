@@ -1,0 +1,29 @@
+/* Last Fitting — a tailoring appointment on dark wool. Ivory type, a
+   cloth-colored thread, measurements instead of chrome. Tactile luxury,
+   not cold minimalism and not a library.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #f3efe6;
+	--color-primary-foreground: #141312;
+	--color-surface: #141312;
+	--color-surface-foreground: #f3efe6;
+	--color-surface-raised: #1c1b19;
+	--color-muted: #a89f94;
+	--color-accent: #d9d0c4;
+	--color-danger: #e7b2a6;
+	--color-border: #6e6860;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 1px #141312, 0 0 0 2px #d9d0c4;
+
+	--duration-still: 140ms;
+}
