@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "frutiger-aero",
+	"name": "Frutiger Aero",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 115,
+	"category": "retro",
+	"vibe": "light",
+	"tags": ["retro", "gloss", "sky", "light", "nature"],
+	"blurb": "A glossy day forecast: open sky, water-bead controls, leaf green, and a painted highlight. Optimistic 2000s aero, in daylight.",
+	"tagline": {
+		"en": "Glossy sky, water, round buttons",
+		"zh": "晴空、水珠、发亮的圆按钮"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://www.kittl.com/blogs/frutiger-aero-aesthetic-stl/",
+		"note": "Authored by Grok Bot. Original system distilled from 2026 Frutiger Aero / neo-aero reporting (Kittl, aesthetics 2026). No third-party assets. Not affiliated with any OS vendor."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

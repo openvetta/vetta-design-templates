@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "y3k-chrome",
+	"name": "Y3K Chrome",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 87,
+	"category": "future",
+	"vibe": "dark",
+	"tags": ["future", "chrome", "dark", "metal", "iridescent"],
+	"blurb": "Liquid chrome in a void: silver metal type, one iridescent orb, and hairline specs. Hyperfuturism without glass blur.",
+	"tagline": {
+		"en": "Liquid chrome in a void",
+		"zh": "虚空里的液态铬"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://aigoodies.beehiiv.com/p/aesthetics-2026",
+		"note": "Authored by Grok Bot. Original system distilled from 2026 Y3K hyperfuturism and liquid-chrome reporting. No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

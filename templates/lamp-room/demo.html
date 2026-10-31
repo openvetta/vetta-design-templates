@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lamp Room — component reference</title>
+<style>
+	:root {
+		--color-primary: #e07a3d;
+		--color-primary-foreground: #1a1210;
+		--color-surface: #1a1210;
+		--color-surface-foreground: #f3e6d4;
+		--color-surface-raised: #261a16;
+		--color-muted: #c4b09a;
+		--color-accent: #e6c27a;
+		--color-danger: #e15a4a;
+		--color-border: #6b4a38;
+		--color-spine-wine: #6e2430;
+		--color-spine-forest: #24362c;
+		--color-spine-navy: #1c3048;
+		--radius-sm: 2px; --radius-md: 2px; --radius-lg: 3px; --radius-xl: 4px; --radius-2xl: 4px; --radius-full: 9999px;
+		--shadow-sm: 0 6px 16px rgb(0 0 0 / 0.35);
+		--shadow-md: 0 12px 28px rgb(0 0 0 / 0.45);
+		--shadow-lg: 0 20px 40px rgb(0 0 0 / 0.55);
+		--shadow-focus: 0 0 0 2px #1a1210, 0 0 0 4px #e6c27a;
+		--serif: "Iowan Old Style", Palatino, "Liberation Serif", Georgia, serif;
+		--sans: Inter, "Liberation Sans", "Noto Sans", sans-serif;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body { margin: 0; background: var(--color-surface); color: var(--color-surface-foreground); font-family: var(--serif); font-size: 17px; line-height: 1.55; }
+	h1, h2, p { margin: 0; }
+	button { font-family: var(--sans); }
+	.cover { padding: 36px 20px 8px; }
+	.desk { max-width: 840px; margin: 0 auto; background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow-lg); }
+	.kicker { font-family: var(--sans); letter-spacing: 0.16em; text-transform: uppercase; font-size: 12px; color: var(--color-accent); }
+	h1 { font-size: 48px; font-weight: 500; margin-top: 8px; }
+	.shelf { display: flex; gap: 0; margin-top: 22px; height: 140px; }
+	.spine { width: 72px; height: 100%; padding: 10px 8px; color: var(--color-surface-foreground); display: flex; align-items: flex-end; font-size: 13px; }
+	.hold { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--color-border); }
+	.hold strong { font-weight: 500; }
+	.due { color: var(--color-danger); font-family: var(--sans); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+	.btn { min-height: 44px; padding: 0 16px; border-radius: var(--radius-sm); border: 1px solid var(--color-primary); background: var(--color-primary); color: var(--color-primary-foreground); cursor: pointer; font-weight: 600; }
+	.btn.quiet { background: transparent; color: var(--color-accent); border-color: var(--color-accent); }
+	.btn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.wrap { max-width: 840px; margin: 0 auto; padding: 12px 20px 80px; }
+	.section { margin-top: 52px; }
+	.section h2 { font-weight: 500; font-size: 32px; margin-top: 6px; }
+	.intro { color: var(--color-muted); margin-top: 8px; max-width: 56ch; }
+	.swatches { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; list-style: none; padding: 0; margin: 16px 0 0; }
+	@media (min-width: 720px) { .swatches { grid-template-columns: repeat(4, 1fr); } }
+	.swatch { min-height: 84px; padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); font-size: 13px; display: flex; flex-direction: column; justify-content: space-between; }
+	.mobile { display: grid; gap: 18px; margin-top: 16px; }
+	@media (min-width: 860px) { .mobile { grid-template-columns: 280px 1fr; } }
+	.phone { width: 280px; max-width: 100%; margin: 0 auto; background: #0e0a09; border-radius: 24px; padding: 10px; }
+	.phone-in { background: var(--color-surface); border-radius: 16px; padding: 14px; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 12px 0; border-bottom: 1px solid var(--color-border); color: var(--color-muted); }
+	.rules b { display: block; color: var(--color-surface-foreground); font-weight: 500; }
+	.compare { display: grid; gap: 12px; margin-top: 16px; }
+	@media (min-width: 760px) { .compare { grid-template-columns: 1fr 1fr; } }
+	.cmp-off { background: #f8fafc; color: #64748b; border-radius: 16px; padding: 16px; font-family: Inter, sans-serif; }
+	.cmp-off h3 { color: #0f172a; font-family: Inter, sans-serif; font-size: 22px; }
+	.cmp-on { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 16px; }
+	.cmp-on h3 { font-weight: 500; font-size: 26px; }
+</style>
+</head>
+<body>
+<header class="cover">
+	<article class="desk">
+		<p class="kicker">Hold desk · after hours</p>
+		<h1>Lamp Room</h1>
+		<div class="shelf" aria-hidden="true">
+			<div class="spine" style="background:var(--color-spine-wine)">Poems</div>
+			<div class="spine" style="background:var(--color-spine-forest)">Moss</div>
+			<div class="spine" style="background:var(--color-spine-navy)">Atlas</div>
+		</div>
+		<div class="hold">
+			<div><strong>Atlas of minor rivers</strong><br><span style="color:var(--color-muted)">Shelf 3 · due Friday</span></div>
+			<span class="due">One day left</span>
+		</div>
+		<div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+			<button class="btn" type="button">Renew the hold</button>
+			<button class="btn quiet" type="button">Return</button>
+		</div>
+	</article>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="kicker">01 — Light</p>
+		<h2>Candle, paper, three dyes</h2>
+		<p class="intro">Amber is the action. Spine colors are objects on the shelf, not buttons.</p>
+		<ul class="swatches">
+			<li class="swatch" style="background:var(--color-surface)"><b>surface</b>The room</li>
+			<li class="swatch" style="background:var(--color-primary);color:var(--color-primary-foreground)"><b>primary</b>Candle</li>
+			<li class="swatch" style="background:var(--color-accent);color:#1a1210"><b>accent</b>Brass</li>
+			<li class="swatch" style="background:var(--color-spine-wine)"><b>spine</b>Wine dye</li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="kicker">02 — Shelf</p>
+		<h2>Books touch</h2>
+		<p class="intro">No gap between spines. A gap would turn them into cards.</p>
+	</section>
+	<section class="section">
+		<p class="kicker">03 — Type</p>
+		<h2>Serif for the title, plain for the button</h2>
+		<p class="intro">The room speaks in a text face. The action is a small grotesque so it reads as a control.</p>
+	</section>
+	<section class="section">
+		<p class="kicker">04 — Controls</p>
+		<h2>Amber fill, brass quiet</h2>
+		<button class="btn" type="button">Renew the hold</button>
+	</section>
+	<section class="section">
+		<p class="kicker">05 — Mobile</p>
+		<h2>The shelf becomes a short stack</h2>
+		<div class="mobile">
+			<div class="phone">
+				<div class="phone-in">
+					<p class="kicker">Hold</p>
+					<h3 style="font-weight:500;font-size:32px;margin-top:6px">Lamp</h3>
+					<div class="shelf" style="height:88px;margin-top:12px">
+						<div class="spine" style="background:var(--color-spine-wine);width:56px">Poems</div>
+						<div class="spine" style="background:var(--color-spine-navy);width:56px">Atlas</div>
+					</div>
+					<button class="btn" type="button" style="width:100%;margin-top:12px">Renew</button>
+				</div>
+			</div>
+			<ul class="rules">
+				<li><b>Three spines become two</b>The third title moves into the list. Spines stay touching.</li>
+				<li><b>Title steps 48 → 32</b>Weight stays 500. It does not jump to a bold sans.</li>
+				<li><b>The device radius is the phone</b>Inside, cards stay at 2–4px. The shell's curve is not a component.</li>
+				<li><b>The renew button is full width</b>44px, candle fill, dark type. Brass is the quiet action only.</li>
+				<li><b>Overdue stays a word</b>"One day left" remains. Color does not carry it alone.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="kicker">06 — Off-style</p>
+		<h2>Daylight is the wrong room</h2>
+		<div class="compare">
+			<div class="cmp-off"><h3>Your hold</h3><p>Cool gray, app sans, soft shadow.</p></div>
+			<div class="cmp-on"><h3>Your hold</h3><p>Oxblood, serif, a candle button.</p></div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

@@ -1,0 +1,28 @@
+/* Sumi Ink — a tea-room book. Rice paper, soy-black ink, one cinnabar seal.
+   Wabi-sabi quiet, not a magazine and not a print shop.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #1c1b19;
+	--color-primary-foreground: #f2eee6;
+	--color-surface: #f2eee6;
+	--color-surface-foreground: #1c1b19;
+	--color-surface-raised: #faf8f3;
+	--color-muted: #5f5b55;
+	--color-accent: #c4372c;
+	--color-danger: #8e1d16;
+	--color-border: #1c1b19;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 2px;
+	--radius-full: 9999px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 1px #f2eee6, 0 0 0 3px #c4372c;
+
+	--duration-brush: 180ms;
+}

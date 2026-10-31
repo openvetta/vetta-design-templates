@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "lamp-room",
+	"name": "Lamp Room",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 55,
+	"category": "editorial",
+	"vibe": "dark",
+	"tags": ["editorial", "dark", "library", "academia", "serif"],
+	"blurb": "A night library hold desk: oxblood dark, candle amber, and dyed book spines. Scholarly dark, not a cream essay page.",
+	"tagline": {
+		"en": "Candlelight on a night library",
+		"zh": "夜读室，烛火与旧书脊"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://digitalheroesco.com/styles/",
+		"note": "Authored by Grok Bot. Original system distilled from 2026 dark-academia style reporting. No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

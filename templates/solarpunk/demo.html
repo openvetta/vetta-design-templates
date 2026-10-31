@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solarpunk — component reference</title>
+<style>
+	:root {
+		--color-primary: #1f5c34;
+		--color-primary-foreground: #f6f3e6;
+		--color-surface: #f4efe2;
+		--color-surface-foreground: #1b2b20;
+		--color-surface-raised: #fff9ee;
+		--color-muted: #3f5340;
+		--color-accent: #8a5a00;
+		--color-danger: #9a2c22;
+		--color-border: #d9d0bc;
+		--color-sun: #e2a008;
+		--color-sun-foreground: #1b1404;
+		--radius-sm: 10px; --radius-md: 14px; --radius-lg: 18px; --radius-xl: 22px; --radius-2xl: 28px; --radius-full: 9999px;
+		--shadow-sm: 0 6px 14px rgb(27 43 32 / 0.08);
+		--shadow-md: 0 10px 22px rgb(27 43 32 / 0.1);
+		--shadow-lg: 0 16px 32px rgb(27 43 32 / 0.12);
+		--shadow-focus: 0 0 0 3px #fff9ee, 0 0 0 6px #1f5c34;
+		--serif: "Iowan Old Style", Palatino, "Liberation Serif", Georgia, serif;
+		--sans: Inter, "Liberation Sans", "Noto Sans", sans-serif;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body { margin: 0; background: var(--color-surface); color: var(--color-surface-foreground); font-family: var(--sans); }
+	h1, h2, p { margin: 0; }
+	button { font: inherit; }
+	.cover { padding: 32px 20px 8px; }
+	.grid { max-width: 920px; margin: 0 auto; display: grid; gap: 20px; }
+	@media (min-width: 840px) { .grid { grid-template-columns: 280px 1fr; align-items: center; } }
+	.sunwrap { text-align: center; }
+	.sun { width: 140px; height: 140px; margin: 0 auto; border-radius: 50%; background: var(--color-sun); box-shadow: 0 0 0 14px rgb(226 160 8 / 0.28); }
+	h1 { font-family: var(--serif); font-weight: 500; font-size: 48px; margin-top: 12px; }
+	.kicker { color: var(--color-accent); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+	.panel { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-sm); }
+	.meter { height: 12px; background: var(--color-border); border-radius: var(--radius-full); margin-top: 10px; overflow: hidden; }
+	.meter span { display: block; height: 100%; width: 84%; background: var(--color-primary); }
+	.figure { font-size: 40px; font-weight: 650; font-weight: 600; letter-spacing: -0.03em; }
+	.plots { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+	.plot { border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 10px; }
+	.plot b { display: block; font-family: var(--serif); font-weight: 500; }
+	.plot span { color: var(--color-muted); font-size: 13px; }
+	.btn { min-height: 44px; padding: 0 16px; border: 0; border-radius: var(--radius-md); background: var(--color-primary); color: var(--color-primary-foreground); font-weight: 650; font-weight: 600; cursor: pointer; }
+	.btn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.wrap { max-width: 920px; margin: 0 auto; padding: 8px 20px 72px; }
+	.section { margin-top: 48px; }
+	.section h2 { font-family: var(--serif); font-weight: 500; font-size: 32px; }
+	.intro { color: var(--color-muted); margin-top: 8px; max-width: 58ch; }
+	.swatches { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; list-style: none; padding: 0; margin: 16px 0 0; }
+	@media (min-width: 720px) { .swatches { grid-template-columns: repeat(4, 1fr); } }
+	.swatch { min-height: 84px; border-radius: var(--radius-md); border: 1px solid var(--color-border); padding: 10px; display: flex; flex-direction: column; justify-content: space-between; }
+	.mobile { display: grid; gap: 16px; margin-top: 14px; }
+	@media (min-width: 860px) { .mobile { grid-template-columns: 280px 1fr; } }
+	.phone { width: 280px; max-width: 100%; margin: 0 auto; background: #1b2b20; border-radius: 28px; padding: 10px; }
+	.phone-in { background: var(--color-surface); border-radius: 20px; padding: 14px; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 10px 0; border-bottom: 1px solid var(--color-border); color: var(--color-muted); }
+	.rules b { display: block; color: var(--color-surface-foreground); }
+	.compare { display: grid; gap: 12px; margin-top: 14px; }
+	@media (min-width: 720px) { .compare { grid-template-columns: 1fr 1fr; } }
+	.cmp-off { background: #052e16; color: #86efac; border-radius: 8px; padding: 16px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+	.cmp-off h3 { color: #bbf7d0; font-size: 22px; }
+	.cmp-on { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 16px; }
+	.cmp-on h3 { font-family: var(--serif); font-weight: 500; font-size: 28px; text-transform: none; letter-spacing: 0; }
+</style>
+</head>
+<body>
+<header class="cover">
+	<div class="grid">
+		<div class="sunwrap">
+			<div class="sun" aria-hidden="true"></div>
+			<p class="kicker">Commons · roof 2</p>
+			<h1>Shared sun</h1>
+		</div>
+		<article class="panel">
+			<p class="kicker">Today's yield</p>
+			<p class="figure">84%</p>
+			<div class="meter" aria-hidden="true"><span></span></div>
+			<div class="plots">
+				<div class="plot"><b>Herbs</b><span>12 kg this week</span></div>
+				<div class="plot"><b>Roof</b><span>31 kWh shared</span></div>
+			</div>
+			<button class="btn" type="button" style="margin-top:14px">Open the log</button>
+		</article>
+	</div>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="kicker">01 — Garden</p>
+		<h2>Linen, leaf, brass</h2>
+		<p class="intro">The bright sun is a disc. Small type uses the darker brass.</p>
+		<ul class="swatches">
+			<li class="swatch" style="background:var(--color-surface)"><b>surface</b>Linen</li>
+			<li class="swatch" style="background:var(--color-primary);color:var(--color-primary-foreground)"><b>primary</b>Leaf</li>
+			<li class="swatch" style="background:var(--color-accent);color:#fff9ee"><b>accent</b>Brass</li>
+			<li class="swatch" style="background:var(--color-sun);color:var(--color-sun-foreground)"><b>sun</b>Disc only</li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="kicker">02 — Meter</p>
+		<h2>A shared figure</h2>
+		<p class="intro">One percent, one bar, two plots. Not a wall of equal tiles.</p>
+	</section>
+	<section class="section">
+		<p class="kicker">03 — Type</p>
+		<h2>Serif name, plain figures</h2>
+		<p class="intro">The co-op name is a text face. The yield is a grotesque so the number reads as a tool.</p>
+	</section>
+	<section class="section">
+		<p class="kicker">04 — Controls</p>
+		<h2>Leaf, not a game press</h2>
+		<button class="btn" type="button">Open the log</button>
+	</section>
+	<section class="section">
+		<p class="kicker">05 — Mobile</p>
+		<h2>The sun stacks above the meter</h2>
+		<div class="mobile">
+			<div class="phone">
+				<div class="phone-in">
+					<div class="sun" style="width:72px;height:72px;box-shadow:0 0 0 8px rgb(226 160 8 / 0.28)"></div>
+					<h3 style="font-family:var(--serif);font-weight:500;font-size:32px;margin-top:8px">Shared sun</h3>
+					<p class="figure" style="font-size:32px">84%</p>
+					<div class="meter"><span></span></div>
+					<button class="btn" type="button" style="width:100%;margin-top:12px">Open the log</button>
+				</div>
+			</div>
+			<ul class="rules">
+				<li><b>The split collapses</b>Sun, then name, then meter. Plots can sit under the button.</li>
+				<li><b>The disc shrinks 140 → 72</b>The ring shrinks with it. It stays one disc.</li>
+				<li><b>The figure steps 40 → 32</b>It stays the grotesque. The name stays the serif.</li>
+				<li><b>The button is full width</b>Leaf fill, 14px radius, not a pill and not a 3D slab.</li>
+				<li><b>The shell is the device</b>Inside, cards keep the linen radius. No chunky uppercase arrives.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="kicker">06 — Off-style</p>
+		<h2>Game green is not a co-op</h2>
+		<div class="compare">
+			<div class="cmp-off"><h3>84% POWER</h3><p>Shouted, electric, black.</p></div>
+			<div class="cmp-on"><h3>84% shared</h3><p>Linen card, leaf meter, a quiet name.</p></div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

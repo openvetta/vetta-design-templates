@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "solarpunk",
+	"name": "Solarpunk",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 152,
+	"category": "civic",
+	"vibe": "light",
+	"tags": ["civic", "eco", "light", "sun", "community"],
+	"blurb": "A neighborhood power co-op: linen paper, leaf green, and a brass sun. Technology drawn like a plant, owned in common.",
+	"tagline": {
+		"en": "Linen, leaf, a shared sun",
+		"zh": "亚麻、叶绿、公共的太阳"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://designdrop.ghost.io/solarpunk-aesthetic-eco-futurism-2026/",
+		"note": "Authored by Grok Bot. Original system distilled from 2026 solarpunk reporting (Design Drop). No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-10-31"
+}

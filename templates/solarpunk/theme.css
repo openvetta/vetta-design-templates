@@ -1,0 +1,31 @@
+/* Solarpunk — a neighborhood power co-op. Linen, leaf, and brass sun.
+   Civic optimism: the machine behaves like a plant. Not a game, not a shop.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #1f5c34;
+	--color-primary-foreground: #f6f3e6;
+	--color-surface: #f4efe2;
+	--color-surface-foreground: #1b2b20;
+	--color-surface-raised: #fff9ee;
+	--color-muted: #3f5340;
+	--color-accent: #8a5a00;
+	--color-danger: #9a2c22;
+	--color-border: #d9d0bc;
+
+	--color-sun: #e2a008;
+	--color-sun-foreground: #1b1404;
+
+	--radius-sm: 10px;
+	--radius-md: 14px;
+	--radius-lg: 18px;
+	--radius-xl: 22px;
+	--radius-2xl: 28px;
+	--radius-full: 9999px;
+
+	--shadow-sm: 0 6px 14px rgb(27 43 32 / 0.08);
+	--shadow-md: 0 10px 22px rgb(27 43 32 / 0.1);
+	--shadow-lg: 0 16px 32px rgb(27 43 32 / 0.12);
+	--shadow-focus: 0 0 0 3px #fff9ee, 0 0 0 6px #1f5c34;
+
+	--duration-grow: 180ms;
+}

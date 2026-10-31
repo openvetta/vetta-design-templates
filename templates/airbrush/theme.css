@@ -1,0 +1,31 @@
+/* Airbrush — studio color fog. Hot pink, cyan, and saffron haze on a pale
+   ground. Soft edges, no skeuomorph, no clay thickness.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #c2186a;
+	--color-primary-foreground: #fff5f9;
+	--color-surface: #f7f1f4;
+	--color-surface-foreground: #2a2030;
+	--color-surface-raised: #fff8fb;
+	--color-muted: #5e4d63;
+	--color-accent: #0e7490;
+	--color-danger: #b42318;
+	--color-border: #e4d5de;
+
+	--color-saffron: #f0b429;
+	--color-saffron-foreground: #2a1c08;
+
+	--radius-sm: 16px;
+	--radius-md: 20px;
+	--radius-lg: 28px;
+	--radius-xl: 36px;
+	--radius-2xl: 48px;
+	--radius-full: 9999px;
+
+	--shadow-sm: 0 10px 28px rgb(194 24 106 / 0.12);
+	--shadow-md: 0 16px 36px rgb(14 116 144 / 0.14);
+	--shadow-lg: 0 24px 48px rgb(194 24 106 / 0.16);
+	--shadow-focus: 0 0 0 3px #fff8fb, 0 0 0 6px #c2186a;
+
+	--duration-haze: 200ms;
+}

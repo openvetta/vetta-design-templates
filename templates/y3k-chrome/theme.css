@@ -1,0 +1,31 @@
+/* Y3K Chrome — liquid metal in a void. Silver type, one iridescent orb,
+   no glass blur. Hyperfuturism, not nocturne glazing.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #e8eef8;
+	--color-primary-foreground: #101218;
+	--color-surface: #07080d;
+	--color-surface-foreground: #eef1f6;
+	--color-surface-raised: #12131c;
+	--color-muted: #a7b0c2;
+	--color-accent: #7af0ff;
+	--color-danger: #ff5c7a;
+	--color-border: #2c3344;
+
+	--color-iris: #d7a0ff;
+
+	--radius-sm: 2px;
+	--radius-md: 4px;
+	--radius-lg: 8px;
+	--radius-xl: 12px;
+	--radius-2xl: 16px;
+	--radius-full: 9999px;
+
+	--shadow-sm: 0 0 0 1px rgb(232 238 248 / 0.28);
+	--shadow-md: 0 0 0 1px rgb(232 238 248 / 0.4), 0 10px 28px rgb(122 240 255 / 0.12);
+	--shadow-lg: 0 0 0 1px rgb(232 238 248 / 0.5), 0 18px 40px rgb(215 160 255 / 0.16);
+	--shadow-focus: 0 0 0 2px #07080d, 0 0 0 4px #7af0ff;
+
+	--metal: linear-gradient(180deg, #ffffff 0%, #d5deea 38%, #8b97ab 50%, #f4f7fb 62%, #b7c3d6 100%);
+	--duration-glide: 180ms;
+}

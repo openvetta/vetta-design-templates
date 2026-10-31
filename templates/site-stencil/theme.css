@@ -1,0 +1,30 @@
+/* Site Stencil — a construction-site board. Concrete ground, hazard yellow,
+   and black stencil type. Utilitarian 2026: signage, not a poster.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #f0c400;
+	--color-primary-foreground: #161616;
+	--color-surface: #e8e6e1;
+	--color-surface-foreground: #161616;
+	--color-surface-raised: #f6f5f2;
+	--color-muted: #4d4d4d;
+	--color-accent: #161616;
+	--color-danger: #c42020;
+	--color-border: #161616;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 9999px;
+
+	/* Depth is a second black rule, not a drop and not a bevel. */
+	--shadow-sm: 0 0 0 1px #161616;
+	--shadow-md: 0 0 0 2px #161616;
+	--shadow-lg: 0 0 0 3px #161616;
+	--shadow-focus: 0 0 0 2px #e8e6e1, 0 0 0 4px #161616;
+
+	--hazard: repeating-linear-gradient(-45deg, #161616 0 10px, #f0c400 10px 20px);
+	--duration-snap: 80ms;
+}

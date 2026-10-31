@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Y3K Chrome — component reference</title>
+<style>
+	:root {
+		--color-primary: #e8eef8;
+		--color-primary-foreground: #101218;
+		--color-surface: #07080d;
+		--color-surface-foreground: #eef1f6;
+		--color-surface-raised: #12131c;
+		--color-muted: #a7b0c2;
+		--color-accent: #7af0ff;
+		--color-danger: #ff5c7a;
+		--color-border: #2c3344;
+		--color-iris: #d7a0ff;
+		--radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px; --radius-xl: 12px; --radius-2xl: 16px; --radius-full: 9999px;
+		--shadow-sm: 0 0 0 1px rgb(232 238 248 / 0.28);
+		--shadow-md: 0 0 0 1px rgb(232 238 248 / 0.4), 0 10px 28px rgb(122 240 255 / 0.12);
+		--shadow-lg: 0 0 0 1px rgb(232 238 248 / 0.5), 0 18px 40px rgb(215 160 255 / 0.16);
+		--shadow-focus: 0 0 0 2px #07080d, 0 0 0 4px #7af0ff;
+		--metal: linear-gradient(180deg, #ffffff 0%, #d5deea 38%, #8b97ab 50%, #f4f7fb 62%, #b7c3d6 100%);
+		--font: Inter, "Liberation Sans", "Noto Sans", sans-serif;
+		--mono: "JetBrains Mono", ui-monospace, monospace;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body { margin: 0; background: var(--color-surface); color: var(--color-surface-foreground); font-family: var(--font); }
+	h1, h2, p { margin: 0; }
+	button { font: inherit; }
+	.metal { background: var(--metal); -webkit-background-clip: text; background-clip: text; color: transparent; }
+	.cover { padding: 36px 20px 8px; text-align: center; }
+	.stage { max-width: 640px; margin: 0 auto; position: relative; }
+	.orb { width: 180px; height: 180px; margin: 0 auto; border-radius: 50%; background: conic-gradient(from 40deg, #e8eef8, #7af0ff, #d7a0ff, #e8eef8, #9fb0c8, #7af0ff); box-shadow: var(--shadow-lg); }
+	h1 { font-size: 72px; font-weight: 750; font-weight: 700; letter-spacing: -0.05em; line-height: 0.9; margin-top: -28px; position: relative; }
+	.kicker { color: var(--color-accent); letter-spacing: 0.2em; text-transform: uppercase; font-size: 12px; margin-top: 8px; }
+	.specs { margin-top: 28px; text-align: left; background: var(--color-surface-raised); border-radius: var(--radius-lg); padding: 8px 16px; }
+	.specs div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--color-border); }
+	.specs div:last-child { border-bottom: 0; }
+	.specs span { color: var(--color-muted); }
+	.specs b { font-family: var(--mono); font-weight: 500; }
+	.btn { margin-top: 16px; min-height: 44px; padding: 0 18px; border-radius: var(--radius-md); border: 0; background: var(--color-primary); color: var(--color-primary-foreground); font-weight: 650; font-weight: 600; box-shadow: var(--shadow-sm); cursor: pointer; }
+	.btn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.wrap { max-width: 720px; margin: 0 auto; padding: 12px 20px 72px; }
+	.section { margin-top: 48px; }
+	.section h2 { font-size: 28px; letter-spacing: -0.03em; margin-top: 6px; }
+	.intro { color: var(--color-muted); margin-top: 8px; }
+	.swatches { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; list-style: none; padding: 0; margin: 16px 0 0; }
+	@media (min-width: 640px) { .swatches { grid-template-columns: repeat(4, 1fr); } }
+	.swatch { min-height: 76px; border-radius: var(--radius-md); border: 1px solid var(--color-border); padding: 8px; font-size: 13px; display: flex; flex-direction: column; justify-content: space-between; }
+	.mobile { display: grid; gap: 16px; margin-top: 16px; }
+	@media (min-width: 800px) { .mobile { grid-template-columns: 260px 1fr; } }
+	.phone { width: 260px; max-width: 100%; margin: 0 auto; border-radius: 28px; padding: 12px; background: #000; text-align: center; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 10px 0; border-bottom: 1px solid var(--color-border); color: var(--color-muted); }
+	.rules b { display: block; color: var(--color-surface-foreground); }
+	.compare { display: grid; gap: 12px; margin-top: 16px; }
+	@media (min-width: 720px) { .compare { grid-template-columns: 1fr 1fr; } }
+	.cmp-off { background: #eef2ff; color: #64748b; border-radius: 16px; padding: 16px; }
+	.cmp-off h3 { color: #1e1b4b; }
+	.cmp-on { background: var(--color-surface-raised); border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-md); }
+</style>
+</head>
+<body>
+<header class="cover">
+	<div class="stage">
+		<div class="orb" aria-hidden="true"></div>
+		<h1 class="metal">Helix</h1>
+		<p class="kicker">Object 19 · in the void</p>
+		<div class="specs">
+			<div><span>Mass</span><b>2.4 kg</b></div>
+			<div><span>Skin</span><b>Liquid chrome</b></div>
+			<div><span>Charge</span><b>Stable</b></div>
+		</div>
+		<button class="btn" type="button">Hold in view</button>
+	</div>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="kicker">01 — Metal</p>
+		<h2>Silver, cyan edge, one iris</h2>
+		<p class="intro">The orb carries the color. The page does not.</p>
+		<ul class="swatches">
+			<li class="swatch" style="background:var(--color-surface)"><b>surface</b>Void</li>
+			<li class="swatch" style="background:var(--color-primary);color:var(--color-primary-foreground)"><b>primary</b>Silver</li>
+			<li class="swatch" style="background:var(--color-accent);color:#062026"><b>accent</b>Edge</li>
+			<li class="swatch" style="background:var(--color-iris);color:#1a1020"><b>iris</b>Orb only</li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="kicker">02 — The orb</p>
+		<h2>One light source</h2>
+		<p class="intro">Iridescence is the sphere and the name. Specs stay flat white on a plate.</p>
+	</section>
+	<section class="section">
+		<p class="kicker">03 — Type</p>
+		<h2>Metal fill, tight grotesque</h2>
+		<p class="intro">Figures in the spec list are mono. The name is not.</p>
+	</section>
+	<section class="section">
+		<p class="kicker">04 — Controls</p>
+		<h2>A silver key</h2>
+		<button class="btn" type="button">Hold in view</button>
+	</section>
+	<section class="section">
+		<p class="kicker">05 — Mobile</p>
+		<h2>The orb shrinks, the specs stay</h2>
+		<div class="mobile">
+			<div class="phone">
+				<div class="orb" style="width:96px;height:96px"></div>
+				<h3 class="metal" style="font-size:40px;margin-top:-12px">Helix</h3>
+				<button class="btn" type="button" style="width:100%">Hold</button>
+			</div>
+			<ul class="rules">
+				<li><b>Name steps 72 → 40</b>The metal fill stays. Tracking stays tight.</li>
+				<li><b>Orb steps 180 → 96</b>Still one. It may tuck behind the name, not behind the specs.</li>
+				<li><b>Specs become a single column</b>They already are. Labels do not drop; units stay mono.</li>
+				<li><b>The button is full width</b>Silver, 44px, small radius. It does not become a pill of glass.</li>
+				<li><b>The shell curve is the device</b>Controls inside stay at radius-md. No blur is added on touch.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="kicker">06 — Off-style</p>
+		<h2>Frosted panels are another material</h2>
+		<div class="compare">
+			<div class="cmp-off"><h3>Helix</h3><p>Soft indigo card, no metal.</p></div>
+			<div class="cmp-on"><h3 class="metal" style="font-size:36px">Helix</h3><p>Void, silver, a cyan rim.</p></div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

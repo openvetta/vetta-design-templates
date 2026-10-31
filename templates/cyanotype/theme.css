@@ -1,0 +1,29 @@
+/* Cyanotype — a drawing sheet. Prussian blue ground, white linework,
+   a title block. Sun-print chemistry, not a dark developer theme.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #f5f8fc;
+	--color-primary-foreground: #0c3d7a;
+	--color-surface: #0c3d7a;
+	--color-surface-foreground: #f5f8fc;
+	--color-surface-raised: #0a3268;
+	--color-muted: #c9daf0;
+	--color-accent: #8ecbff;
+	--color-danger: #ffb1a3;
+	--color-border: #d7e7f8;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 9999px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 1px #0c3d7a, 0 0 0 2px #f5f8fc;
+
+	--grid-line: rgb(215 231 248 / 0.28);
+	--duration-draw: 120ms;
+}
