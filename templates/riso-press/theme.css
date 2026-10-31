@@ -1,0 +1,50 @@
+/* Riso Press — a small print shop's job desk. Uncoated paper, three spot
+   inks, halftone inside the plates, and a hard misregistered second plate
+   where other systems would put a blurred shadow. Original Vetta system
+   authored by Grok Bot; no upstream assets. */
+@theme {
+	--color-primary: #1e3fae;
+	--color-primary-foreground: #f7f3ea;
+	--color-surface: #efe6d4;
+	--color-surface-foreground: #1c1712;
+	--color-surface-raised: #f7f1e4;
+	--color-muted: #5c5348;
+	--color-accent: #c20d62;
+	--color-danger: #b42318;
+	--color-border: #1c1712;
+
+	/* The three drums. primary is the blue drum; accent is the pink drum.
+	   Yellow is a fill only — it is too light to carry small type. */
+	--color-ink-yellow: #f2d230;
+	--color-ink-yellow-foreground: #1c1712;
+	--color-accent-foreground: #f7f3ea;
+
+	/* Corners stay near square. Circles are drums and registration marks only. */
+	--radius-sm: 0px;
+	--radius-md: 2px;
+	--radius-lg: 2px;
+	--radius-xl: 4px;
+	--radius-2xl: 4px;
+	--radius-full: 9999px;
+
+	/* Depth is a second plate, offset and unblurred. The pink drum is the
+	   ghost. Pressing a control snaps this offset back to zero. */
+	--shadow-sm: 2px 1px 0 #c20d62;
+	--shadow-md: 3px 2px 0 #c20d62;
+	--shadow-lg: 5px 3px 0 #c20d62;
+	--shadow-press: 0 0 0 #c20d62;
+	--shadow-focus: 0 0 0 2px #efe6d4, 0 0 0 4px #1c1712;
+
+	--misregister-x: 3px;
+	--misregister-y: 2px;
+
+	/* Halftone lives inside ink, never across body copy. Paper tooth is the
+	   fine grit on the desk itself. */
+	--halftone: radial-gradient(circle, rgb(247 243 234 / 0.5) 0.55px, transparent 0.72px);
+	--halftone-size: 4px 4px;
+	--paper-tooth: radial-gradient(circle, rgb(28 23 18 / 0.18) 0.4px, transparent 0.55px);
+	--paper-tooth-size: 3px 3px;
+
+	--duration-shift: 120ms;
+	--ease-press: cubic-bezier(0.2, 0, 0, 1);
+}
