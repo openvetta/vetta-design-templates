@@ -1,0 +1,34 @@
+/* Firn — a glacial-water allocation. Pale ice paper, three vertical
+   cores, one steel line, a grotesque ledger. Cool and still.
+   Not a sky, not a blueprint, not a wax plate.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #1a2830;
+	--color-primary-foreground: #f4f7f8;
+	--color-surface: #d5e1e7;
+	--color-surface-foreground: #1a2830;
+	--color-surface-raised: #eef3f5;
+	--color-muted: #4c6170;
+	--color-accent: #1d4c60;
+	--color-danger: #8a3e38;
+	--color-border: #7f97a3;
+	--color-band-pale: #e7eef1;
+	--color-band-mid: #c5d0d6;
+	--color-band-deep: #24343c;
+	--color-band-deep-foreground: #f4f7f8;
+	--color-band-deep-muted: #c5d0d6;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 1px #d5e1e7, 0 0 0 2px #1d4c60;
+
+	--duration-still: 150ms;
+}

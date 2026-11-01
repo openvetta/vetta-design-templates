@@ -1,0 +1,29 @@
+/* Late Edition — a city broadsheet. Warm newsprint, carbon ink,
+   a tracked nameplate, three ruled columns. Structured editorial
+   quiet, not a blog and not a gallery wall.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #1c1612;
+	--color-primary-foreground: #f3eadc;
+	--color-surface: #e4d8c6;
+	--color-surface-foreground: #1c1612;
+	--color-surface-raised: #f3eadc;
+	--color-muted: #5e5348;
+	--color-accent: #8a332c;
+	--color-danger: #6e2c28;
+	--color-border: #1c1612;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 1px #e4d8c6, 0 0 0 2px #8a332c;
+
+	--duration-still: 140ms;
+}

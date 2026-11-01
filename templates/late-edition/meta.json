@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "late-edition",
+	"name": "Late Edition",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 42,
+	"category": "press",
+	"vibe": "light",
+	"tags": ["editorial", "newsprint", "serif", "columns", "light"],
+	"blurb": "A city broadsheet that fills the sheet: warm newsprint, carbon ink, a tracked nameplate, and three ruled columns beside an inside index. Structured and anti-cute, with no blog card and no yellow highlight.",
+	"tagline": {
+		"en": "Carbon ink, three ruled columns",
+		"zh": "碳墨三栏，版面排满"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://www.canva.com/newsroom/news/design-trends-2026/",
+		"note": "Authored by Grok Bot. Original system distilled from Canva's 2026 Opt-Out Era: serif type, a pared palette, and structured editorial layouts in place of bright, cute chrome. The broadsheet is the product form of that restraint. No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-01"
+}
