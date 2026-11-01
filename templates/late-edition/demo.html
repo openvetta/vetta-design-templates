@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Late Edition — the east quay</title>
+<style>
+	:root {
+		--color-primary: #1c1612;
+		--color-primary-foreground: #f3eadc;
+		--color-surface: #e4d8c6;
+		--color-surface-foreground: #1c1612;
+		--color-surface-raised: #f3eadc;
+		--color-muted: #5e5348;
+		--color-accent: #8a332c;
+		--color-danger: #6e2c28;
+		--color-border: #1c1612;
+		--shadow-focus: 0 0 0 1px #e4d8c6, 0 0 0 2px #8a332c;
+		--serif: "Iowan Old Style", Palatino, "Palatino Linotype", "Liberation Serif", Georgia, serif;
+		--sans: Inter, "Helvetica Neue", "Liberation Sans", "Noto Sans", sans-serif;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--serif);
+		font-size: 16px;
+		line-height: 1.45;
+	}
+	h1, h2, p { margin: 0; }
+	button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+	.cover {
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		padding: 18px 32px 16px;
+	}
+	.folio {
+		display: flex;
+		justify-content: space-between;
+		gap: 16px;
+		font-family: var(--sans);
+		font-size: 11px;
+		font-weight: 500;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.double {
+		box-sizing: content-box;
+		height: 3px;
+		border-top: 3px solid var(--color-border);
+		border-bottom: 1px solid var(--color-border);
+		margin: 8px 0 10px;
+	}
+	.nameplate {
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		align-items: baseline;
+		gap: 16px;
+	}
+	.vol, .issue {
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+	.issue { text-align: right; }
+	.plate {
+		font-weight: 700;
+		font-size: 32px;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		line-height: 1;
+		padding-left: 0.18em;
+	}
+	.single { border: 0; border-top: 1px solid var(--color-border); margin: 10px 0 14px; }
+	.story {
+		flex: 1;
+		min-height: 0;
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 232px;
+		grid-template-rows: auto 1fr;
+		column-gap: 20px;
+	}
+	.lead { grid-column: 1 / 4; }
+	.kicker {
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+	.lead {
+		display: grid;
+		grid-template-columns: 1.15fr 0.85fr;
+		column-gap: 28px;
+		align-items: end;
+	}
+	.kicker { grid-column: 1 / -1; }
+	h1 {
+		margin-top: 6px;
+		font-weight: 700;
+		font-size: 48px;
+		letter-spacing: -0.025em;
+		line-height: 0.94;
+		text-wrap: balance;
+	}
+	.deck {
+		margin: 0 0 4px;
+		font-style: italic;
+		font-size: 18px;
+		line-height: 1.35;
+		max-width: 34ch;
+	}
+	.cols {
+		grid-column: 1 / 4;
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		min-height: 0;
+	}
+	.col {
+		padding: 12px 16px 0 0;
+		font-size: 15px;
+		line-height: 1.38;
+	}
+	.col + .col { border-left: 1px solid var(--color-border); padding-left: 16px; }
+	.col p + p { margin-top: 10px; }
+	.col:first-child p:first-child::first-letter {
+		font-weight: 700;
+		float: left;
+		font-size: 54px;
+		line-height: 0.78;
+		padding: 4px 8px 0 0;
+	}
+	.rail {
+		grid-column: 4;
+		grid-row: 1 / 3;
+		border-left: 1px solid var(--color-border);
+		padding-left: 16px;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+	}
+	.rail h2 {
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		margin-bottom: 8px;
+	}
+	.rail ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
+	.rail li {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+		border-top: 1px solid var(--color-border);
+		min-height: 44px;
+		padding: 6px 0;
+	}
+	.order {
+		margin-top: auto;
+		padding-top: 12px;
+		border-top: 1px solid var(--color-border);
+	}
+	.order h2 { margin-bottom: 6px; }
+	.order p { font-size: 15px; line-height: 1.35; }
+	.rail b { display: block; font-weight: 400; font-size: 16px; }
+	.rail small {
+		display: block;
+		margin-top: 2px;
+		font-family: var(--sans);
+		font-size: 11px;
+		letter-spacing: 0.04em;
+		color: var(--color-muted);
+	}
+	.rail em {
+		font-style: normal;
+		font-family: var(--sans);
+		font-size: 13px;
+		font-weight: 500;
+		letter-spacing: 0.08em;
+		color: var(--color-muted);
+	}
+	.ask {
+		margin-top: 8px;
+		align-self: flex-start;
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		border-bottom: 1px solid var(--color-border);
+		transition: color var(--duration-still, 140ms) linear, border-color var(--duration-still, 140ms) linear;
+	}
+	.ask:hover, .ask:active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+	.ask:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.notices {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		gap: 18px;
+		margin-top: 12px;
+		padding-top: 10px;
+		border-top: 1px solid var(--color-border);
+	}
+	.notices b {
+		display: block;
+		font-family: var(--sans);
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		margin-bottom: 4px;
+	}
+	.notices p { font-size: 15px; line-height: 1.35; }
+	.notices .correction b { color: var(--color-danger); }
+	.wrap { padding: 8px 32px 80px; max-width: 1100px; }
+	.section { margin-top: 72px; }
+	.section h2 { font-weight: 400; font-size: 36px; letter-spacing: -0.02em; margin-top: 8px; }
+	.eyebrow {
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+	.intro { margin-top: 12px; max-width: 42ch; color: var(--color-muted); font-size: 18px; }
+	.swatches { list-style: none; margin: 22px 0 0; padding: 0; max-width: 480px; }
+	.swatches li {
+		display: grid;
+		grid-template-columns: 22px 1fr auto;
+		gap: 14px;
+		align-items: center;
+		min-height: 44px;
+		border-top: 1px solid var(--color-border);
+		font-family: var(--sans);
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.chip { width: 22px; height: 14px; background: var(--color-border); }
+	.swatches span { color: var(--color-muted); letter-spacing: 0.06em; }
+	.mobile { display: grid; gap: 28px; margin-top: 22px; align-items: start; }
+	.phone {
+		width: 280px;
+		max-width: 100%;
+		margin: 0 auto;
+		border: 1px solid var(--color-border);
+		background: var(--color-surface);
+		padding: 14px 14px 16px;
+	}
+	.phone .plate { font-size: 15px; letter-spacing: 0.12em; padding-left: 0.12em; }
+	.phone .vol, .phone .issue { font-size: 9px; }
+	.phone h3 {
+		margin: 8px 0 0;
+		font-weight: 700;
+		font-size: 28px;
+		letter-spacing: -0.02em;
+		line-height: 0.95;
+	}
+	.phone .deck { font-size: 13px; margin-top: 6px; }
+	.phone .colp { margin-top: 10px; font-size: 13px; line-height: 1.35; }
+	.phone ol { list-style: none; margin: 10px 0 0; padding: 0; }
+	.phone li {
+		display: flex;
+		justify-content: space-between;
+		gap: 8px;
+		border-top: 1px solid var(--color-border);
+		padding: 7px 0;
+		font-size: 13px;
+	}
+	.phone .ask { margin-top: 4px; min-height: 48px; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li {
+		padding: 14px 0;
+		border-top: 1px solid var(--color-border);
+		color: var(--color-muted);
+		font-size: 17px;
+	}
+	.rules b {
+		display: block;
+		color: var(--color-surface-foreground);
+		font-weight: 400;
+		font-size: 18px;
+		margin-bottom: 4px;
+	}
+	.compare { display: grid; gap: 22px; margin-top: 22px; }
+	.cmp-off {
+		background: #fffdf8;
+		border-radius: 22px;
+		padding: 22px;
+		box-shadow: 0 16px 32px rgb(40 40 40 / 0.12);
+		font-family: var(--sans);
+		color: #222;
+	}
+	.cmp-off strong { display: block; font-size: 28px; letter-spacing: -0.03em; }
+	.cmp-off mark { background: #ffe56a; color: inherit; }
+	.cmp-off i {
+		display: inline-block;
+		margin-top: 14px;
+		background: #1f8a4c;
+		color: white;
+		border-radius: 999px;
+		padding: 10px 16px;
+		font-style: normal;
+		font-weight: 700;
+		font-size: 14px;
+	}
+	.cmp-on { border-top: 3px solid var(--color-border); padding-top: 10px; }
+	.cmp-on p { font-weight: 700; font-size: 28px; letter-spacing: -0.02em; line-height: 1; margin-top: 8px; }
+	.cmp-on small {
+		display: block;
+		margin-top: 10px;
+		padding-top: 8px;
+		border-top: 1px solid var(--color-border);
+		font-size: 14px;
+		font-weight: 400;
+	}
+	@media (min-width: 860px) {
+		.mobile { grid-template-columns: 280px 1fr; gap: 48px; }
+		.compare { grid-template-columns: 1fr 1fr; align-items: stretch; }
+	}
+	@media (max-width: 860px) {
+		.cover { min-height: 0; padding: 16px 16px 28px; }
+		.plate { font-size: 18px; letter-spacing: 0.1em; }
+		.story { display: flex; flex-direction: column; }
+		.lead { grid-template-columns: 1fr; }
+		.deck { margin-top: 10px; }
+		.rail { border-left: 0; padding-left: 0; margin-top: 16px; border-top: 1px solid var(--color-border); padding-top: 12px; }
+		.order { margin-top: 12px; }
+		.rail ol { display: block; }
+		.rail li { flex: none; padding: 8px 0; }
+		.cols { display: block; }
+		.col { padding: 12px 0 0; }
+		.col + .col { border-left: 0; padding-left: 0; border-top: 1px solid var(--color-border); margin-top: 12px; }
+		h1 { font-size: 36px; }
+		.notices { grid-template-columns: 1fr; gap: 12px; }
+		.wrap { padding: 8px 16px 64px; }
+		.section h2 { font-size: 28px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.ask { transition: none; }
+	}
+</style>
+</head>
+<body>
+<header class="cover">
+	<p class="folio"><span>Sunday 1 November 2026</span><span>City</span><span>Evening</span></p>
+	<div class="double"></div>
+	<div class="nameplate">
+		<p class="vol">Vol. XLVIII</p>
+		<p class="plate">The Late Edition</p>
+		<p class="issue">No. 312</p>
+	</div>
+	<hr class="single">
+	<div class="story">
+		<div class="lead">
+			<p class="kicker">City</p>
+			<h1>The harbor reopens the east quay, but only after dark</h1>
+			<p class="deck">Mail crosses first. Passengers wait on the west side until the new lamps are counted and named.</p>
+		</div>
+		<aside class="rail">
+			<h2>Inside</h2>
+			<ol>
+				<li><span><b>Harbor lamps</b><small>The count, and the book</small></span><em>4</em></li>
+				<li><span><b>The Mercer kiln</b><small>Friday firing</small></span><em>6</em></li>
+				<li><span><b>Letters</b><small>Close at noon</small></span><em>9</em></li>
+				<li><span><b>The night market</b><small>What stayed west</small></span><em>11</em></li>
+				<li><span><b>Notices</b><small>Three lines</small></span><em>14</em></li>
+				<li><span><b>Correction</b><small>Tuesday, not Monday</small></span><em>16</em></li>
+			</ol>
+			<div class="order">
+				<h2>The order</h2>
+				<p>From tonight the east quay takes mail, ice, and this paper. Passengers stay west until the forty-two lamps are named.</p>
+			</div>
+			<button class="ask" type="button">Read the order</button>
+		</aside>
+		<div class="cols">
+			<div class="col">
+				<p>The harbor master posted the order at noon and nailed a second copy to the east shed, where the paint is still new. From tonight the quay takes boats again, but only those carrying mail, ice, and this paper.</p>
+				<p>Passengers remain on the west side until every new lamp has been counted, named, and written into the cloth book. The book stays in the shed. It does not travel.</p>
+				<p>A third copy stands in the window of the stair, facing the people already waiting. They can read it. They cannot yet cross. The shed clock is ten minutes fast, and the master has left it so.</p>
+				<p>The first sack will be logged when it is on the scale, not when the clock says nine. Until then the east side is a place for reading the order, and for nothing else.</p>
+				<p>Children have been turned back twice already. The master wrote their names in the margin and told them the west stair is the place to wait. The margin is full. The stair is not. Someone has brought a chair. It faces the window copy, not the water.</p>
+			</div>
+			<div class="col">
+				<p>The count is deliberately plain. Forty-two lamps, one keeper, no deputies. The city paid for the piles in March and left the lighting to the harbor, which has asked for nothing else.</p>
+				<p>“We would rather open late than open dim,” the master said, and folded the order once along a crease that has already gone soft. The keeper begins at dusk and reads the numbers aloud.</p>
+				<p>The lamps run from the shed out to the last pile. Names already taken include East Shed, First Pile, and The Bend. The furthest lamp is still “unnamed,” in pencil.</p>
+				<p>The keeper will not light a pencil. When the last name is written in ink, the quay opens, and not a minute before. A spare book sits under the kettle, still blank, in case the first one fills. The ink is the same black as this paper. The harbor buys it by the bottle.</p>
+			</div>
+			<div class="col">
+				<p>On the quay the work has already turned ordinary: coils of line, a scale, a kettle left from the afternoon shift. The night market does not return this week, whatever the west-side posters still promise.</p>
+				<p>What returns is the crossing, and the habit of waiting for the first sack, due at nine. Ice for it sits under sailcloth in the low shed, weighed at the corners with chain.</p>
+				<p>The market’s fish stays west until the book is finished. No one has argued. The kettle is for the keeper, not for sale. The posters come down in the morning, and the night market waits for a later edition than this one.</p>
+				<p>Tonight the quay is a crossing, a scale, and a book. That is the whole of the news. The rest of the city can read it here, and wait its turn on the west side.</p>
+			</div>
+		</div>
+	</div>
+	<div class="notices">
+		<p><b>Kiln</b>The Mercer kiln opens Friday at six for the public firing.</p>
+		<p><b>Letters</b>Notes for the quay close at noon. A late letter waits a day.</p>
+		<p class="correction"><b>Correction</b>The order is dated Tuesday, not Monday. Monday’s copy is void.</p>
+	</div>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="eyebrow">01 — Ink</p>
+		<h2>Newsprint, carbon, one kicker</h2>
+		<p class="intro">The sheet is warm and already full. Red appears once, as the section name. The correction is a darker word, not a second splash.</p>
+		<ul class="swatches">
+			<li><i class="chip" style="background:var(--color-surface)"></i><b>Surface</b><span>Newsprint</span></li>
+			<li><i class="chip" style="background:var(--color-border)"></i><b>Ink</b><span>Type and rules</span></li>
+			<li><i class="chip" style="background:var(--color-accent)"></i><b>Accent</b><span>The kicker</span></li>
+			<li><i class="chip" style="background:var(--color-danger)"></i><b>Danger</b><span>The correction</span></li>
+			<li><i class="chip" style="background:var(--color-muted)"></i><b>Muted</b><span>Folio and page</span></li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="eyebrow">02 — Columns</p>
+		<h2>Rules do the dividing</h2>
+		<p class="intro">A thick rule and a thin rule hold the nameplate. One-pixel rules separate the columns, the index, and the notices. Nothing is a card.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">03 — Type</p>
+		<h2>Serif for the sheet, grotesque for the folio</h2>
+		<p class="intro">The nameplate is tracked capitals. The headline is sentence case and heavier than the body. The deck is italic. Labels stay small.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">04 — Order</p>
+		<h2>An underline, not a stamp</h2>
+		<p class="intro">“Read the order” is a line of type with a target tall enough to hit. Hover changes its color. It does not grow a shape.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">05 — Mobile</p>
+		<h2>One column, the index first</h2>
+		<div class="mobile">
+			<div class="phone">
+				<div class="nameplate">
+					<p class="vol">Vol. 48</p>
+					<p class="plate">Late Edition</p>
+					<p class="issue">312</p>
+				</div>
+				<hr class="single">
+				<p class="kicker">City</p>
+				<h3>The east quay opens after dark</h3>
+				<p class="deck">Mail first. Lamps counted.</p>
+				<ol>
+					<li><b>Harbor lamps</b><span>4</span></li>
+					<li><b>Mercer kiln</b><span>6</span></li>
+					<li><b>Letters</b><span>9</span></li>
+				</ol>
+				<p class="colp">The harbor master posted the order at noon. Passengers wait on the west side.</p>
+				<button class="ask" type="button">Read the order</button>
+			</div>
+			<ul class="rules">
+				<li><b>At 860px the three columns stack</b>The index moves under the headline and above the body, so the first screen still has structure.</li>
+				<li><b>Vertical rules become horizontal rules</b>A column divider that survives as a side stroke would waste the narrow measure.</li>
+				<li><b>The headline steps from 52 to 36</b>It stays a bold serif. The nameplate steps to 18 and keeps its tracking.</li>
+				<li><b>Body rises to a single column</b>The drop cap remains on the first paragraph only.</li>
+				<li><b>The action is at least 48px tall</b>Hover is absent on touch. Press colors the line with the kicker.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="eyebrow">06 — Off-style</p>
+		<h2>A follow pill is not a paper</h2>
+		<div class="compare">
+			<div class="cmp-off">
+				<strong>Tonight’s read</strong>
+				<p>A <mark>soft card</mark>, a highlight, a follow.</p>
+				<i>Follow</i>
+			</div>
+			<div class="cmp-on">
+				<p class="kicker">City</p>
+				<p>The east quay opens after dark</p>
+				<small>Three columns. The order is posted.</small>
+			</div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

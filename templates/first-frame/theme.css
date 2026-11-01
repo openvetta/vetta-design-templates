@@ -1,0 +1,30 @@
+/* First Frame — a title held in the gate. Warm black, ivory serif,
+   fine grain, credits that fill the frame. A paused picture,
+   not a streaming shelf and not a supper club.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #f3ecdf;
+	--color-primary-foreground: #14110e;
+	--color-surface: #14110e;
+	--color-surface-foreground: #f3ecdf;
+	--color-surface-raised: #211c18;
+	--color-muted: #b3a89c;
+	--color-accent: #c65b3e;
+	--color-danger: #e7b6a4;
+	--color-border: #4a433c;
+	--color-bar: #090807;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 1px #14110e, 0 0 0 2px #c65b3e;
+
+	--duration-still: 160ms;
+}

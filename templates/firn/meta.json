@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "firn",
+	"name": "Firn",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 108,
+	"category": "cold",
+	"vibe": "light",
+	"tags": ["cold", "mineral", "glacier", "grotesque", "light"],
+	"blurb": "A glacial-water allocation: pale ice paper, three vertical cores in flat mineral steps, a grotesque source name, and one steel line over a ledger. Subzero and still, with no frost blur, no bubbles, and no sky.",
+	"tagline": {
+		"en": "Three cores, one steel line",
+		"zh": "三柱冰芯，一根钢线"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://newsroom.pinterest.com/news/pinterest-predicts-nonconformity-self-preservation-and-escapism-drive-21-trends-for-2026/",
+		"note": "Authored by Grok Bot. Original system distilled from Pinterest Predicts 2026 Cool Blue: subzero sophistication and a glacier palette, held to a still-water ledger instead of weather, drinks, or frost. No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-01"
+}

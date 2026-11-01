@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Firn — Vestre</title>
+<style>
+	:root {
+		--color-primary: #1a2830;
+		--color-primary-foreground: #f4f7f8;
+		--color-surface: #d5e1e7;
+		--color-surface-foreground: #1a2830;
+		--color-surface-raised: #eef3f5;
+		--color-muted: #4c6170;
+		--color-accent: #1d4c60;
+		--color-danger: #8a3e38;
+		--color-border: #7f97a3;
+		--color-band-pale: #e7eef1;
+		--color-band-mid: #c5d0d6;
+		--color-band-deep: #24343c;
+		--color-band-deep-foreground: #f4f7f8;
+		--color-band-deep-muted: #c5d0d6;
+		--shadow-focus: 0 0 0 1px #d5e1e7, 0 0 0 2px #1d4c60;
+		--sans: Inter, "Helvetica Neue", "Liberation Sans", "Noto Sans", sans-serif;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--sans);
+		font-size: 16px;
+		line-height: 1.45;
+	}
+	h1, h2, p { margin: 0; }
+	button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+	.cover {
+		min-height: 100vh;
+		display: grid;
+		grid-template-columns: 42% 1fr;
+	}
+	.cores { display: grid; grid-template-columns: 1fr 1fr 1fr; min-height: 100%; }
+	.core {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		padding: 28px 22px 24px;
+		background: var(--color-band-pale);
+		min-height: 0;
+	}
+	.core + .core { box-shadow: inset 1px 0 0 var(--color-surface); }
+	.mid { background: var(--color-band-mid); }
+	.deep {
+		background: var(--color-band-deep);
+		color: var(--color-band-deep-foreground);
+	}
+	.deep .place, .deep .unit { color: var(--color-band-deep-muted); }
+	.core b {
+		display: block;
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+	}
+	.place {
+		display: block;
+		margin-top: 6px;
+		font-size: 13px;
+		letter-spacing: 0.04em;
+		color: var(--color-muted);
+	}
+	.service {
+		display: block;
+		margin-top: 14px;
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+	.sounding {
+		list-style: none;
+		margin: 16px 0 0;
+		padding: 0;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
+	.sounding li {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		border-top: 1px solid currentColor;
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+	.sounding span { font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+	.figure { border-top: 1px solid currentColor; padding-top: 12px; }
+	.figure strong {
+		display: block;
+		font-weight: 400;
+		font-size: 72px;
+		letter-spacing: -0.04em;
+		line-height: 0.85;
+		font-variant-numeric: tabular-nums;
+	}
+	.unit {
+		display: block;
+		margin-top: 6px;
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.ledger {
+		display: flex;
+		flex-direction: column;
+		padding: 36px 56px 28px;
+		min-height: 0;
+	}
+	.eyebrow {
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+	h1 {
+		margin-top: 8px;
+		font-weight: 500;
+		font-size: 112px;
+		letter-spacing: -0.045em;
+		line-height: 0.84;
+	}
+	.lede { margin-top: 16px; font-size: 18px; line-height: 1.4; max-width: 32ch; font-weight: 400; }
+	.steel { width: 72px; height: 1px; background: var(--color-accent); border: 0; margin: 18px 0 8px; }
+	.rows { list-style: none; margin: 0; padding: 0; flex: 1; display: flex; flex-direction: column; }
+	.rows li {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		border-top: 1px solid var(--color-border);
+		min-height: 44px;
+		font-size: 16px;
+	}
+	.rows span {
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.rows b { font-weight: 500; }
+	.foot { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-top: 8px; }
+	.ask {
+		min-height: 48px;
+		display: inline-flex;
+		align-items: center;
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		border-bottom: 1px solid var(--color-border);
+		transition: color 150ms linear, border-color 150ms linear;
+	}
+	.ask:hover, .ask:active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+	.ask:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.returned {
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-danger);
+	}
+	.wrap { padding: 8px 56px 80px; max-width: 1100px; }
+	.section { margin-top: 72px; }
+	.section h2 { font-weight: 500; font-size: 36px; letter-spacing: -0.03em; margin-top: 8px; }
+	.intro { margin-top: 12px; max-width: 40ch; color: var(--color-muted); font-size: 18px; }
+	.swatches { list-style: none; margin: 22px 0 0; padding: 0; max-width: 520px; }
+	.swatches li {
+		display: grid;
+		grid-template-columns: 22px 1fr auto;
+		gap: 14px;
+		align-items: center;
+		min-height: 44px;
+		border-top: 1px solid var(--color-border);
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.chip { width: 22px; height: 14px; }
+	.swatches span { color: var(--color-muted); }
+	.mobile { display: grid; gap: 28px; margin-top: 22px; align-items: start; }
+	.phone {
+		width: 280px;
+		max-width: 100%;
+		margin: 0 auto;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+	}
+	.phone .cores { height: 168px; }
+	.phone .core { padding: 10px; }
+	.phone .core b { font-size: 10px; letter-spacing: 0.1em; }
+	.phone .place, .phone .service, .phone .unit { font-size: 9px; }
+	.phone .figure strong { font-size: 32px; }
+	.phone .pad { padding: 14px 14px 16px; }
+	.phone h3 { margin-top: 6px; font-weight: 500; font-size: 48px; letter-spacing: -0.04em; line-height: 0.9; }
+	.phone .lede { font-size: 14px; margin-top: 8px; }
+	.phone .rows { display: block; margin-top: 8px; }
+	.phone .rows li { flex: none; padding: 8px 0; min-height: 0; }
+	.phone .ask { margin-top: 8px; min-height: 48px; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 14px 0; border-top: 1px solid var(--color-border); color: var(--color-muted); font-size: 17px; }
+	.rules b { display: block; color: var(--color-surface-foreground); font-weight: 500; font-size: 18px; margin-bottom: 4px; }
+	.compare { display: grid; gap: 22px; margin-top: 22px; }
+	.cmp-off {
+		background: linear-gradient(180deg, #d7f4ff 0%, #b9e6ff 55%, #9fd0c8 100%);
+		border-radius: 28px;
+		padding: 22px;
+		color: #16324a;
+		box-shadow: 0 14px 28px rgb(40 90 120 / 0.18);
+		position: relative;
+		overflow: hidden;
+	}
+	.cmp-off strong { display: block; font-size: 28px; letter-spacing: -0.03em; position: relative; }
+	.cmp-off p { position: relative; }
+	.bubble {
+		position: absolute;
+		border-radius: 999px;
+		background: rgb(255 255 255 / 0.7);
+		border: 1px solid rgb(255 255 255 / 0.9);
+	}
+	.b1 { width: 28px; height: 28px; right: 28px; top: 24px; }
+	.b2 { width: 16px; height: 16px; right: 58px; top: 48px; }
+	.b3 { width: 10px; height: 10px; right: 40px; top: 64px; }
+	.cmp-on { display: grid; grid-template-columns: 92px 1fr; min-height: 160px; }
+	.mini { display: grid; grid-template-rows: 1fr 1fr 1fr; }
+	.mini i { display: block; }
+	.cmp-copy { padding: 8px 0 0 16px; align-self: end; }
+	.cmp-copy p { font-size: 32px; font-weight: 500; letter-spacing: -0.04em; line-height: 0.9; }
+	.cmp-copy small {
+		display: block;
+		margin-top: 10px;
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	@media (min-width: 860px) {
+		.mobile { grid-template-columns: 280px 1fr; gap: 48px; }
+		.compare { grid-template-columns: 1fr 1fr; align-items: stretch; }
+	}
+	@media (max-width: 800px) {
+		.cover { min-height: 0; grid-template-columns: 1fr; }
+		.cores { height: 280px; }
+		.sounding { display: none; }
+		.core { padding: 16px 12px; }
+		.figure strong { font-size: 40px; }
+		.ledger { padding: 24px 18px 28px; }
+		h1 { font-size: 64px; }
+		.rows { display: block; }
+		.rows li { flex: none; padding: 12px 0; min-height: 48px; }
+		.foot { flex-direction: column; align-items: flex-start; gap: 10px; }
+		.wrap { padding: 8px 18px 64px; }
+		.section h2 { font-size: 28px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.ask { transition: none; }
+	}
+</style>
+</head>
+<body>
+<header class="cover">
+	<div class="cores">
+		<article class="core">
+			<p><b>Vestre</b><span class="place">Upper firn</span><span class="service">On service</span></p>
+			<ol class="sounding">
+				<li><span>1,640</span><b>Firn</b></li>
+				<li><span>1,480</span><b>Packed</b></li>
+				<li><span>1,210</span><b>Ice</b></li>
+				<li><span>980</span><b>Blue</b></li>
+				<li><span>760</span><b>Compact</b></li>
+				<li><span>540</span><b>Melt</b></li>
+				<li><span>320</span><b>Schist</b></li>
+				<li><span>180</span><b>Foot</b></li>
+			</ol>
+			<p class="figure"><strong>4°</strong><span class="unit">Serve</span></p>
+		</article>
+		<article class="core mid">
+			<p><b>Seld</b><span class="place">Melt pool</span></p>
+			<ol class="sounding">
+				<li><span>980</span><b>Pool</b></li>
+				<li><span>860</span><b>Shelf</b></li>
+				<li><span>740</span><b>Ice</b></li>
+				<li><span>620</span><b>Gray</b></li>
+				<li><span>410</span><b>Water</b></li>
+				<li><span>260</span><b>Sand</b></li>
+				<li><span>90</span><b>Rock</b></li>
+				<li><span>20</span><b>Foot</b></li>
+			</ol>
+			<p class="figure"><strong>7°</strong><span class="unit">Hold</span></p>
+		</article>
+		<article class="core deep">
+			<p><b>Natt</b><span class="place">Deep cut</span></p>
+			<ol class="sounding">
+				<li><span>210</span><b>Cut</b></li>
+				<li><span>180</span><b>Shade</b></li>
+				<li><span>140</span><b>Dark</b></li>
+				<li><span>110</span><b>Cold</b></li>
+				<li><span>60</span><b>Still</b></li>
+				<li><span>40</span><b>Salt</b></li>
+				<li><span>20</span><b>Hold</b></li>
+				<li><span>0</span><b>Cellar</b></li>
+			</ol>
+			<p class="figure"><strong>2°</strong><span class="unit">Cellar</span></p>
+		</article>
+	</div>
+	<div class="ledger">
+		<p class="eyebrow">Maison Firn · Lot 18</p>
+		<h1>Vestre</h1>
+		<p class="lede">Still water drawn once from the upper firn. No gas. Served cold, in a short glass.</p>
+		<hr class="steel">
+		<ul class="rows">
+			<li><span>Source</span><b>Vestre basin</b></li>
+			<li><span>Rock</span><b>Dark schist</b></li>
+			<li><span>Mineral</span><b>42 mg / L</b></li>
+			<li><span>Serve</span><b>4°</b></li>
+			<li><span>Vessel</span><b>Short glass</b></li>
+			<li><span>Covers</span><b>Sixty</b></li>
+		</ul>
+		<div class="foot">
+			<button class="ask" type="button">Reserve this lot</button>
+			<p class="returned">Returned · lot 18.03 came back warm</p>
+		</div>
+	</div>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="eyebrow">01 — Ice</p>
+		<h2>Three flats, no sky</h2>
+		<p class="intro">Pale ice, wet stone, dark slate. They stand upright and they do not grade into each other. Steel is a short line, not a wash.</p>
+		<ul class="swatches">
+			<li><i class="chip" style="background:var(--color-band-pale)"></i><b>Pale</b><span>Upper firn</span></li>
+			<li><i class="chip" style="background:var(--color-band-mid)"></i><b>Mid</b><span>Melt pool</span></li>
+			<li><i class="chip" style="background:var(--color-band-deep)"></i><b>Deep</b><span>The cut</span></li>
+			<li><i class="chip" style="background:var(--color-accent)"></i><b>Accent</b><span>Steel line</span></li>
+			<li><i class="chip" style="background:var(--color-surface)"></i><b>Surface</b><span>The ledger</span></li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="eyebrow">02 — Cores</p>
+		<h2>Vertical, flush, full height</h2>
+		<p class="intro">The rack touches the top and the bottom of the first screen. A horizon of stripes would be a landscape. This is a box of samples.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">03 — Name</p>
+		<h2>Grotesque, large, one word</h2>
+		<p class="intro">Vestre is the source. Labels are small capitals. Figures are tabular. A serif monument belongs on warmer stone.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">04 — Reserve</p>
+		<h2>An underline under the ledger</h2>
+		<p class="intro">The lot is reserved in words. The returned lot stays a sentence in the danger color. Neither becomes a pill.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">05 — Mobile</p>
+		<h2>The rack shortens, the divisions stay vertical</h2>
+		<div class="mobile">
+			<div class="phone">
+				<div class="cores">
+					<article class="core">
+						<p><b>Vestre</b><span class="service">On service</span></p>
+						<p class="figure"><strong>4°</strong></p>
+					</article>
+					<article class="core mid">
+						<p><b>Seld</b><span class="place">Pool</span></p>
+						<p class="figure"><strong>7°</strong></p>
+					</article>
+					<article class="core deep">
+						<p><b>Natt</b><span class="place">Cut</span></p>
+						<p class="figure"><strong>2°</strong></p>
+					</article>
+				</div>
+				<div class="pad">
+					<p class="eyebrow">Lot 18</p>
+					<h3>Vestre</h3>
+					<p class="lede">Still. No gas. Served cold.</p>
+					<ul class="rows">
+						<li><span>Rock</span><b>Schist</b></li>
+						<li><span>Mineral</span><b>42 mg</b></li>
+						<li><span>Vessel</span><b>Short</b></li>
+					</ul>
+					<button class="ask" type="button">Reserve this lot</button>
+				</div>
+			</div>
+			<ul class="rules">
+				<li><b>At 800px the rack moves above the ledger</b>It becomes a row about 240px tall. The three divisions stay vertical.</li>
+				<li><b>Stripes are refused</b>Horizontal bands would read as sky over water. The cores remain upright samples.</li>
+				<li><b>The name steps from 112 to 64</b>It stays a grotesque at weight 500.</li>
+				<li><b>Ledger rows stop stretching and stay at least 48px</b>Label and value keep their two edges.</li>
+				<li><b>The reserve line is at least 48px tall</b>Hover is absent on touch. Press colors it with the steel accent.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="eyebrow">06 — Off-style</p>
+		<h2>Bubbles are not a core</h2>
+		<div class="compare">
+			<div class="cmp-off">
+				<span class="bubble b1"></span>
+				<span class="bubble b2"></span>
+				<span class="bubble b3"></span>
+				<strong>Sparkling, 72°</strong>
+				<p>A cold sky, a round glass, a fizz.</p>
+			</div>
+			<div class="cmp-on">
+				<div class="mini" aria-hidden="true">
+					<i style="background:var(--color-band-pale)"></i>
+					<i style="background:var(--color-band-mid)"></i>
+					<i style="background:var(--color-band-deep)"></i>
+				</div>
+				<div class="cmp-copy">
+					<p>Vestre</p>
+					<small>4° · still · lot 18</small>
+				</div>
+			</div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

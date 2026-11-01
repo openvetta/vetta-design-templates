@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "first-frame",
+	"name": "First Frame",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 72,
+	"category": "cinema",
+	"vibe": "dark",
+	"tags": ["cinema", "serif", "grain", "dark", "title"],
+	"blurb": "A film title held in the gate: warm black, an ivory serif name, fine grain, a cast column, and a timed scene list between letterbox bars. Intimate and full, with no play button and no gold fan.",
+	"tagline": {
+		"en": "A title held in the gate",
+		"zh": "片名停在片门里"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://www.creativemarket.com/trends/",
+		"note": "Authored by Grok Bot. Original system distilled from Creative Market's 2026 Director's Cut: a film title paused in the frame, soft serif, grain, and intimate credits. No third-party stills, posters, or brand marks."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-01"
+}
