@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "meridian",
+	"name": "Meridian",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 33,
+	"category": "observatory",
+	"vibe": "dark",
+	"tags": ["celestial", "catalog", "mono", "grid", "dark"],
+	"blurb": "An observatory transit sheet: blue-black field, a ruled graticule, one cold meridian, and a magnitude table that fills the frame. Celestial appetite held to a catalog, with no chrome orb, no alien, and no letterbox.",
+	"tagline": {
+		"en": "One meridian, a full hour",
+		"zh": "一条中天刻度，一小时星表"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://business.pinterest.com/pdf/pinterest-predicts/2026-trend-report/",
+		"note": "Authored by Grok Bot. Original system distilled from Pinterest Predicts 2026 Extra Celestial — intergalactic appetite, opalescent search, cosmic silhouette — held to a ruled transit catalog instead of holograms, alien costume, or a chrome orb. No third-party charts or marks."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-02"
+}

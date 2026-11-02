@@ -1,0 +1,32 @@
+/* Blotter — a perfume formula on three paper strata. Pale, rose, resin.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #241c18;
+	--color-primary-foreground: #f6f1e8;
+	--color-surface: #d9c6b4;
+	--color-surface-foreground: #241c18;
+	--color-surface-raised: #f6f1e8;
+	--color-muted: #5c4e45;
+	--color-accent: #7a3b2e;
+	--color-danger: #8e2e2a;
+	--color-border: #a8907c;
+
+	--color-top: #f4efe6;
+	--color-heart: #e4cfc3;
+	--color-base: #4a342c;
+	--color-fiber: rgb(36 28 24 / 0.05);
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: inset 0 1px 0 rgb(255 248 240 / 0.7);
+	--shadow-md: 0 12px 22px rgb(36 28 24 / 0.1);
+	--shadow-lg: 0 18px 28px rgb(36 28 24 / 0.14);
+	--shadow-focus: 0 0 0 1px #d9c6b4, 0 0 0 3px #7a3b2e;
+
+	--duration-still: 160ms;
+}

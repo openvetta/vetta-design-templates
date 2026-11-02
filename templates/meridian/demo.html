@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meridian — Hour 19</title>
+<style>
+	:root {
+		--color-primary: #e6e9ec;
+		--color-primary-foreground: #101418;
+		--color-surface: #101418;
+		--color-surface-foreground: #e6e9ec;
+		--color-surface-raised: #1a2128;
+		--color-muted: #a9b4bc;
+		--color-accent: #9ec4d4;
+		--color-danger: #e3a097;
+		--color-border: #3c4852;
+		--color-grid: rgb(230 233 236 / 0.16);
+		--color-grid-strong: rgb(230 233 236 / 0.4);
+		--color-plate: #0c1014;
+		--radius-sm: 0px;
+		--radius-md: 0px;
+		--radius-lg: 0px;
+		--radius-xl: 0px;
+		--radius-2xl: 0px;
+		--radius-full: 0px;
+		--shadow-sm: none;
+		--shadow-md: none;
+		--shadow-lg: none;
+		--shadow-focus: 0 0 0 1px #101418, 0 0 0 2px #9ec4d4;
+		--duration-still: 160ms;
+		--sans: Inter, "Helvetica Neue", "Liberation Sans", "Noto Sans", sans-serif;
+		--mono: "Liberation Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--sans);
+		font-size: 16px;
+		line-height: 1.45;
+	}
+	h1, h2, p { margin: 0; }
+	button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+	.cover {
+		height: 100vh;
+		display: grid;
+		grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+		gap: 28px;
+		padding: 24px 28px;
+		overflow: hidden;
+	}
+	.plate {
+		position: relative;
+		min-height: 0;
+		background: var(--color-plate);
+		border: 1px solid var(--color-border);
+		overflow: hidden;
+	}
+	.graticule {
+		position: absolute;
+		inset: 28px 16px 48px 44px;
+		background:
+			repeating-linear-gradient(to right, transparent 0 39px, var(--color-grid-strong) 39px 40px),
+			repeating-linear-gradient(to bottom, transparent 0 39px, var(--color-grid-strong) 39px 40px),
+			repeating-linear-gradient(to right, transparent 0 9px, var(--color-grid) 9px 10px),
+			repeating-linear-gradient(to bottom, transparent 0 9px, var(--color-grid) 9px 10px);
+		border: 1px solid var(--color-grid-strong);
+	}
+	.meridian {
+		position: absolute;
+		top: 28px;
+		bottom: 48px;
+		left: calc(44px + (100% - 60px) / 2);
+		width: 1px;
+		background: var(--color-accent);
+	}
+	.axis {
+		position: absolute;
+		font-family: var(--mono);
+		font-size: 11px;
+		letter-spacing: 0.04em;
+		color: var(--color-muted);
+	}
+	.axis.top { top: 8px; left: 44px; right: 16px; display: flex; justify-content: space-between; }
+	.axis.side { top: 36px; bottom: 56px; left: 8px; display: flex; flex-direction: column; justify-content: space-between; }
+	.star {
+		position: absolute;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-family: var(--mono);
+		font-size: 11px;
+		color: var(--color-muted);
+		white-space: nowrap;
+	}
+	.star i {
+		display: block;
+		background: var(--color-primary);
+		flex: none;
+	}
+	.star.bright { color: var(--color-accent); }
+	.star.bright i { background: var(--color-accent); }
+	.s4 i { width: 5px; height: 5px; }
+	.s3 i { width: 7px; height: 7px; }
+	.s2 i { width: 9px; height: 9px; }
+	.s1 i { width: 12px; height: 12px; }
+	.key {
+		position: absolute;
+		left: 44px;
+		right: 16px;
+		bottom: 12px;
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		font-family: var(--mono);
+		font-size: 11px;
+		color: var(--color-muted);
+	}
+	.key b {
+		display: inline-block;
+		background: var(--color-primary);
+		vertical-align: middle;
+		margin-right: 4px;
+	}
+	.sheet { min-height: 0; display: flex; flex-direction: column; }
+	.meta {
+		display: flex;
+		justify-content: space-between;
+		gap: 12px;
+		font-family: var(--mono);
+		font-size: 12px;
+		color: var(--color-muted);
+	}
+	.eyebrow {
+		margin-top: 14px;
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+	h1 {
+		margin-top: 4px;
+		font-weight: 500;
+		font-size: 92px;
+		letter-spacing: -0.045em;
+		line-height: 0.88;
+	}
+	.deck {
+		margin-top: 10px;
+		max-width: 36ch;
+		font-size: 16px;
+		color: var(--color-muted);
+	}
+	.rows {
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		margin: 16px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.rows li {
+		flex: 1;
+		display: grid;
+		grid-template-columns: 1.1fr 1fr 1fr 52px;
+		gap: 8px;
+		align-items: center;
+		border-top: 1px solid var(--color-border);
+		font-family: var(--mono);
+		font-size: 13px;
+	}
+	.rows li span:first-child { font-family: var(--sans); font-weight: 500; letter-spacing: 0.02em; }
+	.rows .mag { text-align: right; color: var(--color-muted); }
+	.ask {
+		align-self: flex-start;
+		min-height: 48px;
+		display: inline-flex;
+		align-items: center;
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		border-bottom: 1px solid var(--color-border);
+		transition: color var(--duration-still) linear, border-color var(--duration-still) linear;
+	}
+	.ask:hover, .ask:active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+	.ask:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.rejected {
+		margin-top: 4px;
+		font-family: var(--mono);
+		font-size: 12px;
+		color: var(--color-danger);
+	}
+	.wrap { padding: 8px 28px 80px; max-width: 1100px; }
+	.section { margin-top: 72px; }
+	.section h2 { font-weight: 500; font-size: 36px; letter-spacing: -0.03em; margin-top: 8px; }
+	.intro { margin-top: 12px; max-width: 48ch; color: var(--color-muted); font-size: 18px; }
+	.swatches { list-style: none; margin: 22px 0 0; padding: 0; max-width: 520px; }
+	.swatches li {
+		display: grid;
+		grid-template-columns: 22px 1fr auto;
+		gap: 14px;
+		align-items: center;
+		min-height: 44px;
+		border-top: 1px solid var(--color-border);
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.chip { width: 22px; height: 14px; }
+	.swatches span { color: var(--color-muted); letter-spacing: 0.04em; text-transform: none; }
+	.mobile { display: grid; gap: 28px; margin-top: 22px; align-items: start; }
+	.phone {
+		width: 280px;
+		max-width: 100%;
+		margin: 0 auto;
+		border: 1px solid var(--color-border);
+		background: var(--color-surface);
+		padding: 12px;
+	}
+	.phone .plate { height: 150px; }
+	.phone .graticule { inset: 22px 8px 28px 28px; }
+	.phone .meridian { top: 22px; bottom: 28px; left: calc(28px + (100% - 36px) / 2); }
+	.phone .axis { font-size: 9px; }
+	.phone .axis.top { top: 6px; left: 28px; right: 8px; }
+	.phone .axis.side { top: 26px; bottom: 32px; left: 4px; }
+	.phone .star { font-size: 9px; }
+	.phone .key { display: none; }
+	.phone h3 { margin: 10px 0 0; font-weight: 500; font-size: 40px; letter-spacing: -0.04em; line-height: 0.9; }
+	.phone ol { list-style: none; margin: 8px 0 0; padding: 0; }
+	.phone li {
+		display: flex;
+		justify-content: space-between;
+		gap: 8px;
+		border-top: 1px solid var(--color-border);
+		padding: 6px 0;
+		font-family: var(--mono);
+		font-size: 12px;
+	}
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 14px 0; border-top: 1px solid var(--color-border); color: var(--color-muted); font-size: 17px; }
+	.rules b { display: block; color: var(--color-surface-foreground); font-weight: 500; font-size: 18px; margin-bottom: 4px; }
+	.compare { display: grid; gap: 22px; margin-top: 22px; }
+	.cmp-off {
+		background: radial-gradient(circle at 70% 30%, #6a5bff, #101018 55%);
+		border-radius: 28px;
+		padding: 22px;
+		min-height: 220px;
+		position: relative;
+		overflow: hidden;
+	}
+	.cmp-off .orb {
+		width: 92px;
+		height: 92px;
+		border-radius: 50%;
+		margin: 12px auto;
+		background: conic-gradient(from 20deg, #d7dde6, #9aa7ff, #f3e2ff, #c9d4de, #d7dde6);
+		box-shadow: 0 0 32px rgb(180 190 255 / 0.7);
+	}
+	.cmp-off strong { display: block; text-align: center; font-size: 22px; letter-spacing: 0.14em; text-transform: uppercase; }
+	.cmp-on { border-top: 1px solid var(--color-border); padding-top: 12px; }
+	.cmp-on p { font-weight: 500; font-size: 40px; letter-spacing: -0.04em; line-height: 0.9; margin-top: 8px; }
+	.cmp-on small { display: block; margin-top: 10px; font-family: var(--mono); font-size: 13px; color: var(--color-muted); }
+	@media (min-width: 860px) {
+		.mobile { grid-template-columns: 280px 1fr; gap: 48px; }
+		.compare { grid-template-columns: 1fr 1fr; }
+	}
+	@media (max-width: 860px) {
+		.cover {
+			height: auto;
+			display: flex;
+			flex-direction: column;
+			gap: 16px;
+			padding: 16px;
+			overflow: visible;
+		}
+		.plate { height: 300px; flex: none; }
+		.axis.top span:nth-child(even),
+		.axis.side span:nth-child(even) { display: none; }
+		h1 { font-size: 48px; }
+		.rows li { grid-template-columns: 1.2fr 1fr 44px; }
+		.rows li span:nth-child(3) { display: none; }
+		.wrap { padding: 8px 16px 64px; }
+		.section h2 { font-size: 28px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.ask { transition: none; }
+	}
+</style>
+</head>
+<body>
+<header class="cover">
+	<div class="plate">
+		<div class="graticule"></div>
+		<div class="meridian"></div>
+		<div class="axis top"><span>18h</span><span>18h30</span><span>19h</span><span>19h30</span><span>20h</span></div>
+		<div class="axis side"><span>+20</span><span>+10</span><span>0</span><span>−10</span><span>−20</span></div>
+		<span class="star s3" style="left:18%;top:22%"><i></i>Keel 4</span>
+		<span class="star s2" style="left:34%;top:40%"><i></i>Noll 2</span>
+		<span class="star s1 bright" style="left:54%;top:18%"><i></i>West 9</span>
+		<span class="star s2" style="left:68%;top:36%"><i></i>Ilex 1</span>
+		<span class="star s4" style="left:22%;top:58%"><i></i>Pell 6</span>
+		<span class="star s3" style="left:46%;top:62%"><i></i>Arve 3</span>
+		<span class="star s3" style="left:70%;top:70%"><i></i>Quay 5</span>
+		<span class="star s2" style="left:30%;top:76%"><i></i>Sloe 2</span>
+		<div class="key">
+			<span><b style="width:4px;height:4px"></b>6</span>
+			<span><b style="width:6px;height:6px"></b>4</span>
+			<span><b style="width:8px;height:8px"></b>3</span>
+			<span><b style="width:12px;height:12px"></b>1</span>
+			<span>Magnitude, hard squares</span>
+		</div>
+	</div>
+	<div class="sheet">
+		<div class="meta"><span>Transit circle · North</span><span>2 Nov 2026</span></div>
+		<p class="eyebrow">On the meridian</p>
+		<h1>Hour 19</h1>
+		<p class="deck">Eight stars in the hour, logged by ascension. The brightest is West 9.</p>
+		<ol class="rows">
+			<li><span>Keel 4</span><span>18h 41m</span><span>+18° 12′</span><span class="mag">3.4</span></li>
+			<li><span>Noll 2</span><span>18h 55m</span><span>+06° 40′</span><span class="mag">4.1</span></li>
+			<li><span>West 9</span><span>19h 02m</span><span>+21° 05′</span><span class="mag">1.8</span></li>
+			<li><span>Ilex 1</span><span>19h 16m</span><span>−02° 22′</span><span class="mag">2.6</span></li>
+			<li><span>Pell 6</span><span>19h 28m</span><span>−11° 48′</span><span class="mag">4.8</span></li>
+			<li><span>Arve 3</span><span>19h 33m</span><span>−18° 02′</span><span class="mag">3.0</span></li>
+			<li><span>Quay 5</span><span>19h 47m</span><span>−24° 16′</span><span class="mag">3.7</span></li>
+			<li><span>Sloe 2</span><span>20h 04m</span><span>−08° 55′</span><span class="mag">2.9</span></li>
+		</ol>
+		<button class="ask" type="button">Log the hour</button>
+		<p class="rejected">Rejected — clouded, 18:40</p>
+	</div>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="eyebrow">01 — Night</p>
+		<h2>Blue-black, one steel line</h2>
+		<p class="intro">The desk and the plate are the same night, a step apart. Steel appears as the meridian and as West 9. A rejected observation is a pale word, not a red alarm.</p>
+		<ul class="swatches">
+			<li><i class="chip" style="background:var(--color-surface)"></i><b>Surface</b><span>The desk</span></li>
+			<li><i class="chip" style="background:var(--color-plate)"></i><b>Plate</b><span>The chart</span></li>
+			<li><i class="chip" style="background:var(--color-accent)"></i><b>Accent</b><span>Meridian</span></li>
+			<li><i class="chip" style="background:var(--color-primary)"></i><b>Ink</b><span>Stars and type</span></li>
+			<li><i class="chip" style="background:var(--color-danger)"></i><b>Danger</b><span>Rejected</span></li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="eyebrow">02 — Plate</p>
+		<h2>A graticule, not a sky</h2>
+		<p class="intro">Hour and declination rules run to the edge. Stars are squares. Brighter is larger. Nothing glows, and nothing is left as empty black.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">03 — Type</p>
+		<h2>Grotesque for the hour, mono for the figures</h2>
+		<p class="intro">“Hour 19” is a large grotesque, sentence case in spirit and weight 500. Coordinates stay monospace so the columns align. There is no serif title.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">04 — Log</p>
+		<h2>An underline, not a launch</h2>
+		<p class="intro">“Log the hour” is a line of type with a target tall enough to hit. Hover changes its color. Stars do not twinkle while it does.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">05 — Mobile</p>
+		<h2>The plate keeps its height</h2>
+		<div class="mobile">
+			<div class="phone">
+				<div class="plate">
+					<div class="graticule"></div>
+					<div class="meridian"></div>
+					<div class="axis top"><span>18h</span><span>19h</span><span>20h</span></div>
+					<div class="axis side"><span>+20</span><span>0</span><span>−20</span></div>
+					<span class="star s1 bright" style="left:48%;top:28%"><i></i>West 9</span>
+					<span class="star s3" style="left:22%;top:58%"><i></i>Arve 3</span>
+				</div>
+				<p class="eyebrow">On the meridian</p>
+				<h3>Hour 19</h3>
+				<ol>
+					<li><span>West 9</span><span>1.8</span></li>
+					<li><span>Ilex 1</span><span>2.6</span></li>
+					<li><span>Sloe 2</span><span>2.9</span></li>
+					<li><span>Keel 4</span><span>3.4</span></li>
+				</ol>
+				<button class="ask" type="button">Log the hour</button>
+			</div>
+			<ul class="rules">
+				<li><b>At 860px the plate stacks above the hour</b>It keeps a height near 300px, so the graticule is still a chart.</li>
+				<li><b>The hour steps from 92 to 48</b>It stays a grotesque. The figures stay monospace.</li>
+				<li><b>Declination leaves the row</b>Name, right ascension, and magnitude remain. Four fields were too many for the width.</li>
+				<li><b>The meridian stays one pixel</b>It does not become a glow or a divider card.</li>
+				<li><b>The log is at least 48px tall</b>Hover is absent on touch. Press colors the line with steel.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="eyebrow">06 — Off-style</p>
+		<h2>A chrome orb is not a transit</h2>
+		<div class="compare">
+			<div class="cmp-off">
+				<strong>Cosmic drop</strong>
+				<div class="orb"></div>
+			</div>
+			<div class="cmp-on">
+				<p class="eyebrow">On the meridian</p>
+				<p>Hour 19</p>
+				<small>West 9 · 19h 02m · mag 1.8</small>
+			</div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

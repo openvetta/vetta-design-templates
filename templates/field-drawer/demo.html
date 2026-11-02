@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Field Drawer — Upland bench</title>
+<style>
+	:root {
+		--color-primary: #1f1c16;
+		--color-primary-foreground: #f3efe6;
+		--color-surface: #cfc6b2;
+		--color-surface-foreground: #1f1c16;
+		--color-surface-raised: #e4dccb;
+		--color-muted: #4e493f;
+		--color-accent: #7a3f28;
+		--color-danger: #7c302c;
+		--color-border: #6a6254;
+		--color-recess: #b7ad98;
+		--color-chalk: #efe6d6;
+		--color-bone: #e2d3bc;
+		--color-sand: #d2bc94;
+		--color-clay: #b07a48;
+		--color-shale: #5e5952;
+		--color-oxide: #6e3d2e;
+		--color-slate: #3c4650;
+		--color-char: #2a2826;
+		--radius-sm: 0px;
+		--radius-md: 0px;
+		--radius-lg: 0px;
+		--radius-xl: 0px;
+		--radius-2xl: 0px;
+		--radius-full: 0px;
+		--shadow-sm: inset 0 1px 0 rgb(243 239 230 / 0.45);
+		--shadow-md: inset 0 12px 28px rgb(31 28 22 / 0.16);
+		--shadow-lg: 0 16px 28px rgb(31 28 22 / 0.12);
+		--shadow-focus: 0 0 0 1px #cfc6b2, 0 0 0 3px #7a3f28;
+		--duration-still: 160ms;
+		--serif: "Iowan Old Style", Palatino, "Palatino Linotype", "Liberation Serif", Georgia, serif;
+		--sans: Inter, "Helvetica Neue", "Liberation Sans", "Noto Sans", sans-serif;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--serif);
+		font-size: 16px;
+		line-height: 1.45;
+	}
+	h1, h2, p { margin: 0; }
+	button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+	.cover {
+		height: 100vh;
+		display: grid;
+		grid-template-columns: minmax(0, 1.28fr) minmax(300px, 0.72fr);
+		gap: 32px;
+		padding: 28px 32px 24px;
+		overflow: hidden;
+	}
+	.tray {
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		background: var(--color-recess);
+		box-shadow: var(--shadow-md);
+		border: 1px solid var(--color-border);
+		padding: 14px;
+	}
+	.tray-head {
+		display: flex;
+		justify-content: space-between;
+		gap: 12px;
+		padding: 2px 4px 12px;
+		font-family: var(--sans);
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-primary);
+	}
+	.cells {
+		flex: 1;
+		min-height: 0;
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		grid-template-rows: 1fr 1fr;
+		gap: 10px;
+	}
+	.cell {
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		padding: 12px 12px 14px;
+		background-color: var(--color-chalk);
+		color: var(--color-primary);
+		box-shadow: var(--shadow-sm);
+	}
+	.cell b {
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.14em;
+	}
+	.cell span {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		padding-top: 8px;
+		border-top: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+		font-size: 18px;
+		line-height: 1.15;
+	}
+	.cell small {
+		font-family: var(--sans);
+		font-size: 11px;
+		font-weight: 500;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: color-mix(in srgb, currentColor 78%, transparent);
+	}
+	.bone { background-color: var(--color-bone); }
+	.sand { background-color: var(--color-sand); }
+	.clay { background-color: var(--color-clay); }
+	.shale, .oxide, .slate, .char { color: var(--color-primary-foreground); }
+	.shale { background-color: var(--color-shale); }
+	.oxide { background-color: var(--color-oxide); }
+	.slate { background-color: var(--color-slate); }
+	.char { background-color: var(--color-char); }
+	.sheet {
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+	}
+	.eyebrow {
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+	h1 {
+		margin-top: 8px;
+		font-weight: 400;
+		font-size: 64px;
+		letter-spacing: -0.03em;
+		line-height: 0.92;
+	}
+	.deck {
+		margin-top: 12px;
+		max-width: 28ch;
+		font-size: 18px;
+		line-height: 1.35;
+	}
+	.ledger {
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		margin: 18px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.ledger li {
+		flex: 1;
+		display: grid;
+		grid-template-columns: 64px 1fr auto;
+		gap: 12px;
+		align-items: center;
+		border-top: 1px solid var(--color-border);
+		font-family: var(--sans);
+		font-size: 13px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.ledger li span:last-child { color: var(--color-muted); letter-spacing: 0.06em; }
+	.ask {
+		align-self: flex-start;
+		min-height: 48px;
+		display: inline-flex;
+		align-items: center;
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		border-bottom: 1px solid var(--color-border);
+		transition: color var(--duration-still) linear, border-color var(--duration-still) linear;
+	}
+	.ask:hover, .ask:active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+	.ask:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.voided {
+		margin-top: 6px;
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-danger);
+	}
+	.wrap { padding: 8px 32px 80px; max-width: 1100px; }
+	.section { margin-top: 72px; }
+	.section h2 {
+		font-weight: 400;
+		font-size: 36px;
+		letter-spacing: -0.02em;
+		margin-top: 8px;
+	}
+	.intro { margin-top: 12px; max-width: 46ch; color: var(--color-muted); font-size: 18px; }
+	.swatches { list-style: none; margin: 22px 0 0; padding: 0; max-width: 520px; }
+	.swatches li {
+		display: grid;
+		grid-template-columns: 22px 1fr auto;
+		gap: 14px;
+		align-items: center;
+		min-height: 44px;
+		border-top: 1px solid var(--color-border);
+		font-family: var(--sans);
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.chip { width: 22px; height: 14px; }
+	.swatches span { color: var(--color-muted); }
+	.mobile { display: grid; gap: 28px; margin-top: 22px; align-items: start; }
+	.phone {
+		width: 280px;
+		max-width: 100%;
+		margin: 0 auto;
+		border: 1px solid var(--color-border);
+		background: var(--color-surface);
+		padding: 12px;
+	}
+	.phone .mini {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 6px;
+		background: var(--color-recess);
+		padding: 8px;
+		border: 1px solid var(--color-border);
+	}
+	.phone .cell { min-height: 64px; padding: 8px; }
+	.phone .cell span { font-size: 13px; }
+	.phone h3 {
+		margin: 12px 0 0;
+		font-weight: 400;
+		font-size: 32px;
+		letter-spacing: -0.03em;
+		line-height: 0.95;
+	}
+	.phone ol { list-style: none; margin: 10px 0 0; padding: 0; }
+	.phone li {
+		display: flex;
+		justify-content: space-between;
+		gap: 8px;
+		border-top: 1px solid var(--color-border);
+		padding: 7px 0;
+		font-family: var(--sans);
+		font-size: 12px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+	.phone .ask { margin-top: 4px; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li {
+		padding: 14px 0;
+		border-top: 1px solid var(--color-border);
+		color: var(--color-muted);
+		font-size: 17px;
+	}
+	.rules b {
+		display: block;
+		color: var(--color-surface-foreground);
+		font-weight: 400;
+		font-size: 18px;
+		margin-bottom: 4px;
+	}
+	.compare { display: grid; gap: 22px; margin-top: 22px; }
+	.cmp-off {
+		background: #e7f6ff;
+		border-radius: 28px;
+		padding: 22px;
+		font-family: var(--sans);
+		color: #16324a;
+		box-shadow: 0 16px 28px rgb(40 80 120 / 0.16);
+	}
+	.cmp-off .sky {
+		height: 72px;
+		border-radius: 18px;
+		background: linear-gradient(#7ec8f0, #d8f3c8);
+		position: relative;
+		margin-bottom: 12px;
+	}
+	.cmp-off .sun {
+		position: absolute;
+		right: 16px;
+		top: 12px;
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		background: #ffe14a;
+	}
+	.cmp-off strong { display: block; font-size: 26px; letter-spacing: -0.03em; }
+	.cmp-off i {
+		display: inline-block;
+		margin-top: 12px;
+		background: #3aaa55;
+		color: white;
+		border-radius: 999px;
+		padding: 8px 14px;
+		font-style: normal;
+		font-weight: 700;
+	}
+	.cmp-on { border-top: 1px solid var(--color-border); padding-top: 12px; }
+	.cmp-on .pair { display: grid; grid-template-columns: 72px 1fr; gap: 10px; margin-top: 12px; }
+	.cmp-on .pair i { display: block; background: var(--color-oxide); }
+	.cmp-on .pair i + i { background: var(--color-sand); }
+	.cmp-on p { font-size: 28px; letter-spacing: -0.03em; line-height: 1; margin-top: 8px; }
+	.cmp-on small { display: block; margin-top: 8px; font-family: var(--sans); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; }
+	@media (min-width: 860px) {
+		.mobile { grid-template-columns: 280px 1fr; gap: 48px; }
+		.compare { grid-template-columns: 1fr 1fr; align-items: stretch; }
+	}
+	@media (max-width: 860px) {
+		.cover {
+			height: auto;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			gap: 18px;
+			padding: 16px;
+			overflow: visible;
+		}
+		.tray { min-height: 460px; }
+		.cells { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, 1fr); }
+		h1 { font-size: 40px; }
+		.wrap { padding: 8px 16px 64px; }
+		.section h2 { font-size: 28px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.ask { transition: none; }
+	}
+</style>
+</head>
+<body>
+<header class="cover">
+	<div class="tray">
+		<div class="tray-head">
+			<span>Drawer 14</span>
+			<span>Upland bench</span>
+			<span>Eight finds</span>
+		</div>
+		<div class="cells">
+			<article class="cell"><b>F-14</b><span>Chalk<small>1.2 m</small></span></article>
+			<article class="cell bone"><b>F-15</b><span>Bone<small>1.4 m</small></span></article>
+			<article class="cell sand"><b>F-16</b><span>Sandstone<small>1.6 m</small></span></article>
+			<article class="cell clay"><b>F-17</b><span>Fired clay<small>1.8 m</small></span></article>
+			<article class="cell shale"><b>F-18</b><span>Shale<small>2.1 m</small></span></article>
+			<article class="cell oxide"><b>F-19</b><span>Oxide<small>2.4 m</small></span></article>
+			<article class="cell slate"><b>F-20</b><span>Slate<small>2.7 m</small></span></article>
+			<article class="cell char"><b>F-21</b><span>Charcoal<small>3.0 m</small></span></article>
+		</div>
+	</div>
+	<div class="sheet">
+		<p class="eyebrow">Site 19 · East cut</p>
+		<h1>Upland bench</h1>
+		<p class="deck">Eight finds from the east cut, logged by depth and left in the tray.</p>
+		<ol class="ledger">
+			<li><span>F-14</span><span>Chalk</span><span>1.2 m</span></li>
+			<li><span>F-15</span><span>Bone</span><span>1.4 m</span></li>
+			<li><span>F-16</span><span>Sandstone</span><span>1.6 m</span></li>
+			<li><span>F-17</span><span>Fired clay</span><span>1.8 m</span></li>
+			<li><span>F-18</span><span>Shale</span><span>2.1 m</span></li>
+			<li><span>F-19</span><span>Oxide</span><span>2.4 m</span></li>
+			<li><span>F-20</span><span>Slate</span><span>2.7 m</span></li>
+			<li><span>F-21</span><span>Charcoal</span><span>3.0 m</span></li>
+		</ol>
+		<button class="ask" type="button">Request the drawer</button>
+		<p class="voided">Voided — F-09, west spoil</p>
+	</div>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="eyebrow">01 — Board</p>
+		<h2>Khaki, recess, eight faces</h2>
+		<p class="intro">The board is the ground. The recess is darker, so the finds sit down into it. Oxide appears once, as the bench name. A voided find is a darker word, not a painted alarm.</p>
+		<ul class="swatches">
+			<li><i class="chip" style="background:var(--color-surface)"></i><b>Surface</b><span>Khaki board</span></li>
+			<li><i class="chip" style="background:var(--color-recess)"></i><b>Recess</b><span>Tray bed</span></li>
+			<li><i class="chip" style="background:var(--color-sand)"></i><b>Sand</b><span>One find</span></li>
+			<li><i class="chip" style="background:var(--color-accent)"></i><b>Accent</b><span>The eyebrow</span></li>
+			<li><i class="chip" style="background:var(--color-danger)"></i><b>Danger</b><span>Voided</span></li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="eyebrow">02 — Tray</p>
+		<h2>Blocks, not pictures</h2>
+		<p class="intro">Four across, two down. Each block is one material from edge to edge. A lit top edge is the only modeling. Nothing is round, and nothing illustrates the bone it names.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">03 — Type</p>
+		<h2>Serif for the site, grotesque for the number</h2>
+		<p class="intro">The site name is sentence case and quiet. Find numbers, depths, and the request are tracked capitals. The ledger repeats the tray in the same order.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">04 — Request</p>
+		<h2>An underline, not a badge</h2>
+		<p class="intro">“Request the drawer” is a line of type with a target tall enough to hit. Hover changes its color. It does not grow a shape.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">05 — Mobile</p>
+		<h2>Two columns, the tray first</h2>
+		<div class="mobile">
+			<div class="phone">
+				<div class="mini">
+					<article class="cell"><b>F-14</b><span>Chalk<small>1.2 m</small></span></article>
+					<article class="cell bone"><b>F-15</b><span>Bone<small>1.4 m</small></span></article>
+					<article class="cell sand"><b>F-16</b><span>Sandstone<small>1.6 m</small></span></article>
+					<article class="cell clay"><b>F-17</b><span>Fired clay<small>1.8 m</small></span></article>
+				</div>
+				<p class="eyebrow" style="margin-top:12px">Site 19</p>
+				<h3>Upland bench</h3>
+				<ol>
+					<li><span>F-14 Chalk</span><span>1.2 m</span></li>
+					<li><span>F-15 Bone</span><span>1.4 m</span></li>
+					<li><span>F-16 Sandstone</span><span>1.6 m</span></li>
+					<li><span>F-17 Clay</span><span>1.8 m</span></li>
+				</ol>
+				<button class="ask" type="button">Request the drawer</button>
+			</div>
+			<ul class="rules">
+				<li><b>At 860px the tray stacks above the ledger</b>The first screen is still the drawer, not a cropped headline.</li>
+				<li><b>Four columns become two</b>Each find keeps a face large enough to read the number and the depth.</li>
+				<li><b>The site name steps from 64 to 40</b>It stays a serif in sentence case. The numbers stay grotesque.</li>
+				<li><b>The ledger remains full width</b>Number, material, depth. Nothing collapses into a chip.</li>
+				<li><b>The request is at least 48px tall</b>Hover is absent on touch. Press colors the line with oxide.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="eyebrow">06 — Off-style</p>
+		<h2>A dune cartoon is not a drawer</h2>
+		<div class="compare">
+			<div class="cmp-off">
+				<div class="sky"><i class="sun"></i></div>
+				<strong>Adventure day</strong>
+				<p>A sky, a sun, a grassy card, a mascot waiting just offstage.</p>
+				<i>Explore</i>
+			</div>
+			<div class="cmp-on">
+				<p class="eyebrow">Site 19</p>
+				<p>Upland bench</p>
+				<div class="pair"><i></i><i></i></div>
+				<small>F-19 oxide · F-16 sandstone · 2.4 m / 1.6 m</small>
+			</div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

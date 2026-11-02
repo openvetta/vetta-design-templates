@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blotter — Resin veil</title>
+<style>
+	:root {
+		--color-primary: #241c18;
+		--color-primary-foreground: #f6f1e8;
+		--color-surface: #d9c6b4;
+		--color-surface-foreground: #241c18;
+		--color-surface-raised: #f6f1e8;
+		--color-muted: #5c4e45;
+		--color-accent: #7a3b2e;
+		--color-danger: #8e2e2a;
+		--color-border: #a8907c;
+		--color-top: #f4efe6;
+		--color-heart: #e4cfc3;
+		--color-base: #4a342c;
+		--color-fiber: rgb(36 28 24 / 0.05);
+		--radius-sm: 0px;
+		--radius-md: 0px;
+		--radius-lg: 0px;
+		--radius-xl: 0px;
+		--radius-2xl: 0px;
+		--radius-full: 0px;
+		--shadow-sm: inset 0 1px 0 rgb(255 248 240 / 0.7);
+		--shadow-md: 0 12px 22px rgb(36 28 24 / 0.1);
+		--shadow-lg: 0 18px 28px rgb(36 28 24 / 0.14);
+		--shadow-focus: 0 0 0 1px #d9c6b4, 0 0 0 3px #7a3b2e;
+		--duration-still: 160ms;
+		--serif: "Iowan Old Style", Palatino, "Palatino Linotype", "Liberation Serif", Georgia, serif;
+		--sans: Inter, "Helvetica Neue", "Liberation Sans", "Noto Sans", sans-serif;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--serif);
+		font-size: 16px;
+		line-height: 1.45;
+	}
+	h1, h2, p { margin: 0; }
+	button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+	.cover {
+		height: 100vh;
+		display: grid;
+		grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+		gap: 28px;
+		padding: 28px 32px 24px;
+		overflow: hidden;
+	}
+	.running { display: none; }
+	.strata {
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+	}
+	.strip {
+		flex: 1;
+		min-height: 0;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+		gap: 18px;
+		padding: 22px 26px;
+		background-color: var(--color-top);
+		background-image: repeating-linear-gradient(90deg, transparent 0 3px, var(--color-fiber) 3px 4px);
+		box-shadow: var(--shadow-sm), var(--shadow-md);
+	}
+	.strip .role {
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+	.strip h2 {
+		margin-top: 6px;
+		font-weight: 400;
+		font-size: 42px;
+		letter-spacing: -0.03em;
+		line-height: 1;
+	}
+	.strip p { margin-top: 8px; max-width: 32ch; font-size: 16px; }
+	.share {
+		font-family: var(--sans);
+		font-weight: 500;
+		font-size: 64px;
+		letter-spacing: -0.04em;
+		line-height: 0.85;
+		font-variant-numeric: tabular-nums;
+	}
+	.share small {
+		font-size: 18px;
+		letter-spacing: 0;
+		margin-left: 2px;
+	}
+	.heart { background-color: var(--color-heart); }
+	.strip.base {
+		background-color: var(--color-base);
+		background-image: repeating-linear-gradient(90deg, transparent 0 3px, rgb(246 241 232 / 0.07) 3px 4px);
+		color: var(--color-primary-foreground);
+		box-shadow: inset 0 1px 0 rgb(246 241 232 / 0.18), var(--shadow-md);
+	}
+	.base .role { color: var(--color-heart); }
+	.sheet { min-height: 0; display: flex; flex-direction: column; }
+	.eyebrow {
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+	h1 {
+		margin-top: 8px;
+		font-weight: 400;
+		font-size: 64px;
+		letter-spacing: -0.03em;
+		line-height: 0.92;
+	}
+	.deck { margin-top: 12px; max-width: 30ch; font-size: 18px; line-height: 1.35; }
+	.formula {
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		flex-direction: column;
+		margin: 16px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.formula li {
+		flex: 1;
+		display: grid;
+		grid-template-columns: 1.3fr 0.7fr auto;
+		gap: 10px;
+		align-items: center;
+		border-top: 1px solid var(--color-border);
+		font-family: var(--sans);
+		font-size: 13px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+	.formula li span:nth-child(2) { color: var(--color-muted); }
+	.formula li span:last-child { font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+	.total { font-weight: 600; }
+	.ask {
+		align-self: flex-start;
+		min-height: 48px;
+		display: inline-flex;
+		align-items: center;
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		border-bottom: 1px solid var(--color-primary);
+		transition: color var(--duration-still) linear, border-color var(--duration-still) linear;
+	}
+	.ask:hover, .ask:active { color: var(--color-accent); border-bottom-color: var(--color-accent); }
+	.ask:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+	.spoiled {
+		margin-top: 6px;
+		font-family: var(--sans);
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-danger);
+	}
+	.wrap { padding: 8px 32px 80px; max-width: 1100px; }
+	.section { margin-top: 72px; }
+	.section h2 { font-weight: 400; font-size: 36px; letter-spacing: -0.02em; margin-top: 8px; }
+	.intro { margin-top: 12px; max-width: 46ch; color: var(--color-muted); font-size: 18px; }
+	.swatches { list-style: none; margin: 22px 0 0; padding: 0; max-width: 520px; }
+	.swatches li {
+		display: grid;
+		grid-template-columns: 22px 1fr auto;
+		gap: 14px;
+		align-items: center;
+		min-height: 44px;
+		border-top: 1px solid var(--color-border);
+		font-family: var(--sans);
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.chip { width: 22px; height: 14px; }
+	.swatches span { color: var(--color-muted); }
+	.mobile { display: grid; gap: 28px; margin-top: 22px; align-items: start; }
+	.phone {
+		width: 280px;
+		max-width: 100%;
+		margin: 0 auto;
+		border: 1px solid var(--color-border);
+		background: var(--color-surface);
+		padding: 12px;
+	}
+	.phone .strip { padding: 10px 12px; box-shadow: none; }
+	.phone .strip h2 { font-size: 20px; }
+	.phone .strip p { display: none; }
+	.phone .share { font-size: 28px; }
+	.phone h3 { margin: 12px 0 0; font-weight: 400; font-size: 32px; letter-spacing: -0.03em; line-height: 0.95; }
+	.phone ol { list-style: none; margin: 8px 0 0; padding: 0; }
+	.phone li {
+		display: flex;
+		justify-content: space-between;
+		border-top: 1px solid var(--color-border);
+		padding: 6px 0;
+		font-family: var(--sans);
+		font-size: 12px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 14px 0; border-top: 1px solid var(--color-border); color: var(--color-muted); font-size: 17px; }
+	.rules b { display: block; color: var(--color-surface-foreground); font-weight: 400; font-size: 18px; margin-bottom: 4px; }
+	.compare { display: grid; gap: 22px; margin-top: 22px; }
+	.cmp-off {
+		background: #fff6fb;
+		border-radius: 28px;
+		padding: 22px;
+		font-family: var(--sans);
+		color: #5a2748;
+		box-shadow: 0 16px 28px rgb(180 80 140 / 0.16);
+	}
+	.cmp-off .bottle {
+		width: 54px;
+		height: 88px;
+		margin: 8px auto 12px;
+		border-radius: 28px 28px 16px 16px;
+		background: linear-gradient(#ffd0ea, #9ad7ff);
+		box-shadow: inset 0 0 0 3px rgb(255 255 255 / 0.7), 0 10px 16px rgb(180 80 140 / 0.25);
+	}
+	.cmp-off strong { display: block; text-align: center; font-size: 26px; letter-spacing: -0.03em; }
+	.cmp-off p { text-align: center; }
+	.cmp-on { border-top: 1px solid var(--color-border); padding-top: 12px; }
+	.cmp-on .bands { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 6px; margin-top: 12px; height: 64px; }
+	.cmp-on .bands i:nth-child(1) { background: var(--color-top); }
+	.cmp-on .bands i:nth-child(2) { background: var(--color-heart); }
+	.cmp-on .bands i:nth-child(3) { background: var(--color-base); }
+	.cmp-on p { font-size: 32px; letter-spacing: -0.03em; line-height: 1; margin-top: 8px; }
+	.cmp-on small { display: block; margin-top: 8px; font-family: var(--sans); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; }
+	@media (min-width: 860px) {
+		.mobile { grid-template-columns: 280px 1fr; gap: 48px; }
+		.compare { grid-template-columns: 1fr 1fr; }
+	}
+	@media (max-width: 860px) {
+		.cover {
+			height: auto;
+			display: flex;
+			flex-direction: column;
+			gap: 16px;
+			padding: 16px;
+			overflow: visible;
+		}
+		.running {
+			display: flex;
+			justify-content: space-between;
+			font-family: var(--sans);
+			font-size: 12px;
+			font-weight: 600;
+			letter-spacing: 0.16em;
+			text-transform: uppercase;
+		}
+		.strata { min-height: calc(100vh - 88px); }
+		.strip { padding: 16px; }
+		.strip h2 { font-size: 32px; }
+		.share { font-size: 44px; }
+		h1 { font-size: 40px; }
+		.wrap { padding: 8px 16px 64px; }
+		.section h2 { font-size: 28px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.ask { transition: none; }
+	}
+</style>
+</head>
+<body>
+<header class="cover">
+	<div class="strata">
+		<div class="running"><span>No. 18</span><span>Resin veil</span></div>
+		<article class="strip">
+			<div>
+				<p class="role">Top · 18</p>
+				<h2>Bergamot peel</h2>
+				<p>Petitgrain beside it. Both leave the strip first.</p>
+			</div>
+			<p class="share">18<small>%</small></p>
+		</article>
+		<article class="strip heart">
+			<div>
+				<p class="role">Heart · 34</p>
+				<h2>Rose absolute</h2>
+				<p>Geranium under it. The middle of the card.</p>
+			</div>
+			<p class="share">34<small>%</small></p>
+		</article>
+		<article class="strip base">
+			<div>
+				<p class="role">Base · 48</p>
+				<h2>Labdanum</h2>
+				<p>Benzoin and cedar stay after the rest.</p>
+			</div>
+			<p class="share">48<small>%</small></p>
+		</article>
+	</div>
+	<div class="sheet">
+		<p class="eyebrow">No. 18 · Bench</p>
+		<h1>Resin veil</h1>
+		<p class="deck">A formula in three papers. The ledger sums to the strips.</p>
+		<ol class="formula">
+			<li><span>Bergamot peel</span><span>Top</span><span>12</span></li>
+			<li><span>Petitgrain</span><span>Top</span><span>6</span></li>
+			<li><span>Rose absolute</span><span>Heart</span><span>22</span></li>
+			<li><span>Geranium</span><span>Heart</span><span>12</span></li>
+			<li><span>Labdanum</span><span>Base</span><span>28</span></li>
+			<li><span>Benzoin</span><span>Base</span><span>14</span></li>
+			<li><span>Cedar</span><span>Base</span><span>6</span></li>
+			<li class="total"><span>Whole</span><span></span><span>100</span></li>
+		</ol>
+		<button class="ask" type="button">Cut a strip</button>
+		<p class="spoiled">Spoiled — batch 17, held</p>
+	</div>
+</header>
+<main class="wrap">
+	<section class="section">
+		<p class="eyebrow">01 — Papers</p>
+		<h2>Pale, rose, resin</h2>
+		<p class="intro">Three equal strips on a pink-tan desk. The base is the only dark mass, and it carries light type. Resin red is the number of the formula, not a fourth paper.</p>
+		<ul class="swatches">
+			<li><i class="chip" style="background:var(--color-surface)"></i><b>Surface</b><span>The desk</span></li>
+			<li><i class="chip" style="background:var(--color-top)"></i><b>Top</b><span>Pale blotter</span></li>
+			<li><i class="chip" style="background:var(--color-heart)"></i><b>Heart</b><span>Rose paper</span></li>
+			<li><i class="chip" style="background:var(--color-base)"></i><b>Base</b><span>Resin</span></li>
+			<li><i class="chip" style="background:var(--color-danger)"></i><b>Danger</b><span>Spoiled</span></li>
+		</ul>
+	</section>
+	<section class="section">
+		<p class="eyebrow">02 — Tooth</p>
+		<h2>Fiber, not a pattern</h2>
+		<p class="intro">A fine vertical tooth sits inside each strip. A pale lip along the top edge and a short shadow put the paper on the desk. Nothing is glossy.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">03 — Type</p>
+		<h2>Serif for the note, grotesque for the share</h2>
+		<p class="intro">The formula and the three notes are sentence-case serifs. Shares and the ledger are tracked grotesques with tabular figures. Eighteen, thirty-four, and forty-eight are the strips. The rows beneath them sum to the same hundred.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">04 — Cut</p>
+		<h2>An underline, not a bottle</h2>
+		<p class="intro">“Cut a strip” is a line of type with a target tall enough to hit. Hover changes its color. It does not grow a cap or a dropper.</p>
+	</section>
+	<section class="section">
+		<p class="eyebrow">05 — Mobile</p>
+		<h2>The papers still fill the first screen</h2>
+		<div class="mobile">
+			<div class="phone">
+				<div class="running" style="display:flex;justify-content:space-between;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px"><span>No. 18</span><span>Resin veil</span></div>
+				<article class="strip"><div><p class="role">Top</p><h2>Bergamot</h2></div><p class="share">18<small>%</small></p></article>
+				<article class="strip heart"><div><p class="role">Heart</p><h2>Rose</h2></div><p class="share">34<small>%</small></p></article>
+				<article class="strip base"><div><p class="role">Base</p><h2>Labdanum</h2></div><p class="share">48<small>%</small></p></article>
+				<p class="eyebrow" style="margin-top:12px">Bench</p>
+				<h3>Resin veil</h3>
+				<ol>
+					<li><span>Bergamot</span><span>12</span></li>
+					<li><span>Rose</span><span>22</span></li>
+					<li><span>Labdanum</span><span>28</span></li>
+					<li><span>Whole</span><span>100</span></li>
+				</ol>
+				<button class="ask" type="button">Cut a strip</button>
+			</div>
+			<ul class="rules">
+				<li><b>At 860px a running line names the formula</b>Then the three papers fill the rest of the first viewport. The ledger follows.</li>
+				<li><b>Each paper keeps its share</b>18, 34, and 48 stay on the right. They still sum with the table.</li>
+				<li><b>The formula name steps from 64 to 40</b>It stays a serif. The shares stay grotesque.</li>
+				<li><b>The tooth remains</b>A narrow screen does not replace the fiber with a flat fill.</li>
+				<li><b>The cut is at least 48px tall</b>Hover is absent on touch. Press colors the line with the resin mark.</li>
+			</ul>
+		</div>
+	</section>
+	<section class="section">
+		<p class="eyebrow">06 — Off-style</p>
+		<h2>A jelly bottle is not a formula</h2>
+		<div class="compare">
+			<div class="cmp-off">
+				<div class="bottle"></div>
+				<strong>Dew drop</strong>
+				<p>Translucent, floral, and empty of amounts.</p>
+			</div>
+			<div class="cmp-on">
+				<p class="eyebrow">No. 18</p>
+				<p>Resin veil</p>
+				<div class="bands"><i></i><i></i><i></i></div>
+				<small>18 · 34 · 48 · sums to 100</small>
+			</div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

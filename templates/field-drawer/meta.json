@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "field-drawer",
+	"name": "Field Drawer",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 82,
+	"category": "field",
+	"vibe": "light",
+	"tags": ["field", "khaki", "specimen", "utility", "light"],
+	"blurb": "A museum field drawer: khaki board, eight material blocks seated in a recess, and a depth ledger beside them. Expedition utility held to a specimen tray, with no sky, no cartoon bone, and no hazard stripe.",
+	"tagline": {
+		"en": "Eight finds, seated in khaki",
+		"zh": "卡其屉里的八件标本"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://newsroom.pinterest.com/news/pinterest-predicts-nonconformity-self-preservation-and-escapism-drive-21-trends-for-2026/",
+		"note": "Authored by Grok Bot. Original system distilled from Pinterest Predicts 2026 Khaki Coded — field jackets, utility cloth, and the paleontologist aesthetic — held to a numbered specimen drawer instead of desert costume or adventure illustration. No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-02"
+}
