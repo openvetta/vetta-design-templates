@@ -1,0 +1,38 @@
+/* Field Drawer — a specimen tray on khaki board. Eight material blocks,
+   a depth ledger, no desert and no hazard stripe.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #1f1c16;
+	--color-primary-foreground: #f3efe6;
+	--color-surface: #cfc6b2;
+	--color-surface-foreground: #1f1c16;
+	--color-surface-raised: #e4dccb;
+	--color-muted: #4e493f;
+	--color-accent: #7a3f28;
+	--color-danger: #7c302c;
+	--color-border: #6a6254;
+
+	--color-recess: #b7ad98;
+	--color-chalk: #efe6d6;
+	--color-bone: #e2d3bc;
+	--color-sand: #d2bc94;
+	--color-clay: #b07a48;
+	--color-shale: #5e5952;
+	--color-oxide: #6e3d2e;
+	--color-slate: #3c4650;
+	--color-char: #2a2826;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: inset 0 1px 0 rgb(243 239 230 / 0.45);
+	--shadow-md: inset 0 12px 28px rgb(31 28 22 / 0.16);
+	--shadow-lg: 0 16px 28px rgb(31 28 22 / 0.12);
+	--shadow-focus: 0 0 0 1px #cfc6b2, 0 0 0 3px #7a3f28;
+
+	--duration-still: 160ms;
+}

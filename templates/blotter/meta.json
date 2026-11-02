@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "blotter",
+	"name": "Blotter",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 148,
+	"category": "scent",
+	"vibe": "light",
+	"tags": ["scent", "paper", "formula", "tactile", "light"],
+	"blurb": "A perfume formula on three blotter strata: pale top, rose heart, resin base, and a percentage ledger that sums to the whole. Scent made as paper and type, with no bottle, no flower, and no gummy translucency.",
+	"tagline": {
+		"en": "Three papers, one formula",
+		"zh": "三层试香纸，一张配方"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://thedieline.com/combo-delivers-scent-and-sensibility-for-nue-co/",
+		"note": "Authored by Grok Bot. Original system distilled from Pinterest Predicts 2026 Scent Stacking (https://newsroom.pinterest.com/news/pinterest-predicts-nonconformity-self-preservation-and-escapism-drive-21-trends-for-2026/) and from Dieline's March 2026 note on tonal fragrance layering. Held to three blotter papers and a formula instead of bottles, florals, or translucent gummies. No third-party assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-02"
+}

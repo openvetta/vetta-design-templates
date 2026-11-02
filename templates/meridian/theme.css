@@ -1,0 +1,32 @@
+/* Meridian — a transit catalog. Blue-black field, one cold meridian,
+   a ruled graticule, magnitudes as hard squares.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #e6e9ec;
+	--color-primary-foreground: #101418;
+	--color-surface: #101418;
+	--color-surface-foreground: #e6e9ec;
+	--color-surface-raised: #1a2128;
+	--color-muted: #a9b4bc;
+	--color-accent: #9ec4d4;
+	--color-danger: #e3a097;
+	--color-border: #3c4852;
+
+	--color-grid: rgb(230 233 236 / 0.16);
+	--color-grid-strong: rgb(230 233 236 / 0.4);
+	--color-plate: #0c1014;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 1px #101418, 0 0 0 2px #9ec4d4;
+
+	--duration-still: 160ms;
+}
