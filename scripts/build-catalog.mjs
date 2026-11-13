@@ -45,6 +45,12 @@ const TEXT_EXTENSIONS = new Set(["md", "css", "html", "htm", "txt", "json", "svg
 /** 单个文本资源的内联上限：超过就退化成按需下载，别把清单撑爆。 */
 const MAX_INLINE_BYTES = 256 * 1024;
 
+/**
+ * 客户端 remote-catalog.ts 的 MAX_SPEC_BYTES（64KiB）按 JS 字符串长度比较。
+ * 超限的内联文本会被静默丢弃，预览和规范都不会出现，所以这里直接失败。
+ */
+const MAX_INLINE_JS_CHARS = 64 * 1024;
+
 const errors = [];
 const fail = (slug, message) => errors.push(`${slug}: ${message}`);
 
@@ -151,6 +157,12 @@ function buildResources(slug, roles) {
 			: undefined;
 		const textBytes = text === undefined ? undefined : Buffer.byteLength(text, "utf8");
 		const inline = textBytes !== undefined && textBytes <= MAX_INLINE_BYTES;
+		if (inline && text.length > MAX_INLINE_JS_CHARS) {
+			fail(
+				slug,
+				`资源 ${rel} 将作为文本内联进清单，但 JS 字符串长度为 ${text.length}，超过客户端上限 ${MAX_INLINE_JS_CHARS}。客户端按字符串长度比较，超限的内联文本会被静默丢弃`,
+			);
+		}
 		const bytes = inline ? textBytes : rawBytes;
 		resources.push({
 			path: rel,
