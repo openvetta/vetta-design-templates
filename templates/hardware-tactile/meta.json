@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "hardware-tactile",
+	"name": "Hardware Tactile",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 168,
+	"category": "instrument",
+	"vibe": "light",
+	"tags": ["instrument", "hardware", "tactile", "aluminum", "orange", "light"],
+	"blurb": "Matte desk instrument for a local agent: warm plastic chassis, a brushed aluminum nameplate, flat phosphor segments in a recessed well, encoder knobs with an orange notch, square keys with a short lip, and a single orange run key. Clean and modern, not glossy gel and not clay.",
+	"tagline": {
+		"en": "Warm plastic, a phosphor well, one orange key",
+		"zh": "暖塑料机身，磷光屏，一颗橙色键"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://rams-foundation.org/magazine/texts/colors/",
+		"note": "Authored by Grok Bot. Original Hardware Tactile system. Mood only: Dieter Rams and Dietrich Lubs at Braun, where color marks a function on otherwise quiet plastic (Rams Foundation, Colors), and Teenage Engineering's machined housings, physical encoders, and orange assigned to one job. Latch-1, the palette, and the copy are original. No third-party marks, drawings, or assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-13"
+}

@@ -1,0 +1,51 @@
+/* Hardware Tactile — warm plastic, brushed aluminum, a flat phosphor well,
+   and one orange key. Matte and modern. Not gel gloss, not clay, not neon.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #e15c16;
+	--color-primary-foreground: #1a120c;
+	--color-surface: #e6e1d6;
+	--color-surface-foreground: #1c1914;
+	--color-surface-raised: #f4f0e7;
+	--color-muted: #534e45;
+	--color-accent: #3c5626;
+	--color-danger: #8e2e28;
+	--color-border: #7a7268;
+
+	--color-primary-deep: #a33a0c;
+	--color-danger-foreground: #f6f1e8;
+	--color-danger-deep: #641f1b;
+	--color-danger-wash: #f3d4ce;
+
+	--color-plastic: #efeae2;
+	--color-plastic-deep: #d5cfc4;
+	--color-aluminum: #c4bfb5;
+	--color-aluminum-hi: #e0dbd2;
+	--color-aluminum-deep: #8f8a80;
+	--color-screw: #5c564e;
+
+	--color-well: #171d15;
+	--color-phosphor: #d5eda8;
+	--color-phosphor-soft: #8ea67a;
+	--color-phosphor-dim: #2a3624;
+
+	--radius-sm: 3px;
+	--radius-md: 6px;
+	--radius-lg: 10px;
+	--radius-xl: 14px;
+	--radius-2xl: 18px;
+	--radius-full: 999px;
+
+	--shadow-sm: inset 0 1px 0 rgb(255 252 246 / 0.65), 0 1px 0 rgb(48 38 24 / 0.16);
+	--shadow-md: 0 8px 16px rgb(48 38 24 / 0.1);
+	--shadow-lg: 0 16px 28px rgb(48 38 24 / 0.16);
+	--shadow-well: inset 0 2px 5px rgb(0 0 0 / 0.55), inset 0 0 0 1px rgb(0 0 0 / 0.45);
+	--shadow-focus: 0 0 0 2px #e6e1d6, 0 0 0 4px #e15c16;
+
+	--ease-press: cubic-bezier(0.2, 0, 0, 1);
+	--duration-press: 90ms;
+	--duration-blink: 1.2s;
+
+	--font-sans: "Helvetica Neue", Helvetica, Arial, "Segoe UI", sans-serif;
+	--font-mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+}
