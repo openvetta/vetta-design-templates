@@ -1,0 +1,1073 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vesper — Synthwave Grid</title>
+<style>
+	/* Mirrors theme.css. Plain custom properties so this file opens standalone. */
+	:root {
+		--color-primary: #d41470;
+		--color-primary-foreground: #ffffff;
+		--color-surface: #14071c;
+		--color-surface-foreground: #f7f2ff;
+		--color-surface-raised: #241230;
+		--color-muted: #d4c4e4;
+		--color-accent: #5cefff;
+		--color-danger: #ff9aa8;
+		--color-border: #9a6cbc;
+		--color-sun-0: #fff4b0;
+		--color-sun-1: #ffb03a;
+		--color-sun-2: #ff4b7a;
+		--color-sky-top: #10051a;
+		--color-sky-mid: #5c1874;
+		--color-sky-hot: #c43378;
+		--color-sky-deep: #3a1248;
+		--color-wire: #ff6aa8;
+		--color-palm: #12061a;
+		--grid-line: rgb(92 239 255 / 0.62);
+		--glow-display: 0 0 8px rgb(255 61 138 / 0.55), 0 0 22px rgb(255 61 138 / 0.28);
+		--glow-gold: 0 0 8px rgb(255 180 60 / 0.4), 0 0 20px rgb(255 61 138 / 0.22);
+		--radius-sm: 4px;
+		--radius-md: 6px;
+		--radius-lg: 10px;
+		--radius-xl: 14px;
+		--radius-2xl: 18px;
+		--radius-full: 9999px;
+		--shadow-sm: 0 0 0 1px rgb(154 108 188 / 0.45);
+		--shadow-md: 0 0 18px rgb(212 20 112 / 0.35);
+		--shadow-lg: 0 0 12px rgb(255 77 154 / 0.55), 0 0 36px rgb(92 239 255 / 0.18);
+		--shadow-focus: 0 0 0 2px #14071c, 0 0 0 5px #5cefff;
+		--ease-ui: cubic-bezier(0.2, 0, 0, 1);
+		--duration-drive: 8s;
+		--duration-ui: 160ms;
+		--font-display: Inter, "Noto Sans Display", "Segoe UI", "Helvetica Neue", sans-serif;
+		--font-body: Inter, "Segoe UI", "Helvetica Neue", "Noto Sans", "Liberation Sans", sans-serif;
+		--font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", monospace;
+	}
+
+	*, *::before, *::after { box-sizing: border-box; }
+	html { scroll-behavior: smooth; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--font-body);
+		font-size: 17px;
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+		overflow-x: hidden;
+	}
+	h1, h2, h3, p, ul, ol, dl, figure { margin: 0; }
+	a { color: inherit; }
+	button, input { font: inherit; color: inherit; }
+	button { cursor: pointer; }
+	:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+	::selection { background: rgb(212 20 112 / 0.55); color: #fff; }
+	.quiet { color: var(--color-muted); }
+
+	.wordmark {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		font-family: var(--font-display);
+		font-style: italic;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		text-decoration: none;
+		font-size: 18px;
+	}
+	.lamp {
+		width: 12px;
+		height: 12px;
+		background: var(--color-primary);
+		border-radius: 2px;
+		box-shadow: 0 0 10px var(--color-primary);
+		flex: none;
+	}
+
+	.action {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 48px;
+		padding: 0 18px;
+		border-radius: var(--radius-md);
+		border: 1px solid transparent;
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+		font-weight: 700;
+		letter-spacing: 0.01em;
+		text-decoration: none;
+		box-shadow: var(--shadow-md);
+		transition: box-shadow var(--duration-ui) var(--ease-ui), border-color var(--duration-ui) var(--ease-ui), background var(--duration-ui) var(--ease-ui), transform var(--duration-ui) var(--ease-ui);
+	}
+	.action-quiet {
+		background: transparent;
+		color: var(--color-surface-foreground);
+		border-color: var(--color-accent);
+		box-shadow: none;
+	}
+	.action-danger {
+		background: var(--color-danger);
+		color: var(--color-surface);
+		box-shadow: none;
+	}
+	.action:disabled {
+		background: var(--color-surface);
+		color: var(--color-muted);
+		border-color: var(--color-border);
+		box-shadow: none;
+		opacity: 1;
+		cursor: not-allowed;
+	}
+	.action:active { transform: translateY(1px); }
+	.action-small { min-height: 40px; padding: 0 14px; font-size: 15px; }
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		min-height: 28px;
+		padding: 0 10px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		color: var(--color-surface-foreground);
+		font-size: 13px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.eyebrow {
+		font-family: var(--font-mono);
+		font-size: 13px;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+
+	/* Horizon scene ------------------------------------------------------- */
+	.hero {
+		position: relative;
+		min-height: 840px;
+		display: flex;
+		flex-direction: column;
+		background: var(--color-sky-top);
+		overflow: hidden;
+	}
+	.scene {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+	.sky {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg,
+			var(--color-sky-top) 0%,
+			#1a0a38 18%,
+			var(--color-sky-mid) 40%,
+			var(--color-sky-hot) 58%,
+			var(--color-sky-deep) 70%,
+			var(--color-surface) 100%);
+	}
+	.stars {
+		position: absolute;
+		left: 0; right: 0; top: 0; height: 46%;
+		background-image:
+			radial-gradient(1.2px 1.2px at 8% 22%, var(--color-surface-foreground) 55%, transparent 62%),
+			radial-gradient(1.6px 1.6px at 16% 48%, var(--color-surface-foreground) 55%, transparent 62%),
+			radial-gradient(1px 1px at 24% 18%, var(--color-sun-0) 55%, transparent 62%),
+			radial-gradient(1.4px 1.4px at 33% 36%, var(--color-surface-foreground) 55%, transparent 62%),
+			radial-gradient(1px 1px at 41% 14%, var(--color-surface-foreground) 55%, transparent 62%),
+			radial-gradient(1.8px 1.8px at 49% 42%, var(--color-sun-0) 50%, transparent 64%),
+			radial-gradient(1px 1px at 57% 20%, var(--color-surface-foreground) 55%, transparent 62%),
+			radial-gradient(1.3px 1.3px at 64% 52%, var(--color-surface-foreground) 55%, transparent 62%),
+			radial-gradient(1px 1px at 72% 16%, var(--color-sun-0) 55%, transparent 62%),
+			radial-gradient(1.5px 1.5px at 79% 38%, var(--color-surface-foreground) 55%, transparent 62%),
+			radial-gradient(1px 1px at 86% 24%, var(--color-surface-foreground) 55%, transparent 62%),
+			radial-gradient(1.7px 1.7px at 93% 46%, var(--color-sun-0) 50%, transparent 64%),
+			radial-gradient(1px 1px at 12% 70%, var(--color-surface-foreground) 55%, transparent 62%),
+			radial-gradient(1.2px 1.2px at 28% 78%, var(--color-surface-foreground) 55%, transparent 62%),
+			radial-gradient(1px 1px at 68% 74%, var(--color-surface-foreground) 55%, transparent 62%),
+			radial-gradient(1.4px 1.4px at 88% 68%, var(--color-sun-0) 50%, transparent 64%);
+		opacity: 0.85;
+	}
+	.bloom {
+		position: absolute;
+		left: 50%;
+		top: 34%;
+		width: min(680px, 90vw);
+		height: 280px;
+		transform: translate(-50%, -40%);
+		background: radial-gradient(ellipse at center, rgb(255 60 140 / 0.55) 0%, rgb(255 140 40 / 0.22) 36%, transparent 70%);
+		filter: blur(8px);
+	}
+	.sun {
+		position: absolute;
+		left: 50%;
+		top: 15%;
+		width: 300px;
+		height: 300px;
+		transform: translateX(-50%);
+		filter: drop-shadow(0 0 18px rgb(255 70 140 / 0.9)) drop-shadow(0 0 48px rgb(255 150 40 / 0.45));
+	}
+	.mountains {
+		position: absolute;
+		left: 0;
+		width: 100%;
+		top: 33%;
+		height: 250px;
+	}
+	.mountains svg { width: 100%; height: 100%; display: block; }
+	.palm {
+		position: absolute;
+		bottom: 51%;
+		width: 168px;
+		height: auto;
+		z-index: 2;
+		overflow: visible;
+	}
+	.palm-a { left: 8px; }
+	.palm-b { right: 18px; transform: scaleX(-1); }
+	.horizon-line {
+		position: absolute;
+		left: 0; right: 0;
+		top: 49%;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, var(--color-wire), var(--color-sun-0), var(--color-accent), transparent);
+		box-shadow: 0 0 16px var(--color-accent);
+		opacity: 0.85;
+	}
+	.floor {
+		position: absolute;
+		left: 0; right: 0;
+		top: 49%;
+		bottom: 0;
+		overflow: hidden;
+		background: linear-gradient(180deg, rgb(90 16 70 / 0.35), var(--color-surface) 46%);
+		-webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 100%);
+		mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 100%);
+	}
+	.grid {
+		position: absolute;
+		left: -40%;
+		width: 180%;
+		top: 0;
+		height: 220%;
+		background-image:
+			linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+			linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+		background-size: 84px 52px;
+		transform: perspective(280px) rotateX(64deg);
+		transform-origin: top center;
+		animation: drive var(--duration-drive) linear infinite;
+	}
+	@keyframes drive {
+		to { background-position: 0 52px, 0 52px; }
+	}
+	.scan {
+		position: absolute;
+		inset: 0;
+		background: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.22) 0 1px, transparent 1px 3px);
+		opacity: 0.28;
+		mix-blend-mode: multiply;
+	}
+	.hero-fade {
+		position: absolute;
+		left: 0; right: 0; bottom: 0;
+		height: 88px;
+		background: linear-gradient(transparent, var(--color-surface));
+		z-index: 3;
+	}
+
+	.nav {
+		position: relative;
+		z-index: 4;
+		display: flex;
+		align-items: center;
+		gap: 28px;
+		padding: 18px 48px;
+	}
+	.nav-links {
+		display: flex;
+		gap: 22px;
+		margin-right: auto;
+		font-size: 15px;
+	}
+	.nav-links a { color: var(--color-muted); text-decoration: none; }
+	.nav-links a:hover { color: var(--color-surface-foreground); }
+
+	.hero-copy {
+		position: relative;
+		z-index: 4;
+		margin-top: auto;
+		width: min(720px, 100%);
+		padding: 72px 48px 48px;
+		background: linear-gradient(180deg, transparent, var(--color-surface) 64px);
+	}
+	.display {
+		margin-top: 12px;
+		font-family: var(--font-display);
+		font-style: italic;
+		font-weight: 700;
+		font-size: clamp(40px, 5.4vw, 76px);
+		line-height: 0.9;
+		letter-spacing: 0.03em;
+		text-transform: uppercase;
+		text-shadow: var(--glow-display);
+	}
+	.display span { display: block; }
+	.display-gold {
+		color: var(--color-sun-0);
+		text-shadow: var(--glow-gold);
+	}
+	.lede {
+		margin-top: 18px;
+		max-width: 38rem;
+		color: var(--color-surface-foreground);
+	}
+	.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+	.badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; list-style: none; padding: 0; }
+
+	.wrap { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+	.band { padding: 72px 0; }
+	.band h2 {
+		margin-top: 8px;
+		font-size: clamp(28px, 4vw, 40px);
+		font-weight: 700;
+		letter-spacing: -0.03em;
+		line-height: 1.1;
+	}
+	.intro { margin-top: 10px; max-width: 64ch; color: var(--color-muted); }
+
+	.feature-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 16px;
+		margin-top: 28px;
+	}
+	.feature {
+		background: var(--color-surface-raised);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		padding: 20px 20px 22px;
+		transition: border-color var(--duration-ui) var(--ease-ui);
+	}
+	.feature h3 { margin-top: 10px; font-size: 22px; letter-spacing: -0.02em; }
+	.feature p { margin-top: 8px; color: var(--color-muted); font-size: 16px; }
+
+	.console {
+		margin-top: 28px;
+		background: var(--color-surface-raised);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-xl);
+		overflow: hidden;
+		max-width: 760px;
+	}
+	.console-bar {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 12px 16px;
+		border-bottom: 1px solid var(--color-border);
+	}
+	.console-bar .spacer { margin-left: auto; }
+	.msg { padding: 14px 16px 16px; border-bottom: 1px solid var(--color-border); }
+	.msg-agent { box-shadow: inset 3px 0 0 var(--color-accent); }
+	.who {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.msg p { margin-top: 6px; }
+	.run-meta {
+		padding: 10px 16px;
+		font-family: var(--font-mono);
+		font-size: 13px;
+		color: var(--color-muted);
+		border-bottom: 1px solid var(--color-border);
+	}
+	.composer {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: 10px;
+		align-items: end;
+		padding: 14px;
+	}
+	.field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--color-muted); }
+	.field input {
+		min-height: 48px;
+		padding: 0 12px;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+	}
+	.field input::placeholder { color: var(--color-muted); opacity: 0.7; }
+	.field input[aria-invalid="true"] { border-color: var(--color-danger); }
+	.err { color: var(--color-danger); font-size: 14px; }
+
+	.swatches {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+		list-style: none;
+		padding: 0;
+		margin: 22px 0 0;
+	}
+	.swatches li {
+		display: grid;
+		grid-template-columns: 42px 1fr;
+		gap: 10px;
+		align-items: center;
+		min-height: 64px;
+		padding: 8px;
+		background: var(--color-surface-raised);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+	}
+	.swatches i { display: block; height: 42px; border-radius: var(--radius-sm); }
+	.swatches b { display: block; font-size: 14px; }
+	.swatches span { color: var(--color-muted); font-size: 13px; }
+
+	.split { display: grid; gap: 18px; margin-top: 22px; }
+	.specimen {
+		position: relative;
+		height: 240px;
+		border-radius: var(--radius-lg);
+		overflow: hidden;
+		border: 1px solid var(--color-border);
+		background: var(--color-sky-top);
+	}
+	.specimen .sun { width: 140px; height: 140px; top: 18px; }
+	.specimen .mountains { top: 46%; height: 110px; }
+	.specimen .floor { top: 62%; }
+	.specimen .horizon-line { top: 62%; }
+	.tokens { display: grid; gap: 0; }
+	.tokens div {
+		display: flex;
+		justify-content: space-between;
+		gap: 16px;
+		padding: 10px 0;
+		border-bottom: 1px solid var(--color-border);
+		font-size: 15px;
+	}
+	.tokens dt { color: var(--color-muted); }
+	.tokens dd { margin: 0; text-align: right; }
+
+	.studio {
+		margin-top: 22px;
+		background: var(--color-surface-raised);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-xl);
+		padding: 20px;
+		display: grid;
+		gap: 16px;
+	}
+	.chip-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+	.fields-2 { display: grid; gap: 14px; }
+
+	.mobile {
+		display: grid;
+		gap: 22px;
+		margin-top: 22px;
+		align-items: start;
+	}
+	.device {
+		width: min(280px, 100%);
+		margin: 0 auto;
+		padding: 10px;
+		border-radius: 28px;
+		background: #07030e;
+		border: 1px solid var(--color-border);
+		box-shadow: var(--shadow-lg);
+	}
+	.device-screen {
+		position: relative;
+		height: 520px;
+		border-radius: 20px;
+		overflow: hidden;
+		background: var(--color-sky-top);
+	}
+	.device-screen .sun { width: 132px; height: 132px; top: 78px; }
+	.device-screen .mountains { top: 32%; height: 130px; }
+	.device-screen .palm { width: 86px; bottom: 50%; left: -8px; }
+	.device-screen .floor, .device-screen .horizon-line { top: 50%; }
+	.device-copy {
+		position: absolute;
+		left: 0; right: 0; bottom: 0;
+		z-index: 4;
+		padding: 36px 14px 16px;
+		background: linear-gradient(180deg, transparent, var(--color-surface) 28px);
+	}
+	.mini-mark { font-size: 14px; }
+	.mini-display {
+		margin-top: 8px;
+		font-family: var(--font-display);
+		font-style: italic;
+		font-weight: 700;
+		font-size: 28px;
+		line-height: 0.92;
+		letter-spacing: 0.03em;
+		text-transform: uppercase;
+		text-shadow: var(--glow-display);
+	}
+	.mini-display span { display: block; }
+	.device-copy .lede { font-size: 14px; margin-top: 8px; }
+	.device-copy .actions { flex-direction: column; margin-top: 12px; }
+	.device-copy .action { width: 100%; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 12px 0; border-bottom: 1px solid var(--color-border); color: var(--color-muted); }
+	.rules b { display: block; color: var(--color-surface-foreground); font-size: 16px; }
+
+	.compare { display: grid; gap: 16px; margin-top: 22px; }
+	.cmp-off, .cmp-on {
+		min-height: 280px;
+		border-radius: var(--radius-lg);
+		padding: 16px;
+		overflow: hidden;
+	}
+	.cmp-off {
+		background: #07080d;
+		color: #aeb6c6;
+		display: grid;
+		align-content: start;
+		gap: 10px;
+	}
+	.orb-wrong {
+		width: 72px;
+		height: 72px;
+		border-radius: 50%;
+		background: conic-gradient(from 30deg, #f4f7fb, #9aa8bd, #7af0ff, #d7a0ff, #e8eef8, #8b97ab);
+	}
+	.metal-wrong {
+		font-family: var(--font-display);
+		font-weight: 700;
+		font-size: 32px;
+		letter-spacing: 0.04em;
+		background: linear-gradient(180deg, #ffffff 0%, #c5d0e0 40%, #8b97ab 52%, #f4f7fb 70%);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+	.bevel-wrong {
+		justify-self: start;
+		min-height: 28px;
+		padding: 0 12px;
+		background: #c3c3c3;
+		color: #000;
+		border-radius: 0;
+		border-top: 2px solid #fff;
+		border-left: 2px solid #fff;
+		border-right: 2px solid #5a5a5a;
+		border-bottom: 2px solid #5a5a5a;
+		font-size: 13px;
+	}
+	.mud-wrong {
+		margin: 0;
+		color: #ff4d9a;
+		font-size: 13px;
+		text-shadow: 0 0 6px #ff4d9a, 0 0 14px #ff4d9a;
+	}
+	.cmp-on {
+		position: relative;
+		padding: 0;
+		border: 1px solid var(--color-border);
+		background: var(--color-sky-top);
+	}
+	.cmp-on .sun { width: 120px; height: 120px; top: 16px; }
+	.cmp-on .floor, .cmp-on .horizon-line { top: 58%; }
+	.cmp-on .mountains { top: 40%; height: 100px; }
+	.on-copy {
+		position: absolute;
+		left: 0; right: 0; bottom: 0;
+		z-index: 4;
+		padding: 28px 16px 16px;
+		background: linear-gradient(180deg, transparent, var(--color-surface) 24px);
+	}
+	.on-copy .display { font-size: 28px; margin-top: 0; }
+	.on-copy p { margin-top: 8px; font-size: 15px; }
+	.on-copy .action { margin-top: 12px; }
+	.note { margin-top: 8px; color: var(--color-muted); font-size: 14px; }
+
+	.site-foot {
+		border-top: 1px solid var(--color-border);
+		padding: 36px 0 56px;
+	}
+	.foot-grid {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 18px 32px;
+		align-items: start;
+		justify-content: space-between;
+	}
+	.foot-links { display: flex; gap: 18px; list-style: none; padding: 0; }
+	.foot-links a { color: var(--color-muted); text-decoration: none; }
+	.fine { margin-top: 22px; max-width: 62ch; color: var(--color-muted); font-size: 14px; }
+	.palette { display: flex; gap: 6px; list-style: none; padding: 0; margin-top: 16px; }
+	.palette li { width: 36px; height: 10px; border-radius: var(--radius-full); }
+
+	@media (min-width: 800px) {
+		.feature-grid { grid-template-columns: repeat(3, 1fr); }
+		.swatches { grid-template-columns: repeat(4, 1fr); }
+		.split { grid-template-columns: 1.1fr 0.9fr; align-items: center; }
+		.fields-2 { grid-template-columns: 1fr 1fr; }
+		.mobile { grid-template-columns: 280px 1fr; }
+		.compare { grid-template-columns: 1fr 1fr; }
+	}
+	@media (max-width: 800px) {
+		.hero { min-height: 860px; }
+		.nav { padding: 14px 20px; }
+		.nav-links { display: none; }
+		.nav .action { margin-left: auto; }
+		.hero-copy { width: 100%; padding: 56px 20px 28px; }
+		.hero-copy .actions { flex-direction: column; align-items: stretch; }
+		.hero-copy .action { width: 100%; }
+		.sun { width: 196px; height: 196px; top: 11%; }
+		.mountains { top: 26%; height: 170px; }
+		.hero .horizon-line, .hero .floor { top: 42%; }
+		.palm-b { display: none; }
+		.palm-a { width: 124px; left: -20px; bottom: 58%; }
+		.band { padding: 48px 0; }
+		.wrap { width: min(1120px, calc(100% - 40px)); }
+	}
+	@media (max-width: 720px) {
+		.composer { grid-template-columns: 1fr; }
+		.composer .action { width: 100%; }
+	}
+	@media (hover: hover) and (pointer: fine) {
+		.action:hover { box-shadow: var(--shadow-lg); }
+		.action-quiet:hover { background: rgb(92 239 255 / 0.08); box-shadow: none; }
+		.action-danger:hover { box-shadow: none; }
+		.feature:hover { border-color: var(--color-accent); }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		html { scroll-behavior: auto; }
+		.grid { animation: none; }
+		.action, .feature { transition: none; }
+		.action:active { transform: none; }
+	}
+	@media (prefers-contrast: more) {
+		.feature, .console, .badge, .field input, .action-quiet, .device {
+			border-color: var(--color-surface-foreground);
+		}
+	}
+</style>
+</head>
+<body>
+<header class="hero" id="top">
+	<div class="scene" aria-hidden="true">
+		<div class="sky"></div>
+		<div class="stars"></div>
+		<div class="bloom"></div>
+		<svg class="sun" viewBox="0 0 200 200">
+			<defs>
+				<linearGradient id="sunfill-hero" x1="0" y1="0" x2="0" y2="1">
+					<stop offset="0%" stop-color="var(--color-sun-0)"/>
+					<stop offset="42%" stop-color="var(--color-sun-1)"/>
+					<stop offset="78%" stop-color="var(--color-sun-2)"/>
+					<stop offset="100%" stop-color="var(--color-sky-hot)"/>
+				</linearGradient>
+				<mask id="sunbands-hero">
+					<rect width="200" height="200" fill="white"/>
+						<g fill="black">
+						<rect y="16" width="200" height="3"/>
+						<rect y="28" width="200" height="3"/>
+						<rect y="42" width="200" height="4"/>
+						<rect y="56" width="200" height="6"/>
+						<rect y="74" width="200" height="8"/>
+						<rect y="94" width="200" height="10"/>
+						<rect y="116" width="200" height="13"/>
+						<rect y="142" width="200" height="16"/>
+						<rect y="170" width="200" height="18"/>
+					</g>
+				</mask>
+			</defs>
+			<circle cx="100" cy="100" r="98" fill="url(#sunfill-hero)" mask="url(#sunbands-hero)"/>
+		</svg>
+		<svg class="mountains" viewBox="0 0 1440 260" preserveAspectRatio="xMidYMax slice">
+			<polygon fill="var(--color-palm)" points="0,250 70,210 150,230 250,150 340,220 430,120 530,200 640,150 760,240 860,160 980,230 1100,140 1220,210 1340,180 1440,230 1440,260 0,260"/>
+			<polyline fill="none" stroke="var(--color-wire)" stroke-width="2" points="0,190 100,150 180,175 270,80 360,160 460,40 560,145 660,70 780,165 890,55 1000,150 1120,90 1240,160 1440,120"/>
+			<polyline fill="none" stroke="var(--color-accent)" stroke-width="1.6" points="0,235 90,200 170,225 280,155 370,215 470,130 580,205 690,160 800,230 910,165 1030,220 1150,150 1280,205 1440,185"/>
+			<g fill="none" stroke="var(--color-wire)" stroke-width="1.2" opacity="0.85">
+				<polyline points="270,80 280,155"/>
+				<polyline points="460,40 470,130"/>
+				<polyline points="660,70 690,160"/>
+				<polyline points="890,55 910,165"/>
+				<polyline points="1120,90 1150,150"/>
+			</g>
+		</svg>
+		<svg class="palm palm-a" viewBox="0 0 230 340" overflow="visible">
+			<g fill="none" stroke="var(--color-palm)" stroke-linecap="round">
+				<path d="M118 328 C108 268 128 208 112 156" stroke-width="18"/>
+				<path d="M112 158 C72 118 26 128 4 172" stroke-width="12"/>
+				<path d="M110 154 C64 96 22 62 8 28" stroke-width="11"/>
+				<path d="M112 150 C100 86 118 36 148 12" stroke-width="11"/>
+				<path d="M114 152 C158 96 204 64 224 30" stroke-width="11"/>
+				<path d="M116 160 C168 128 210 150 218 196" stroke-width="12"/>
+				<path d="M108 164 C66 176 30 214 18 252" stroke-width="10"/>
+				<path d="M120 166 C166 188 202 226 190 268" stroke-width="10"/>
+			</g>
+		</svg>
+		<svg class="palm palm-b" viewBox="0 0 230 340" overflow="visible">
+			<g fill="none" stroke="var(--color-palm)" stroke-linecap="round">
+				<path d="M118 328 C108 268 128 208 112 156" stroke-width="18"/>
+				<path d="M112 158 C72 118 26 128 4 172" stroke-width="12"/>
+				<path d="M110 154 C64 96 22 62 8 28" stroke-width="11"/>
+				<path d="M112 150 C100 86 118 36 148 12" stroke-width="11"/>
+				<path d="M114 152 C158 96 204 64 224 30" stroke-width="11"/>
+				<path d="M116 160 C168 128 210 150 218 196" stroke-width="12"/>
+				<path d="M108 164 C66 176 30 214 18 252" stroke-width="10"/>
+				<path d="M120 166 C166 188 202 226 190 268" stroke-width="10"/>
+			</g>
+		</svg>
+		<div class="horizon-line"></div>
+		<div class="floor"><div class="grid"></div></div>
+		<div class="scan"></div>
+		<div class="hero-fade"></div>
+	</div>
+	<nav class="nav" aria-label="Vesper">
+		<a class="wordmark" href="#top"><span class="lamp" aria-hidden="true"></span>Vesper</a>
+		<div class="nav-links">
+			<a href="#features">Desk</a>
+			<a href="#console">Memory</a>
+			<a href="#controls">Models</a>
+		</div>
+		<a class="action action-small" href="#console">Open the desk</a>
+	</nav>
+	<div class="hero-copy">
+		<p class="eyebrow">Local-first · on this machine</p>
+		<h1 class="display"><span>Night work,</span><span class="display-gold">kept here</span></h1>
+		<p class="lede">Vesper is a desktop agent for the folder in front of you. The thread, the files, and the run stay on this machine.</p>
+		<div class="actions">
+			<a class="action" href="#console">Open the desk</a>
+			<a class="action action-quiet" href="#features">See the desk</a>
+		</div>
+		<ul class="badge-row">
+			<li class="badge">On disk</li>
+			<li class="badge">No account</li>
+			<li class="badge">One folder</li>
+		</ul>
+	</div>
+</header>
+
+<main>
+	<section class="band" id="features">
+		<div class="wrap">
+			<p class="eyebrow">The desk</p>
+			<h2>Three things that never leave.</h2>
+			<p class="intro">The horizon is the poster. The work sits on a solid dusk panel, where a sentence can be read without a glow.</p>
+			<div class="feature-grid">
+				<article class="feature">
+					<p class="eyebrow">Thread</p>
+					<h3>The thread stays</h3>
+					<p>A conversation is a file beside the work. Closing the lid does not send it anywhere.</p>
+				</article>
+				<article class="feature">
+					<p class="eyebrow">Folder</p>
+					<h3>A folder is the desk</h3>
+					<p>Point Vesper at a directory. It reads what you allow and writes the result next to the source.</p>
+				</article>
+				<article class="feature">
+					<p class="eyebrow">Model</p>
+					<h3>A known footprint</h3>
+					<p>The ordinary shift runs a small local model. The console shows the tool, the files, and the time.</p>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<section class="band" id="console" style="padding-top:0">
+		<div class="wrap">
+			<p class="eyebrow">The run</p>
+			<h2>A thread, in the open.</h2>
+			<p class="intro">The console is a raised panel on dusk. The agent row carries a cyan edge. The field is labeled, and the send control is the one magenta action.</p>
+			<div class="console">
+				<div class="console-bar">
+					<span class="lamp" aria-hidden="true"></span>
+					<strong>Vesper</strong>
+					<span class="quiet">· shore-notes</span>
+					<span class="badge spacer">Local</span>
+				</div>
+				<div class="msg">
+					<p class="who">You · 19:42</p>
+					<p>Draft a short evening note from the three files in /notes, and leave it beside them.</p>
+				</div>
+				<div class="msg msg-agent">
+					<p class="who">Vesper · on disk</p>
+					<p>Read shore.md, tide.md, and lamp.md. Wrote /notes/evening.md. Nothing left this machine.</p>
+				</div>
+				<p class="run-meta">read ×3 · write ×1 · 1.8s</p>
+				<div class="composer">
+					<label class="field">Message
+						<input type="text" placeholder="Ask for a note, a diff, a summary">
+					</label>
+					<button class="action" type="button">Send</button>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="band" id="color">
+		<div class="wrap">
+			<p class="eyebrow">01 — Color roles</p>
+			<h2>Dusk for the words, neon for the light.</h2>
+			<p class="intro">Ink and muted live on the opaque panels. Magenta is the commit fill. Cyan is the grid, the focus ring, and a short label. The sun stops are the disc, plus one display line.</p>
+			<ul class="swatches">
+				<li><i style="background:var(--color-surface);border:1px solid var(--color-border)"></i><span><b>surface</b><span>Dusk ground</span></span></li>
+				<li><i style="background:var(--color-surface-foreground)"></i><span><b>ink</b><span>Body on dusk</span></span></li>
+				<li><i style="background:var(--color-primary)"></i><span><b>primary</b><span>Commit fill</span></span></li>
+				<li><i style="background:var(--color-accent)"></i><span><b>accent</b><span>Grid and focus</span></span></li>
+				<li><i style="background:var(--color-muted)"></i><span><b>muted</b><span>Secondary</span></span></li>
+				<li><i style="background:var(--color-danger)"></i><span><b>danger</b><span>Rose, dark label</span></span></li>
+				<li><i style="background:linear-gradient(var(--color-sun-0),var(--color-sun-2))"></i><span><b>sun</b><span>Disc and one line</span></span></li>
+				<li><i style="background:linear-gradient(var(--color-sky-top),var(--color-sky-hot))"></i><span><b>sky</b><span>Hero only</span></span></li>
+			</ul>
+		</div>
+	</section>
+
+	<section class="band" id="shape">
+		<div class="wrap">
+			<p class="eyebrow">02 — Shape and depth</p>
+			<h2>One vanishing point, then a still panel.</h2>
+			<p class="intro">Perspective belongs to the floor. The sun is the only circle. Cards stay on a small radius, with a lilac edge that can be seen without the glow.</p>
+			<div class="split">
+				<div class="specimen" aria-hidden="true">
+					<div class="sky"></div>
+					<div class="bloom"></div>
+					<svg class="sun" viewBox="0 0 200 200">
+						<defs>
+							<linearGradient id="sunfill-sample" x1="0" y1="0" x2="0" y2="1">
+								<stop offset="0%" stop-color="var(--color-sun-0)"/>
+								<stop offset="45%" stop-color="var(--color-sun-1)"/>
+								<stop offset="100%" stop-color="var(--color-sun-2)"/>
+							</linearGradient>
+							<mask id="sunbands-sample">
+								<rect width="200" height="200" fill="white"/>
+								<g fill="black">
+									<rect y="24" width="200" height="4"/>
+									<rect y="44" width="200" height="5"/>
+									<rect y="66" width="200" height="7"/>
+									<rect y="92" width="200" height="9"/>
+									<rect y="120" width="200" height="12"/>
+									<rect y="150" width="200" height="16"/>
+									<rect y="180" width="200" height="16"/>
+								</g>
+							</mask>
+						</defs>
+						<circle cx="100" cy="100" r="98" fill="url(#sunfill-sample)" mask="url(#sunbands-sample)"/>
+					</svg>
+					<svg class="mountains" viewBox="0 0 1440 260" preserveAspectRatio="xMidYMax slice">
+						<polygon fill="var(--color-palm)" points="0,240 160,190 300,220 460,120 640,200 820,140 1000,210 1200,150 1440,200 1440,260 0,260"/>
+						<polyline fill="none" stroke="var(--color-accent)" stroke-width="2" points="0,200 180,150 360,190 540,80 760,170 980,90 1200,160 1440,120"/>
+					</svg>
+					<div class="horizon-line"></div>
+					<div class="floor"><div class="grid"></div></div>
+				</div>
+				<dl class="tokens">
+					<div><dt>Vanishing point</dt><dd>Center of the horizon</dd></div>
+					<div><dt>Sun bands</dt><dd>Thicker toward the base</dd></div>
+					<div><dt>Grid</dt><dd>Hero and specimens only</dd></div>
+					<div><dt>Mountains</dt><dd>Wire over a silhouette</dd></div>
+					<div><dt>Card radius</dt><dd>10px, not a pill</dd></div>
+					<div><dt>Glow</dt><dd>Display and the sun</dd></div>
+					<div><dt>Scan</dt><dd>Still lines, under the scrim</dd></div>
+					<div><dt>Drive</dt><dd>8s, one cell</dd></div>
+				</dl>
+			</div>
+		</div>
+	</section>
+
+	<section class="band" id="controls">
+		<div class="wrap">
+			<p class="eyebrow">03 — Controls</p>
+			<h2>One magenta commit, a cyan quiet edge.</h2>
+			<p class="intro">White type sits on the deeper magenta, where it clears the line. The rose fill takes a dusk label. Fields are solid, and the error keeps its sentence.</p>
+			<div class="studio">
+				<div class="actions">
+					<button class="action" type="button">Open the desk</button>
+					<button class="action action-quiet" type="button">Later</button>
+					<button class="action" type="button" disabled>Holding…</button>
+					<button class="action action-danger" type="button">Remove the run</button>
+				</div>
+				<div class="chip-row">
+					<span class="badge">On disk</span>
+					<span class="badge">Local</span>
+					<span class="badge">1.8s</span>
+				</div>
+				<div class="fields-2">
+					<label class="field">Folder
+						<input type="text" value="/notes">
+					</label>
+					<label class="field">Model path
+						<input type="text" value="models/" aria-invalid="true">
+						<span class="err">That folder has no model file.</span>
+					</label>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="band" id="phone">
+		<div class="wrap">
+			<p class="eyebrow">04 — The phone</p>
+			<h2>The same night, held closer.</h2>
+			<p class="intro">Below 800px the poster stacks. The sun shrinks, one palm leaves, and the actions become full width. The words stay on the scrim.</p>
+			<div class="mobile">
+				<div class="device">
+					<div class="device-screen">
+						<div class="sky" aria-hidden="true"></div>
+						<div class="stars" aria-hidden="true"></div>
+						<div class="bloom" aria-hidden="true"></div>
+						<svg class="sun" viewBox="0 0 200 200" aria-hidden="true">
+							<defs>
+								<linearGradient id="sunfill-phone" x1="0" y1="0" x2="0" y2="1">
+									<stop offset="0%" stop-color="var(--color-sun-0)"/>
+									<stop offset="40%" stop-color="var(--color-sun-1)"/>
+									<stop offset="100%" stop-color="var(--color-sun-2)"/>
+								</linearGradient>
+								<mask id="sunbands-phone">
+									<rect width="200" height="200" fill="white"/>
+									<g fill="black">
+										<rect y="22" width="200" height="4"/>
+										<rect y="42" width="200" height="5"/>
+										<rect y="64" width="200" height="7"/>
+										<rect y="90" width="200" height="9"/>
+										<rect y="118" width="200" height="12"/>
+										<rect y="148" width="200" height="16"/>
+										<rect y="178" width="200" height="16"/>
+									</g>
+								</mask>
+							</defs>
+							<circle cx="100" cy="100" r="98" fill="url(#sunfill-phone)" mask="url(#sunbands-phone)"/>
+						</svg>
+						<svg class="mountains" viewBox="0 0 1440 260" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+							<polygon fill="var(--color-palm)" points="0,230 200,170 420,210 640,110 860,190 1100,140 1440,200 1440,260 0,260"/>
+							<polyline fill="none" stroke="var(--color-wire)" stroke-width="3" points="0,180 220,120 480,170 720,60 980,150 1440,90"/>
+						</svg>
+						<svg class="palm palm-a" viewBox="0 0 230 340" overflow="visible" aria-hidden="true">
+							<g fill="none" stroke="var(--color-palm)" stroke-linecap="round">
+								<path d="M118 328 C108 268 128 208 112 156" stroke-width="18"/>
+								<path d="M112 158 C72 118 26 128 4 172" stroke-width="12"/>
+								<path d="M110 154 C64 96 22 62 8 28" stroke-width="11"/>
+								<path d="M112 150 C100 86 118 36 148 12" stroke-width="11"/>
+								<path d="M114 152 C158 96 204 64 224 30" stroke-width="11"/>
+								<path d="M116 160 C168 128 210 150 218 196" stroke-width="12"/>
+								<path d="M108 164 C66 176 30 214 18 252" stroke-width="10"/>
+							</g>
+						</svg>
+						<div class="horizon-line" aria-hidden="true"></div>
+						<div class="floor" aria-hidden="true"><div class="grid"></div></div>
+						<div class="device-copy">
+							<p class="wordmark mini-mark"><span class="lamp" aria-hidden="true"></span>Vesper</p>
+							<p class="mini-display"><span>Night work,</span><span class="display-gold">kept here</span></p>
+							<p class="lede">The thread stays on this machine.</p>
+							<div class="actions">
+								<a class="action" href="#console">Open the desk</a>
+								<a class="action action-quiet" href="#features">See the desk</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<ul class="rules">
+					<li><b>Links leave at 800px</b>The wordmark and one action stay in the nav. The text links do not collapse into a drawer.</li>
+					<li><b>Sun 300 to 196</b>It stays on the horizon. The right palm drops so the disc is not crowded.</li>
+					<li><b>Display 76 to 40</b>It stays solid and italic. It does not grow a heavier glow to fake contrast.</li>
+					<li><b>Actions stack</b>Both controls become full width and stay 48px tall. The quiet edge remains cyan.</li>
+					<li><b>Cards become one column</b>The console field stays 48px. Send moves under it, full width, below 720px.</li>
+					<li><b>Inset 48 to 20</b>The grid still ends before the feature cards. Body type never sits on a moving line.</li>
+					<li><b>Hover leaves</b>A coarse pointer keeps the focus ring and the press color. The lift is for a fine pointer only.</li>
+					<li><b>The drive can stay</b>Reduced motion stops it on every width, including this frame. The still grid is the design.</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<section class="band" id="compare">
+		<div class="wrap">
+			<p class="eyebrow">05 — Off-style</p>
+			<h2>A void and a bevel are other machines.</h2>
+			<p class="intro">The left panel mixes a liquid-metal orb, a beveled control, and glow used as the letter. The right panel is this system: a banded sun, a cyan grid, solid display type, and a plain sentence.</p>
+			<div class="compare">
+				<figure>
+					<div class="cmp-off">
+						<div class="orb-wrong" aria-hidden="true"></div>
+						<p class="metal-wrong">CHROME</p>
+						<button class="bevel-wrong" type="button">OK</button>
+						<p class="mud-wrong">Glow is doing the reading here, and the letters dissolve into their own halo.</p>
+					</div>
+					<figcaption class="note">Off. Liquid metal, a beveled window control, and a halo standing in for the glyph.</figcaption>
+				</figure>
+				<figure>
+					<div class="cmp-on">
+						<div class="sky" aria-hidden="true"></div>
+						<div class="bloom" aria-hidden="true"></div>
+						<svg class="sun" viewBox="0 0 200 200" aria-hidden="true">
+							<defs>
+								<linearGradient id="sunfill-on" x1="0" y1="0" x2="0" y2="1">
+									<stop offset="0%" stop-color="var(--color-sun-0)"/>
+									<stop offset="50%" stop-color="var(--color-sun-1)"/>
+									<stop offset="100%" stop-color="var(--color-sun-2)"/>
+								</linearGradient>
+								<mask id="sunbands-on">
+									<rect width="200" height="200" fill="white"/>
+									<g fill="black">
+										<rect y="28" width="200" height="5"/>
+										<rect y="52" width="200" height="7"/>
+										<rect y="80" width="200" height="9"/>
+										<rect y="112" width="200" height="12"/>
+										<rect y="146" width="200" height="16"/>
+										<rect y="178" width="200" height="16"/>
+									</g>
+								</mask>
+							</defs>
+							<circle cx="100" cy="100" r="98" fill="url(#sunfill-on)" mask="url(#sunbands-on)"/>
+						</svg>
+						<svg class="mountains" viewBox="0 0 1440 260" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+							<polygon fill="var(--color-palm)" points="0,220 240,160 520,200 780,100 1040,180 1440,140 1440,260 0,260"/>
+							<polyline fill="none" stroke="var(--color-accent)" stroke-width="3" points="0,170 300,110 620,160 900,70 1200,140 1440,100"/>
+						</svg>
+						<div class="horizon-line" aria-hidden="true"></div>
+						<div class="floor" aria-hidden="true"><div class="grid"></div></div>
+						<div class="on-copy">
+							<p class="display"><span>Night work</span></p>
+							<p>Ink on the dusk scrim. A cyan grid. One magenta action.</p>
+							<a class="action" href="#console">Open the desk</a>
+						</div>
+					</div>
+					<figcaption class="note">On. A banded sun, a perspective grid, solid type, and a sentence with no halo.</figcaption>
+				</figure>
+			</div>
+		</div>
+	</section>
+</main>
+
+<footer class="site-foot">
+	<div class="wrap">
+		<div class="foot-grid">
+			<div>
+				<p class="wordmark"><span class="lamp" aria-hidden="true"></span>Vesper</p>
+				<p class="quiet" style="margin-top:8px">The night shift stays on the machine it started on.</p>
+			</div>
+			<ul class="foot-links">
+				<li><a href="#features">Desk</a></li>
+				<li><a href="#console">Memory</a></li>
+				<li><a href="#controls">Models</a></li>
+			</ul>
+		</div>
+		<ul class="palette" aria-label="Palette">
+			<li style="background:var(--color-sky-top)"></li>
+			<li style="background:var(--color-sky-mid)"></li>
+			<li style="background:var(--color-primary)"></li>
+			<li style="background:var(--color-wire)"></li>
+			<li style="background:var(--color-accent)"></li>
+			<li style="background:var(--color-sun-1)"></li>
+			<li style="background:var(--color-sun-0)"></li>
+		</ul>
+		<p class="fine">Vesper is the worked example for Synthwave Grid（合成波网格）. The dusk, the banded sun, and the cyan grid are the system.</p>
+	</div>
+</footer>
+</body>
+</html>
