@@ -1,0 +1,37 @@
+/* Anti-Grid Brutalism — paper, ink, one signal, windows that miss the grid.
+   Depth is overlap. Radius stays at zero. No sticker shadow.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #ff3b22;
+	--color-primary-foreground: #141414;
+	--color-surface: #e9e9e7;
+	--color-surface-foreground: #141414;
+	--color-surface-raised: #ffffff;
+	--color-muted: #4a4a4a;
+	--color-accent: #ff3b22;
+	--color-danger: #8e1c14;
+	--color-border: #141414;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	/* Overlap is the depth. These stay empty on purpose. */
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 2px #e9e9e7, 0 0 0 4px #141414;
+
+	--rule-hair: 1px;
+	--rule-width: 2px;
+	--bar-height: 36px;
+
+	--font-sans: Arial, Helvetica, "Liberation Sans", "Noto Sans", sans-serif;
+	--font-mono: "Courier New", Courier, "Liberation Mono", ui-monospace, monospace;
+
+	--duration-snap: 80ms;
+	--duration-blink: 2.4s;
+}

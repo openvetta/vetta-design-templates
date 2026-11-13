@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "anti-grid-brutalism",
+	"name": "Anti-Grid Brutalism",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 161,
+	"category": "brutalist",
+	"vibe": "light",
+	"tags": ["brutalist", "anti-grid", "monochrome", "windows", "grotesk", "light"],
+	"blurb": "Anti-grid brutalism for a local-first agent desk: neutral paper, ink rules, system grotesk and mono, zero radius, and overlapping windows whose titles stay readable. One signal red marks the live window. The grid is drawn and then broken. Not stickers, not a Swiss column, not a beveled desktop.",
+	"tagline": {
+		"en": "Overlapping windows, one red, a grid that misses",
+		"zh": "黑白硬边，窗口交叠，只留一处红"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://brutalistwebsites.com/",
+		"note": "Authored by Grok Bot. Original Anti-Grid Brutalism system: paper, ink, one signal red, system grotesk, and overlapping desk windows on a grid that does not close. Mood only, from Pascal Deville's Brutalist Websites directory and writing on raw, asymmetrical, overlapping web brutalism. No third-party assets, screenshots, code, or marks."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-13"
+}
