@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raster — Swiss Grid</title>
+<style>
+	/* Mirrors theme.css. Plain custom properties so this file opens standalone. */
+	:root {
+		--color-primary: #111111;
+		--color-primary-foreground: #ffffff;
+		--color-surface: #ffffff;
+		--color-surface-foreground: #111111;
+		--color-surface-raised: #ffffff;
+		--color-muted: #4a4a48;
+		--color-accent: #a30e1c;
+		--color-danger: #6e1020;
+		--color-border: #111111;
+
+		--radius-sm: 0px;
+		--radius-md: 0px;
+		--radius-lg: 0px;
+		--radius-xl: 0px;
+		--radius-2xl: 0px;
+		--radius-full: 0px;
+
+		--shadow-sm: none;
+		--shadow-md: none;
+		--shadow-lg: none;
+		--shadow-focus: 0 0 0 3px #ffffff, 0 0 0 5px #111111;
+
+		--rule-width: 1px;
+		--font-sans: Inter, "Helvetica Neue", Helvetica, "Liberation Sans", Arial, sans-serif;
+		--tracking-display: -0.045em;
+		--tracking-label: 0.08em;
+		--ease-ui: linear;
+		--duration-ui: 120ms;
+
+		--margin: 20px;
+	}
+
+	*, *::before, *::after { box-sizing: border-box; }
+	html { color-scheme: light; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 1.5;
+		-webkit-font-smoothing: antialiased;
+		text-rendering: optimizeLegibility;
+	}
+	h1, h2, p { margin: 0; }
+	button, input { font: inherit; color: inherit; border-radius: 0; margin: 0; appearance: none; }
+	button { cursor: pointer; background: transparent; }
+	::selection { background: var(--color-accent); color: var(--color-primary-foreground); }
+
+	@media (min-width: 800px) { :root { --margin: 40px; --tracking-label: 0.14em; } }
+	@media (min-width: 1080px) { :root { --margin: 56px; } }
+
+	.tnum { font-variant-numeric: tabular-nums; }
+	.kicker, .mast, .foot, .f-idx, .meta dt, .sw-name, figcaption, .ctrl > span:first-child, .composer label, .log-top {
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: var(--tracking-label);
+		text-transform: uppercase;
+		line-height: 1.3;
+	}
+	.kicker { color: var(--color-muted); margin-bottom: 16px; }
+
+	/* ── Poster: the first screen is the product ─────────────────── */
+	.poster {
+		min-height: 100vh;
+		min-height: 100dvh;
+		display: flex;
+		flex-direction: column;
+		padding: 28px var(--margin) 24px;
+	}
+	.mast, .foot {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 8px 16px;
+		color: var(--color-surface-foreground);
+	}
+	.mast { padding-bottom: 12px; border-bottom: var(--rule-width) solid var(--color-border); }
+	.foot { padding: 16px var(--margin) 28px; border-top: var(--rule-width) solid var(--color-border); }
+
+	.hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 12px 24px;
+		align-items: start;
+		padding-top: 28px;
+	}
+	.num {
+		margin: 0;
+		color: var(--color-accent);
+		font-weight: 600;
+		font-size: 64px;
+		line-height: 0.86;
+		letter-spacing: -0.05em;
+		font-variant-numeric: tabular-nums;
+	}
+	h1 {
+		font-weight: 600;
+		font-size: 44px;
+		line-height: 0.96;
+		letter-spacing: var(--tracking-display);
+		margin-bottom: 0.32em;
+	}
+	.deck { max-width: 36em; font-size: 16px; line-height: 1.5; }
+
+	.grow {
+		flex: 1 1 auto;
+		display: flex;
+		align-items: flex-end;
+		justify-content: flex-start;
+		min-height: 36px;
+		padding: 16px 0 20px;
+	}
+	.meta { display: grid; gap: 8px; }
+	.meta div { display: grid; grid-template-columns: 72px auto; gap: 12px; align-items: baseline; }
+	.meta dt { color: var(--color-muted); margin: 0; }
+	.meta dd { margin: 0; font-size: 15px; font-weight: 500; }
+
+	.fields {
+		display: grid;
+		grid-template-columns: 1fr;
+		border-top: var(--rule-width) solid var(--color-border);
+		border-bottom: var(--rule-width) solid var(--color-border);
+	}
+	.field { min-height: 112px; padding: 16px 18px 20px; border-bottom: var(--rule-width) solid var(--color-border); }
+	.field:last-child { border-bottom: 0; }
+	.f-idx { margin: 0 0 12px; font-variant-numeric: tabular-nums; }
+	.field-open .f-idx { color: var(--color-muted); }
+	.f-title { font-size: 18px; font-weight: 500; line-height: 1.3; margin: 0 0 6px; }
+
+	.composer {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 8px;
+		align-items: stretch;
+		padding-top: 16px;
+	}
+	.composer label { padding-top: 6px; }
+	.line {
+		width: 100%;
+		min-height: 44px;
+		border: 0;
+		border-bottom: var(--rule-width) solid var(--color-border);
+		background: transparent;
+		padding: 8px 0;
+		font-size: 16px;
+		border-radius: 0;
+		caret-color: var(--color-primary);
+	}
+	.line::placeholder { color: var(--color-muted); opacity: 1; }
+	.line.is-error { border-bottom-color: var(--color-danger); }
+
+	.btn {
+		min-height: 44px;
+		padding: 0 18px;
+		border: var(--rule-width) solid var(--color-border);
+		background: transparent;
+		color: var(--color-primary);
+		font-size: 14px;
+		font-weight: 500;
+		letter-spacing: 0;
+		text-transform: none;
+		border-radius: 0;
+		box-shadow: none;
+		transition: background-color var(--duration-ui) var(--ease-ui), color var(--duration-ui) var(--ease-ui), border-color var(--duration-ui) var(--ease-ui);
+	}
+	.btn-ink { background: var(--color-primary); color: var(--color-primary-foreground); border-color: var(--color-primary); }
+	.btn-stop { color: var(--color-danger); border-color: var(--color-danger); }
+	.btn:disabled {
+		background: transparent;
+		color: var(--color-muted);
+		border-color: var(--color-muted);
+		cursor: not-allowed;
+		opacity: 1;
+	}
+	.btn:focus { outline: none; }
+	.btn:focus-visible, .line:focus-visible, .is-focus { box-shadow: var(--shadow-focus); outline: none; }
+	.line:focus { outline: none; }
+
+	@media (hover: hover) and (pointer: fine) {
+		.btn-ink:hover { background: var(--color-surface); color: var(--color-primary); }
+		.btn-quiet:hover { background: var(--color-primary); color: var(--color-primary-foreground); }
+		.btn-stop:hover { background: var(--color-primary); color: var(--color-primary-foreground); border-color: var(--color-primary); }
+	}
+	.btn-ink:active { background: var(--color-surface); color: var(--color-primary); }
+	.btn-quiet:active { background: var(--color-primary); color: var(--color-primary-foreground); }
+	.btn-stop:active { background: var(--color-primary); color: var(--color-primary-foreground); border-color: var(--color-primary); }
+	.btn:disabled:active, .btn:disabled:hover { background: transparent; color: var(--color-muted); border-color: var(--color-muted); }
+	.btn-ink.is-hover { background: var(--color-surface); color: var(--color-primary); }
+
+	/* ── Bands ────────────────────────────────────────────────────── */
+	.band { padding: 48px var(--margin); border-top: var(--rule-width) solid var(--color-border); }
+	.band-head {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 12px;
+		margin-bottom: 28px;
+	}
+	h2 {
+		font-weight: 600;
+		font-size: 32px;
+		line-height: 1.05;
+		letter-spacing: -0.03em;
+	}
+	.lede { max-width: 38em; }
+
+	.swatches, .controls, .log { border-top: var(--rule-width) solid var(--color-border); }
+	.swatches { display: grid; grid-template-columns: 1fr; border-bottom: var(--rule-width) solid var(--color-border); }
+	.swatch:last-child { border-bottom: 0; }
+	.swatch { padding: 16px 18px 20px; border-bottom: var(--rule-width) solid var(--color-border); min-height: 148px; }
+	.sw-name { margin: 10px 0 8px; }
+	.num-sample {
+		color: var(--color-accent);
+		font-weight: 600;
+		font-size: 56px;
+		line-height: 0.86;
+		letter-spacing: -0.05em;
+		font-variant-numeric: tabular-nums;
+	}
+	.err-sample { color: var(--color-danger); }
+	.reversed {
+		margin: 16px -18px -20px;
+		padding: 10px 18px;
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+		font-weight: 500;
+	}
+
+	.ruler {
+		display: none;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		margin-bottom: 8px;
+	}
+	.ruler span { font-size: 11px; color: var(--color-muted); font-variant-numeric: tabular-nums; }
+	.sheet {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		border-top: var(--rule-width) solid var(--color-border);
+		border-left: var(--rule-width) solid var(--color-border);
+	}
+	.mod {
+		min-height: 72px;
+		padding: 10px 12px;
+		box-shadow: inset -1px -1px 0 var(--color-border);
+		font-size: 14px;
+	}
+	.mod b { display: block; font-weight: 500; font-variant-numeric: tabular-nums; margin-bottom: 4px; }
+	.mod-8, .mod-6, .mod-4 { grid-column: 1 / -1; }
+	.mod-open { color: var(--color-muted); }
+
+	.controls { display: grid; gap: 0; }
+	.ctrl-row { display: flex; flex-wrap: wrap; gap: 12px; padding: 16px 0; border-bottom: var(--rule-width) solid var(--color-border); }
+	.ctrl { display: grid; gap: 8px; padding: 16px 0; border-bottom: var(--rule-width) solid var(--color-border); }
+	.ctrl > span:first-child { color: var(--color-muted); }
+	.hint { margin-top: 16px; max-width: 40em; color: var(--color-surface-foreground); }
+	.err { color: var(--color-danger); font-size: 14px; }
+
+	.log-line {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 4px 16px;
+		padding: 14px 0 14px 0;
+		border-bottom: var(--rule-width) solid var(--color-border);
+	}
+	.log-line .say { grid-column: 1 / -1; }
+	.log-line.is-live { box-shadow: inset 2px 0 0 var(--color-accent); padding-left: 14px; }
+	.log-line .who { font-weight: 500; }
+	.log-line .when { color: var(--color-muted); font-variant-numeric: tabular-nums; }
+	.run-meta { margin-top: 12px; color: var(--color-muted); font-size: 13px; }
+	.log .composer { border-bottom: 0; }
+
+	.narrow { display: grid; grid-template-columns: 1fr; gap: 28px; align-items: start; }
+	.handset { border: var(--rule-width) solid var(--color-border); padding: 14px 14px 16px; max-width: 360px; }
+	.h-status { display: flex; justify-content: space-between; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+	.h-num { margin: 16px 0 0; color: var(--color-accent); font-size: 64px; font-weight: 600; line-height: 0.86; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+	.h-title { margin: 8px 0 0.28em; font-size: 36px; font-weight: 600; line-height: 0.96; letter-spacing: -0.04em; }
+	.h-deck { margin: 12px 0 0; font-size: 15px; max-width: 28em; }
+	.h-meta { display: grid; gap: 4px; margin: 16px 0; }
+	.h-meta div { display: grid; grid-template-columns: 64px 1fr; gap: 8px; }
+	.h-meta dt { margin: 0; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-muted); }
+	.h-meta dd { margin: 0; font-size: 14px; font-weight: 500; }
+	.h-fields { border-top: var(--rule-width) solid var(--color-border); border-bottom: var(--rule-width) solid var(--color-border); }
+	.h-field { padding: 12px 0; border-bottom: var(--rule-width) solid var(--color-border); }
+	.h-field:last-child { border-bottom: 0; }
+	.h-field .f-idx { margin-bottom: 6px; }
+	.h-run { width: 100%; margin-top: 12px; }
+	.hand-cap { margin-top: 8px; }
+
+	.rules { list-style: none; margin: 0; padding: 0; counter-reset: rule; }
+	.rules li {
+		counter-increment: rule;
+		display: grid;
+		grid-template-columns: 36px minmax(0, 1fr);
+		gap: 12px;
+		padding: 14px 0;
+		border-top: var(--rule-width) solid var(--color-border);
+	}
+	.rules li::before {
+		content: counter(rule, decimal-leading-zero);
+		color: var(--color-muted);
+		font-variant-numeric: tabular-nums;
+		font-weight: 500;
+	}
+	.rules b { font-weight: 500; }
+	.rules li span { display: block; }
+
+	.compare { display: grid; grid-template-columns: 1fr; gap: 28px; }
+	.cmp-off, .cmp-on { margin: 0; min-height: 280px; }
+	.cmp-off {
+		background: linear-gradient(145deg, #2f6fed 0%, #f0b429 52%, #e23b4a 100%);
+		border-radius: 28px;
+		box-shadow: 0 22px 40px rgb(20 20 40 / 0.22);
+		text-align: center;
+		color: #ffffff;
+		padding: 28px 22px 22px;
+	}
+	.cmp-off figcaption, .cmp-on figcaption { letter-spacing: 0.14em; }
+	.bad-shapes { display: flex; gap: 10px; justify-content: center; margin: 18px 0; }
+	.bad-sq { width: 36px; height: 36px; background: #ffe14a; }
+	.bad-ci { width: 36px; height: 36px; border-radius: 999px; background: #3d5afe; }
+	.bad-title { font-weight: 800; font-size: 28px; letter-spacing: -0.03em; text-transform: uppercase; line-height: 1; }
+	.cmp-off p { margin-top: 10px; }
+	.bad-pill {
+		display: inline-block;
+		margin-top: 18px;
+		padding: 10px 22px;
+		border-radius: 999px;
+		background: #ffffff;
+		color: #1a1a1a;
+		font-weight: 700;
+	}
+	.cmp-on { border-top: var(--rule-width) solid var(--color-border); border-bottom: var(--rule-width) solid var(--color-border); padding: 16px 0 18px; }
+	.on-num { color: var(--color-accent); font-size: 64px; font-weight: 600; line-height: 0.86; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+	.on-title { font-size: 36px; font-weight: 600; line-height: 0.96; letter-spacing: -0.04em; margin: 8px 0 0.28em; }
+	.on-note { margin: 12px 0 16px; max-width: 28em; }
+	.note { margin-top: 20px; max-width: 40em; }
+
+	@media (min-width: 520px) {
+		.fields { grid-template-columns: 1fr 1fr; }
+		.field { border-bottom: var(--rule-width) solid var(--color-border); border-right: var(--rule-width) solid var(--color-border); }
+		.field:nth-child(2n) { border-right: 0; }
+		.field:nth-last-child(-n+2) { border-bottom: 0; }
+		.swatches { grid-template-columns: 1fr 1fr; }
+		.swatch { border-right: var(--rule-width) solid var(--color-border); border-bottom: var(--rule-width) solid var(--color-border); }
+		.swatch:nth-child(2n) { border-right: 0; }
+		.swatch:nth-last-child(-n+2) { border-bottom: 0; }
+	}
+	@media (min-width: 640px) {
+		.log-line { grid-template-columns: 64px 88px minmax(0, 1fr); padding-left: 0; }
+		.log-line .say { grid-column: auto; }
+		.log-line.is-live { padding-left: 14px; }
+	}
+	@media (min-width: 800px) {
+		.mast, .foot { grid-template-columns: 1.3fr 1fr 1.4fr auto; align-items: baseline; }
+		.hero { grid-template-columns: minmax(140px, 3fr) minmax(0, 9fr); padding-top: 36px; }
+		.num { font-size: 96px; }
+		h1 { font-size: 72px; max-width: none; }
+		.grow { justify-content: flex-end; padding-bottom: 28px; }
+		.fields { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+		.field { border-bottom: 0; border-right: var(--rule-width) solid var(--color-border); min-height: 148px; }
+		.field:nth-child(2n) { border-right: var(--rule-width) solid var(--color-border); }
+		.field:last-child { border-right: 0; }
+		.composer { grid-template-columns: 72px minmax(0, 1fr) auto; gap: 12px 16px; align-items: end; }
+		.composer .btn { width: auto; }
+		.band { padding-top: 56px; padding-bottom: 56px; }
+		.band-head { grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr); gap: 24px 40px; align-items: end; }
+		h2 { font-size: 40px; }
+		.swatches { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+		.swatch { border-bottom: 0; border-right: var(--rule-width) solid var(--color-border); }
+		.swatch:nth-child(2n) { border-right: var(--rule-width) solid var(--color-border); }
+		.swatch:last-child { border-right: 0; }
+		.ruler { display: grid; }
+		.sheet { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+		.mod-8 { grid-column: span 8; }
+		.mod-4 { grid-column: span 4; }
+		.mod-3 { grid-column: span 3; }
+		.mod-6 { grid-column: span 6; }
+		.narrow { grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 40px; }
+		.compare { grid-template-columns: 1fr 1fr; gap: 40px; align-items: stretch; }
+	}
+	@media (min-width: 1080px) {
+		.num { font-size: 148px; }
+		h1 { font-size: 104px; }
+		.hero { column-gap: 32px; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.btn { transition: none; }
+	}
+</style>
+</head>
+<body>
+<header class="poster">
+	<div class="mast">
+		<span>Raster</span>
+		<span>Local agent</span>
+		<span>On this machine</span>
+		<span class="tnum">13.11.26</span>
+	</div>
+	<div class="hero">
+		<p class="num">01</p>
+		<div class="hero-copy">
+			<h1>the files<br>stay here.</h1>
+			<p class="deck">Raster is a local-first agent. The model runs on this machine. A line placed in the grid stays in the grid.</p>
+		</div>
+	</div>
+	<div class="grow">
+		<dl class="meta">
+			<div><dt>Status</dt><dd>Idle</dd></div>
+			<div><dt>Fields</dt><dd class="tnum">04 open</dd></div>
+			<div><dt>Sent</dt><dd class="tnum">0 bytes</dd></div>
+		</dl>
+	</div>
+	<div class="fields">
+		<article class="field">
+			<p class="f-idx">01</p>
+			<p class="f-title">On device</p>
+			<p>The weights stay in the local store.</p>
+		</article>
+		<article class="field">
+			<p class="f-idx">02</p>
+			<p class="f-title">Cited</p>
+			<p>A line names the path it came from.</p>
+		</article>
+		<article class="field">
+			<p class="f-idx">03</p>
+			<p class="f-title">Reversible</p>
+			<p>The log can undo a run.</p>
+		</article>
+		<article class="field field-open">
+			<p class="f-idx">04</p>
+		</article>
+	</div>
+	<div class="composer">
+		<label for="line-hero">Line</label>
+		<input class="line" id="line-hero" type="text" value="Where did the grid notes go?" autocomplete="off">
+		<button class="btn btn-ink" type="button">Run</button>
+	</div>
+</header>
+
+<main>
+	<section class="band" id="color">
+		<p class="kicker">01 — Color</p>
+		<div class="band-head">
+			<h2>one signal, and it is a position</h2>
+			<p class="lede">Paper, ink, and a single red. The red is the active index at display size. The same numeral at label size stays ink, so the signal remains one mark. Error red appears only with an error sentence.</p>
+		</div>
+		<div class="swatches">
+			<div class="swatch">
+				<p class="f-idx">Paper</p>
+				<p class="sw-name">surface</p>
+				<p>The sheet. Long text is ink on this paper, about 18:1. Raised is the same paper.</p>
+			</div>
+			<div class="swatch">
+				<p class="f-idx">Ink</p>
+				<p class="sw-name">primary</p>
+				<p>The sentence, the rule, and one reversed line.</p>
+				<p class="reversed">primary-foreground</p>
+			</div>
+			<div class="swatch">
+				<p class="num-sample">01</p>
+				<p class="sw-name">accent</p>
+				<p>The signal. A numeral, not a filled block.</p>
+			</div>
+			<div class="swatch">
+				<p class="f-idx err-sample">Error</p>
+				<p class="sw-name">danger</p>
+				<p class="err-sample">The line is empty.</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="band" id="grid">
+		<p class="kicker">02 — Grid and depth</p>
+		<div class="band-head">
+			<h2>the module is the picture</h2>
+			<p class="lede">Twelve columns, a hairline, no shadow, no radius. A field spans 3, 4, 6, or 8. The last module can stay empty. Asymmetry is unequal span, flush left.</p>
+		</div>
+		<div class="ruler" aria-hidden="true">
+			<span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
+		</div>
+		<div class="sheet" aria-hidden="true">
+			<div class="mod mod-8"><b>8</b> Headline</div>
+			<div class="mod mod-4"><b>4</b> Note</div>
+			<div class="mod mod-3"><b>3</b> Field</div>
+			<div class="mod mod-3"><b>3</b> Field</div>
+			<div class="mod mod-3"><b>3</b> Field</div>
+			<div class="mod mod-3 mod-open"><b>3</b> Open</div>
+			<div class="mod mod-6"><b>6</b> Reading</div>
+			<div class="mod mod-6 mod-open"><b>6</b> Open</div>
+		</div>
+		<p class="note">Depth tokens are none. A blur, a lift, or a rounded corner would invent a material this sheet does not have. The 1px rule is the edge at every width.</p>
+	</section>
+
+	<section class="band" id="controls">
+		<p class="kicker">03 — Controls</p>
+		<div class="band-head">
+			<h2>ink for the commit, red for the index</h2>
+			<p class="lede">The commit control is an ink rectangle. It does not use the signal. Hover inverts; nothing scales. Focus is an ink ring with a paper gap. Disabled stays opaque and turns muted.</p>
+		</div>
+		<div class="controls">
+			<div class="ctrl-row">
+				<button class="btn btn-ink" type="button">Run</button>
+				<button class="btn btn-ink is-hover" type="button">Run</button>
+				<button class="btn btn-quiet" type="button">Hold</button>
+				<button class="btn btn-stop" type="button">Stop</button>
+				<button class="btn btn-quiet" type="button" disabled>Send</button>
+			</div>
+			<label class="ctrl">
+				<span>Line</span>
+				<input class="line" type="text" value="notes/grid.md" autocomplete="off">
+			</label>
+			<label class="ctrl">
+				<span>Keyboard focus</span>
+				<input class="line is-focus" type="text" value="notes/grid.md" readonly>
+			</label>
+			<label class="ctrl">
+				<span>Error</span>
+				<input class="line is-error" type="text" value="" aria-invalid="true" autocomplete="off">
+				<span class="err">The line is empty.</span>
+			</label>
+		</div>
+		<p class="hint">The second Run is the hover state, held still so it can be compared. A fine pointer inverts the live control. A press does the same and returns. The caret stays ink.</p>
+	</section>
+
+	<section class="band" id="console">
+		<p class="kicker">04 — The console</p>
+		<div class="band-head">
+			<h2>a run, set as a row</h2>
+			<p class="lede">Time, name, line. No bubble, no avatar, no second typeface. This view has no display index, so the signal is a 2px rule on the latest agent row.</p>
+		</div>
+		<div class="log">
+			<div class="log-line">
+				<span class="when tnum">14:02</span>
+				<span class="who">You</span>
+				<span class="say">Where did the grid notes go?</span>
+			</div>
+			<div class="log-line">
+				<span class="when tnum">14:02</span>
+				<span class="who">Raster</span>
+				<span class="say">In notes/grid.md, lines 40–58. The measure is eight points. The file stayed where it was.</span>
+			</div>
+			<div class="log-line">
+				<span class="when tnum">14:06</span>
+				<span class="who">You</span>
+				<span class="say">Draft a caption for field 04.</span>
+			</div>
+			<div class="log-line is-live">
+				<span class="when tnum">14:06</span>
+				<span class="who">Raster</span>
+				<span class="say">Field 04 stays empty. The index is the whole content. Nothing was written out.</span>
+			</div>
+			<p class="run-meta">read notes/grid.md · wrote nothing · 0 bytes sent</p>
+			<div class="composer">
+				<label for="line-next">Line</label>
+				<input class="line" id="line-next" type="text" placeholder="Place a line" autocomplete="off">
+				<button class="btn btn-ink" type="button">Run</button>
+			</div>
+		</div>
+	</section>
+
+	<section class="band" id="narrow">
+		<p class="kicker">05 — A narrow sheet</p>
+		<div class="band-head">
+			<h2>the same grid, one column</h2>
+			<p class="lede">The handset is a square rule, not a rounded shell. Inside it, the poster has already collapsed the way a 390px sheet collapses.</p>
+		</div>
+		<div class="narrow">
+			<div>
+				<div class="handset">
+					<div class="h-status"><span class="tnum">09:41</span><span>LTE</span></div>
+					<p class="h-num">01</p>
+					<p class="h-title">the files<br>stay here.</p>
+					<p class="h-deck">A local-first agent. The model stays on this machine.</p>
+					<dl class="h-meta">
+						<div><dt>Status</dt><dd>Idle</dd></div>
+						<div><dt>Fields</dt><dd class="tnum">04 open</dd></div>
+					</dl>
+					<div class="h-fields">
+						<div class="h-field">
+							<p class="f-idx">01</p>
+							<p class="f-title">On device</p>
+							<p>The weights stay in the local store.</p>
+						</div>
+						<div class="h-field">
+							<p class="f-idx">02</p>
+							<p class="f-title">Cited</p>
+							<p>A line names the path it came from.</p>
+						</div>
+						<div class="h-field">
+							<p class="f-idx">03</p>
+							<p class="f-title">Reversible</p>
+							<p>The log can undo a run.</p>
+						</div>
+						<div class="h-field field-open">
+							<p class="f-idx">04</p>
+						</div>
+					</div>
+					<button class="btn btn-ink h-run" type="button">Run</button>
+				</div>
+				<p class="kicker hand-cap">390 — index, headline, then the fields</p>
+			</div>
+			<ul class="rules">
+				<li><span><b>Margin.</b> 56px becomes 40px, then 20px. The rule stays 1px. A thinner rule, so the phone can “breathe,” removes the sheet.</span></li>
+				<li><span><b>Columns.</b> Below 800px the row stacks: display index, headline, deck, then the meta. The meta is the side column that leaves first. The blank between deck and fields keeps a 36px floor and grows only when the sheet is shorter than the viewport.</span></li>
+				<li><span><b>Fields.</b> Two columns from 520px to 799px, one column below 520px. The empty field keeps its index. It is not dropped to shorten the page.</span></li>
+				<li><span><b>Type.</b> The display index goes 148, then 96, then 64. The headline goes 104, then 72, then 44. Body stays 16px. Labels stay 12px, and tracking tightens from 0.14em to 0.08em below 800px so the running head wraps inside the margin.</span></li>
+				<li><span><b>Targets.</b> The composer stacks. Run becomes full width and stays 44px tall, as does the baseline. Nothing on the narrow sheet depends on a sideways scroll.</span></li>
+				<li><span><b>Pointer.</b> The invert is limited to a fine pointer. A coarse pointer gets the same invert on press, then the control returns. The ink focus ring still shows for a keyboard.</span></li>
+				<li><span><b>Console.</b> Time and name share a line. The sentence moves under them. The 2px signal rule stays on the left of the latest agent row.</span></li>
+			</ul>
+		</div>
+	</section>
+
+	<section class="band" id="off">
+		<p class="kicker">06 — Off the grid</p>
+		<div class="band-head">
+			<h2>what breaks the sheet</h2>
+			<p class="lede">The left sample is a different language: a gradient, a radius, a blur, centered uppercase, a pill, and several hues. The right sample is the same subject on this grid.</p>
+		</div>
+		<div class="compare">
+			<figure class="cmp-off">
+				<figcaption>Off-style</figcaption>
+				<div class="bad-shapes" aria-hidden="true"><span class="bad-sq"></span><span class="bad-ci"></span></div>
+				<p class="bad-title">Get started</p>
+				<p>A centered card. The grid is gone, and the red is no longer a single index.</p>
+				<span class="bad-pill">Join</span>
+			</figure>
+			<figure class="cmp-on">
+				<figcaption>On-style</figcaption>
+				<p class="on-num">01</p>
+				<p class="on-title">the files<br>stay here.</p>
+				<p class="on-note">Flush left. One red. A hairline. An ink control.</p>
+				<button class="btn btn-ink" type="button">Run</button>
+			</figure>
+		</div>
+		<p class="note">Also outside this sheet: a monospace path, a serif headline, a filled red button, a second accent, and an empty module stuffed so the row looks even.</p>
+	</section>
+</main>
+<footer class="foot">
+	<span>Raster</span>
+	<span>Swiss Grid</span>
+	<span>The structure is the image</span>
+	<span class="tnum">01–06</span>
+</footer>
+</body>
+</html>
