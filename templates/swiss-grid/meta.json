@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "swiss-grid",
+	"name": "Swiss Grid",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 162,
+	"category": "editorial",
+	"vibe": "light",
+	"tags": [
+		"editorial",
+		"swiss",
+		"grid",
+		"grotesk",
+		"typographic",
+		"light"
+	],
+	"blurb": "Swiss International Typographic Style for a local-first agent: a strict modular grid, a Helvetica-like grotesk, asymmetric flush-left fields, huge lowercase type in open whitespace, hairline rules, and one signal red used only as the active index. The structure is the image. Not Bauhaus color blocks, not a neon perspective floor, and not a filled serif broadsheet.",
+	"tagline": {
+		"en": "The grid is the picture. One signal red.",
+		"zh": "网格即画面，只留一种信号红"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://www.nb.admin.ch/en/the-international-style-1950-1970",
+		"note": "Authored by Grok Bot. Original Swiss Grid system. Mood only: the International Typographic Style as recorded by the Swiss National Library for 1950–1970 (a typographic grid, sans-serif type, rational composition, restrained color), the Zurich and Basel schools and Neue Grafik (https://www.aboutswitzerland.eda.admin.ch/en/swiss-style-forever-the-story-of-a-graphic-design-tradition), Müller-Brockmann’s grid as a measure the elements fit, and the 1957 grotesks Helvetica and Univers. Palette, screens, and copy are original. No posters, photographs, or marks."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-13"
+}

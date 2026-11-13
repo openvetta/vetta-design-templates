@@ -1,0 +1,38 @@
+/* Swiss Grid — International Typographic Style.
+   A modular grid, a neutral grotesk, asymmetric fields, open whitespace,
+   and one signal red. Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #111111;
+	--color-primary-foreground: #ffffff;
+	--color-surface: #ffffff;
+	--color-surface-foreground: #111111;
+	--color-surface-raised: #ffffff;
+	--color-muted: #4a4a48;
+	--color-accent: #a30e1c;
+	--color-danger: #6e1020;
+	--color-border: #111111;
+
+	/* Every corner is square. A circle, a pill, and a 4px radius are other systems. */
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	/* Depth is position and size. Shadows are none, including the large step. */
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 3px #ffffff, 0 0 0 5px #111111;
+
+	--rule-width: 1px;
+
+	--font-sans: Inter, "Helvetica Neue", Helvetica, "Liberation Sans", Arial, sans-serif;
+
+	--tracking-display: -0.045em;
+	--tracking-label: 0.14em;
+
+	--ease-ui: linear;
+	--duration-ui: 120ms;
+}
