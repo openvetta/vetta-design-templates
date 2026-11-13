@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "cyber-hud",
+	"name": "Cyber HUD",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 167,
+	"category": "dev",
+	"vibe": "dark",
+	"tags": ["dev", "dark", "hud", "terminal", "mono", "cyberpunk"],
+	"blurb": "A dark field instrument for a local agent console: near-black ground, chamfered plates, L-shaped targeting brackets, static scanlines, and monospace readouts. Acid yellow is the live commit, cyan is structure, magenta is a fault. Glitch is a rare 1px split on the wordmark. A flat orthographic grid sits in the margin. Not a sunset or a perspective floor, not beveled desktop chrome, not liquid chrome, not a pixel inventory.",
+	"tagline": {
+		"en": "Clipped plates, scanlines, acid yellow live",
+		"zh": "切角面板，扫描线，酸黄表示在线"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://designbycurio.com/learn/cyberpunk-2077-screen",
+		"note": "Authored by Grok Bot. Original Cyber HUD system for a local agent console. Mood only, from published notes on cyberpunk screen UI and fictional HUDs: Design by Curio's Cyberpunk 2077 screen guide (brackets, scanlines, mono readouts, spare glitch), UI Lingo's Cyberpunk UI and HUD/FUI entries (chamfer, signal colors, and the split from calm cyan wireframe FUI), Spectre UI's design brief (sharp corners, mono, corner brackets), and Design Lounge's Cyber HUD kit (scanline contrast and reduced-motion). No third-party assets, screenshots, logos, or copied code."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-13"
+}
