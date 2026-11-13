@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "soft-3d",
+	"name": "Soft 3D",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 89,
+	"category": "playful",
+	"vibe": "light",
+	"tags": [
+		"playful",
+		"light",
+		"soft-3d",
+		"clay",
+		"mascot",
+		"wellness",
+		"pastel"
+	],
+	"blurb": "Matte soft-3D clay for a quiet wellness hour: peach-cream ground, lilac accents, pillow cards with a warm seam edge, one near-black pill for the commit action, and an original pebble family (the Puffets) modeled with radial volume, a broad highlight, and a contact shadow.",
+	"tagline": {
+		"en": "Peach clay, sleepy volume, one black pill",
+		"zh": "蜜桃黏土，软萌体积，一颗黑胶囊"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"note": "Authored by Grok Bot. Original Soft 3D system. A user-supplied Xiaohongshu still of a pastel wellness app was used as mood only and is not in the repo. The Puffet family, palette, screens, and copy are original. No upstream assets."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-13"
+}

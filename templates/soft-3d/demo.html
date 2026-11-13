@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stillhour — Soft 3D</title>
+<style>
+	/* Mirrors theme.css so this file opens on its own. */
+	:root {
+		--color-primary: #2c2428;
+		--color-primary-foreground: #fff8f3;
+		--color-surface: #f6e6da;
+		--color-surface-foreground: #3a2a32;
+		--color-surface-raised: #fff8f3;
+		--color-muted: #6b5360;
+		--color-accent: #d9c6f0;
+		--color-danger: #9d3d4c;
+		--color-border: #946858;
+		--color-danger-foreground: #fff8f3;
+		--color-danger-wash: #f8c9c6;
+		--color-lilac-ink: #5c4578;
+		--color-selected: #e7dcf6;
+		--color-clay-cream: #f3d2c0;
+		--color-clay-cream-deep: #e0b094;
+		--color-clay-apricot: #f0b48a;
+		--color-clay-apricot-deep: #dd9468;
+		--color-clay-sage: #c5d2b4;
+		--color-clay-sage-deep: #9aaf86;
+		--color-clay-lilac: #d9c6f0;
+		--color-clay-lilac-deep: #b89edc;
+		--volume-light: rgb(255 248 243 / 0.92);
+		--volume-shade: rgb(90 48 58 / 0.22);
+		--volume-ao: rgb(74 42 52 / 0.30);
+		--radius-sm: 16px;
+		--radius-md: 22px;
+		--radius-lg: 28px;
+		--radius-xl: 36px;
+		--radius-2xl: 44px;
+		--radius-full: 9999px;
+		--shadow-sm: 0 8px 16px rgb(90 52 62 / 0.08), inset 0 1px 0 rgb(255 248 243 / 0.75);
+		--shadow-md: 0 14px 28px rgb(90 52 62 / 0.12), inset 0 1px 0 rgb(255 248 243 / 0.8);
+		--shadow-lg: 0 22px 40px rgb(90 52 62 / 0.16), inset 0 1px 0 rgb(255 248 243 / 0.85);
+		--shadow-contact: 0 16px 18px rgb(90 50 60 / 0.20);
+		--ease-breathe: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+		--ease-soft: cubic-bezier(0.22, 1.12, 0.36, 1);
+		--duration-breathe: 4.8s;
+		--duration-press: 160ms;
+		--font-sans: "ui-rounded", "SF Pro Rounded", Nunito, "Avenir Next", "Segoe UI", "Trebuchet MS", sans-serif;
+		--clay: var(--color-clay-cream);
+		--clay-deep: var(--color-clay-cream-deep);
+	}
+
+	*, *::before, *::after { box-sizing: border-box; }
+	html { scroll-behavior: smooth; }
+	body {
+		margin: 0;
+		color: var(--color-surface-foreground);
+		font-family: var(--font-sans);
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 1.5;
+		background:
+			radial-gradient(90% 42% at 0% -8%, #efe4f8 0%, transparent 58%),
+			radial-gradient(70% 36% at 100% 0%, #f8d7c6 0%, transparent 52%),
+			#f3e4d8;
+		-webkit-font-smoothing: antialiased;
+	}
+	h1, h2, h3, p { margin: 0; }
+	button, input { font: inherit; color: inherit; }
+	a { color: inherit; }
+	::selection { background: var(--color-accent); color: var(--color-surface-foreground); }
+
+	.stage-mark {
+		text-align: center;
+		font-weight: 800;
+		font-size: 15px;
+		letter-spacing: -0.02em;
+		padding: 28px 16px 0;
+	}
+	.stage, .film {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: flex-start;
+		gap: 28px;
+		padding: 18px 20px 8px;
+	}
+	.wrap { max-width: 1080px; margin: 0 auto; padding: 12px 20px 72px; }
+	.block { padding: 42px 0; scroll-margin-top: 24px; }
+	.eyebrow {
+		font-size: 12px;
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		color: var(--color-lilac-ink);
+		margin-bottom: 6px;
+	}
+	.block h2, .sheet h2 {
+		font-size: 32px;
+		font-weight: 800;
+		letter-spacing: -0.02em;
+		line-height: 1.15;
+	}
+	.lede { max-width: 62ch; margin-top: 10px; color: var(--color-muted); }
+
+	/* ── phone ───────────────────────────────────────────────────── */
+	.phone {
+		width: 340px;
+		height: auto;
+		display: flex;
+		flex-direction: column;
+		background: var(--color-surface);
+		border-radius: 40px;
+		border: 1.5px solid var(--color-border);
+		box-shadow: var(--shadow-lg);
+		overflow: hidden;
+		scroll-margin-top: 20px;
+		flex: none;
+	}
+	.status {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 14px 22px 0;
+		font-size: 13px;
+		font-weight: 800;
+		flex: none;
+	}
+	.status-icons { display: flex; align-items: center; gap: 6px; }
+	.bars, .batt { display: inline-block; }
+	.bars {
+		width: 15px; height: 10px;
+		background:
+			linear-gradient(var(--color-surface-foreground), var(--color-surface-foreground)) 0 4px / 3px 6px no-repeat,
+			linear-gradient(var(--color-surface-foreground), var(--color-surface-foreground)) 5px 2px / 3px 8px no-repeat,
+			linear-gradient(var(--color-surface-foreground), var(--color-surface-foreground)) 10px 0 / 3px 10px no-repeat;
+	}
+	.batt {
+		width: 18px; height: 9px;
+		border: 1.5px solid var(--color-surface-foreground);
+		border-radius: 3px;
+		position: relative;
+	}
+	.batt::before {
+		content: "";
+		position: absolute;
+		inset: 1.5px 5px 1.5px 1.5px;
+		background: var(--color-surface-foreground);
+		border-radius: 1px;
+	}
+	.app {
+		flex: none;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		padding: 12px 16px 16px;
+	}
+	.app > * { flex-shrink: 0; }
+	.brand { font-size: 13px; font-weight: 800; letter-spacing: -0.02em; }
+	.screen-title { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.12; }
+	.sub { color: var(--color-muted); font-size: 14px; }
+	.day { font-size: 13px; font-weight: 700; color: var(--color-lilac-ink); }
+
+	.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+	.chip, .quiet, .pill, .mood, .row, .tab, .iconbtn {
+		border: 1.5px solid var(--color-border);
+		background: var(--color-surface-raised);
+		color: var(--color-surface-foreground);
+		text-decoration: none;
+		cursor: pointer;
+	}
+	.chip {
+		min-height: 44px;
+		padding: 0 14px;
+		border-radius: var(--radius-full);
+		font-size: 13px;
+		font-weight: 700;
+		box-shadow: var(--shadow-sm);
+	}
+	.chip.is-on, .mood.is-on, .tab.is-on {
+		background: var(--color-accent);
+		border-color: var(--color-lilac-ink);
+	}
+	.pill {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 48px;
+		padding: 0 18px;
+		border-radius: var(--radius-full);
+		border-color: transparent;
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+		font-weight: 700;
+		font-size: 16px;
+		box-shadow: inset 0 1px 0 rgb(255 248 243 / 0.28), 0 10px 16px rgb(44 36 40 / 0.16);
+		margin-top: auto;
+	}
+	.pill:active { transform: translateY(1px) scale(0.985); }
+	.quiet {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 44px;
+		padding: 0 16px;
+		border-radius: var(--radius-full);
+		font-weight: 700;
+		box-shadow: var(--shadow-sm);
+	}
+	.pill.is-disabled, .quiet.is-disabled {
+		opacity: 0.4;
+		box-shadow: none;
+		cursor: not-allowed;
+	}
+	.textlink {
+		color: var(--color-lilac-ink);
+		font-weight: 700;
+		text-decoration: none;
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+	}
+
+	.hero-card, .row, .thread li, .promise, .note-card, .ref-card, .sheet, .swatch, .cmp-on {
+		background: var(--color-surface-raised);
+		border: 1.5px solid var(--color-border);
+		box-shadow: var(--shadow-sm);
+	}
+	.hero-card { border-radius: var(--radius-lg); overflow: hidden; }
+	.hero-copy { padding: 12px 14px 14px; }
+	.hero-copy h3 { font-size: 16px; font-weight: 800; letter-spacing: -0.02em; }
+	.hero-copy p { color: var(--color-muted); font-size: 13px; margin-top: 2px; }
+
+	.row {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		min-height: 64px;
+		padding: 6px 10px 6px 8px;
+		border-radius: 22px;
+		text-align: left;
+	}
+	.row span.copy { min-width: 0; display: block; }
+	.row strong { display: block; font-size: 15px; font-weight: 800; letter-spacing: -0.02em; }
+	.row em { display: block; font-style: normal; font-size: 12px; font-weight: 500; color: var(--color-muted); }
+	.chev { width: 16px; height: 16px; margin-left: auto; flex: none; color: var(--color-muted); }
+
+	.navline {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		min-height: 44px;
+	}
+	.navline h2 { flex: 1; text-align: center; font-size: 16px; font-weight: 800; }
+	.iconbtn {
+		width: 44px; height: 44px;
+		border-radius: var(--radius-full);
+		display: grid; place-items: center;
+		box-shadow: var(--shadow-sm);
+		flex: none;
+	}
+	.iconbtn svg, .chev { display: block; }
+
+	.facts { display: flex; flex-wrap: wrap; gap: 8px; }
+	.facts span {
+		min-height: 36px;
+		display: inline-flex;
+		align-items: center;
+		padding: 0 12px;
+		border-radius: var(--radius-full);
+		border: 1.5px solid var(--color-border);
+		background: var(--color-surface-raised);
+		font-size: 13px;
+		font-weight: 700;
+	}
+	.plan-label { font-size: 13px; font-weight: 800; margin-top: 4px; }
+	.thread { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+	.thread li {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		min-height: 44px;
+		border-radius: 18px;
+		padding: 8px 12px;
+		font-size: 14px;
+		font-weight: 700;
+	}
+	.thread b {
+		width: 28px; height: 28px; flex: none;
+		display: grid; place-items: center;
+		border-radius: 50%;
+		background: var(--color-accent);
+		font-size: 13px;
+	}
+
+	.moods { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+	.mood {
+		min-height: 76px;
+		border-radius: 22px;
+		padding: 10px 12px;
+		text-align: left;
+		box-shadow: var(--shadow-sm);
+	}
+	.mood strong { display: block; font-size: 15px; font-weight: 800; }
+	.mood small { display: block; color: var(--color-lilac-ink); font-weight: 700; font-size: 12px; }
+	.mark {
+		display: block;
+		width: 28px; height: 14px; margin-bottom: 8px;
+		border-radius: var(--radius-full);
+		background:
+			radial-gradient(60% 80% at 30% 28%, rgb(255 248 243 / 0.75), transparent 52%),
+			#c4896e;
+		box-shadow: inset -3px -3px 5px rgb(90 48 58 / 0.28);
+	}
+	.mark.thin { width: 12px; height: 22px; }
+	.mark.bright { width: 18px; height: 18px; border-radius: 50%; background:
+		radial-gradient(60% 60% at 32% 28%, rgb(255 248 243 / 0.9), transparent 50%),
+		var(--color-clay-apricot); }
+	.mark.heavy { width: 34px; height: 12px; }
+	.field {
+		width: 100%;
+		min-height: 48px;
+		border-radius: 18px;
+		border: 1.5px solid var(--color-border);
+		background: var(--color-surface-raised);
+		box-shadow: inset 0 8px 12px rgb(90 48 58 / 0.06);
+		padding: 0 14px;
+	}
+	.field-label { font-size: 13px; font-weight: 700; display: flex; flex-direction: column; gap: 6px; }
+
+	.ask { text-align: center; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+	.center { display: flex; justify-content: center; }
+
+	.week {
+		margin: 0;
+		background: var(--color-surface-raised);
+		border: 1.5px solid var(--color-border);
+		border-radius: 22px;
+		padding: 12px 12px 10px;
+		box-shadow: var(--shadow-sm);
+	}
+	.stat { font-size: 42px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+	.stat span { font-size: 16px; font-weight: 700; letter-spacing: 0; color: var(--color-muted); }
+	.chart {
+		display: flex;
+		align-items: flex-end;
+		gap: 6px;
+		height: 112px;
+		margin-top: 4px;
+	}
+	.bar {
+		flex: 1 0 0;
+		height: var(--h);
+		min-height: 10px;
+		border-radius: 999px 999px 10px 10px;
+		background:
+			linear-gradient(90deg, rgb(255 248 243 / 0.7), transparent 42%),
+			var(--color-clay-apricot);
+		box-shadow: inset -4px 0 6px rgb(90 48 58 / 0.16), inset 3px 0 4px rgb(255 248 243 / 0.45);
+	}
+	.bar.is-today {
+		background:
+			linear-gradient(90deg, rgb(255 248 243 / 0.55), transparent 40%),
+			var(--color-clay-lilac-deep);
+	}
+	.days { display: flex; gap: 6px; margin-top: 6px; }
+	.days span { flex: 1; text-align: center; font-size: 12px; font-weight: 700; color: var(--color-muted); }
+	.days .is-today { color: var(--color-surface-foreground); }
+	.note-card { border-radius: 22px; padding: 12px 14px; font-size: 14px; }
+	.note-card strong { display: block; font-weight: 800; }
+
+	.promises { display: flex; flex-direction: column; gap: 8px; }
+	.promise {
+		display: flex; gap: 10px; align-items: center;
+		min-height: 52px; border-radius: 18px; padding: 8px 12px;
+		font-weight: 700; font-size: 14px;
+	}
+	.promise b {
+		width: 28px; height: 28px; flex: none;
+		display: grid; place-items: center;
+		border-radius: 50%;
+		background: var(--color-clay-lilac);
+		font-size: 13px;
+	}
+	.later { align-self: center; }
+
+	.tabbar {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 4px;
+		padding: 8px 10px 12px;
+		background: var(--color-surface-raised);
+		border-top: 1.5px solid var(--color-border);
+		flex: none;
+	}
+	.tab {
+		min-height: 48px;
+		border-radius: 16px;
+		border-color: transparent;
+		background: transparent;
+		box-shadow: none;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 2px;
+		font-size: 12px;
+		font-weight: 700;
+		color: var(--color-muted);
+	}
+	.tab svg { width: 22px; height: 22px; }
+	.tab.is-on { color: var(--color-surface-foreground); }
+
+	/* ── scenes ──────────────────────────────────────────────────── */
+	.nest, .stones { position: relative; overflow: hidden; }
+	.nest {
+		height: 168px;
+		background:
+			radial-gradient(80% 90% at 50% 120%, #e8c4b0 0%, transparent 55%),
+			linear-gradient(180deg, #fbf6f2, #f4ddd0);
+	}
+	.bowl {
+		position: absolute;
+		z-index: 0;
+		width: 190px; height: 62px;
+		left: 50%; bottom: -8px;
+		transform: translateX(-50%);
+		border-radius: 50%;
+		background:
+			radial-gradient(70% 55% at 50% 16%, #fff8f3 0%, #f3d0be 48%, #e2b197 100%);
+		box-shadow: inset 0 12px 14px rgb(120 64 72 / 0.16);
+	}
+	.bead {
+		position: absolute;
+		border-radius: 50%;
+		z-index: 2;
+		background:
+			radial-gradient(60% 60% at 32% 28%, rgb(255 248 243 / 0.9), transparent 48%),
+			var(--bead, var(--color-clay-lilac));
+		box-shadow: inset -3px -4px 5px rgb(90 48 58 / 0.18);
+	}
+	.bead.a { width: 16px; height: 16px; left: 22%; bottom: 22px; --bead: var(--color-clay-lilac); }
+	.bead.b { width: 12px; height: 12px; right: 24%; bottom: 18px; --bead: var(--color-clay-sage); }
+	.bead.c { width: 10px; height: 10px; left: 30%; bottom: 14px; --bead: var(--color-clay-apricot); }
+	.nest .puffet { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 2; }
+
+	.stones {
+		height: 196px;
+		margin: 0 -16px;
+		background: linear-gradient(180deg, #f8efe8 0%, #efe0f4 100%);
+	}
+	.bolster {
+		position: absolute;
+		z-index: 0;
+		border-radius: 50%;
+		background:
+			radial-gradient(60% 55% at 30% 28%, rgb(255 248 243 / 0.65), transparent 50%),
+			var(--color-clay-sage);
+		box-shadow: inset -8px -8px 12px rgb(70 90 60 / 0.18);
+	}
+	.bolster.l { width: 92px; height: 68px; left: -28px; bottom: 6px; }
+	.bolster.r { width: 84px; height: 60px; right: -26px; bottom: 2px; }
+	.stone {
+		position: absolute;
+		z-index: 0;
+		border-radius: 50%;
+		background:
+			radial-gradient(60% 70% at 32% 30%, rgb(255 248 243 / 0.85), transparent 52%),
+			radial-gradient(80% 80% at 70% 80%, rgb(90 48 58 / 0.16), transparent 60%),
+			var(--stone, #f0c4aa);
+		box-shadow: inset -5px -6px 8px rgb(90 48 58 / 0.12), 0 8px 10px rgb(90 50 60 / 0.08);
+	}
+	.stone.a { width: 78px; height: 34px; left: 14%; bottom: 26px; --stone: #e7d3c4; }
+	.stone.b { width: 118px; height: 46px; left: 50%; bottom: 18px; transform: translateX(-50%); --stone: #f3c7ad; }
+	.stone.c { width: 68px; height: 30px; right: 12%; bottom: 32px; --stone: #ead6c8; }
+	.stones .puffet { position: absolute; left: 50%; bottom: 34px; transform: translateX(-50%); z-index: 2; }
+
+	/* ── Puffet ──────────────────────────────────────────────────── */
+	.puffet {
+		--s: 112px;
+		position: relative;
+		width: var(--s);
+		height: calc(var(--s) * 0.92);
+		flex: none;
+	}
+	.puffet .body {
+		position: absolute;
+		inset: 0 0 8% 0;
+		border-radius: 50% 50% 48% 48% / 56% 56% 44% 44%;
+		background:
+			radial-gradient(56% 48% at 30% 24%, var(--volume-light) 0%, rgb(255 248 243 / 0) 58%),
+			radial-gradient(78% 68% at 76% 88%, var(--volume-ao) 0%, rgb(74 42 52 / 0) 62%),
+			radial-gradient(120% 110% at 42% 38%, var(--clay) 0%, var(--clay) 46%, var(--clay-deep) 100%);
+		box-shadow:
+			inset 10px 12px 16px rgb(255 248 243 / 0.38),
+			inset -12px -14px 18px var(--volume-shade);
+		transform-origin: 50% 92%;
+		z-index: 1;
+	}
+	.puffet .ground {
+		position: absolute;
+		left: 16%; right: 16%; bottom: 0;
+		height: 14%;
+		border-radius: 50%;
+		background: radial-gradient(ellipse at center, rgb(74 42 52 / 0.32), transparent 70%);
+	}
+	.puffet .seam {
+		position: absolute;
+		left: 16%; right: 16%; top: 16%;
+		height: 24%;
+		border-radius: 50%;
+		background:
+			radial-gradient(50% 90% at 50% 0%, rgb(90 48 58 / 0.28) 0%, rgb(90 48 58 / 0) 52%),
+			radial-gradient(55% 80% at 50% 100%, rgb(255 248 243 / 0.55) 0%, rgb(255 248 243 / 0) 48%);
+	}
+	.puffet .eye {
+		position: absolute;
+		top: 43%;
+		width: 15%;
+		height: 9%;
+		border-bottom: max(2px, calc(var(--s) * 0.028)) solid rgb(58 42 50 / 0.82);
+		border-radius: 0 0 99px 99px;
+	}
+	.puffet .eye.l { left: 26%; }
+	.puffet .eye.r { right: 26%; }
+	.puffet .blush {
+		position: absolute;
+		top: 54%;
+		width: 14%;
+		height: 9%;
+		border-radius: 50%;
+		background: radial-gradient(circle, rgb(214 112 122 / 0.55), rgb(214 112 122 / 0) 72%);
+	}
+	.puffet .blush.l { left: 16%; }
+	.puffet .blush.r { right: 16%; }
+	.puffet .mouth { display: none; }
+	.puffet .arm {
+		position: absolute;
+		top: 58%;
+		width: 24%;
+		height: 20%;
+		border-radius: 50%;
+		background:
+			radial-gradient(60% 60% at 32% 30%, rgb(255 248 243 / 0.75), transparent 52%),
+			radial-gradient(circle at 40% 40%, var(--clay), var(--clay-deep));
+		box-shadow: inset -4px -5px 6px rgb(90 48 58 / 0.16);
+		z-index: 2;
+	}
+	.puffet .arm.l { left: -4%; }
+	.puffet .arm.r { right: -4%; }
+	.is-cream { --clay: var(--color-clay-cream); --clay-deep: var(--color-clay-cream-deep); }
+	.is-apricot { --clay: var(--color-clay-apricot); --clay-deep: var(--color-clay-apricot-deep); }
+	.is-sage { --clay: var(--color-clay-sage); --clay-deep: var(--color-clay-sage-deep); }
+	.is-lilac { --clay: var(--color-clay-lilac); --clay-deep: var(--color-clay-lilac-deep); }
+	.pose-bust .arm { display: none; }
+	.pose-bust { height: calc(var(--s) * 0.78); }
+	.pose-lean .body { transform: rotate(-14deg); }
+	.pose-wave .arm.r { top: 18%; right: -2%; transform: rotate(-24deg); }
+	.expr-glad .mouth {
+		display: block;
+		position: absolute;
+		left: 42%; top: 60%;
+		width: 16%; height: 8%;
+		border-bottom: max(2px, calc(var(--s) * 0.022)) solid rgb(58 42 50 / 0.7);
+		border-radius: 0 0 99px 99px;
+	}
+	.expr-glad .eye { top: 40%; }
+	.expr-glad .blush { transform: scale(1.2); }
+	.expr-listen .eye.r {
+		border: none;
+		top: 41%;
+		width: 13%;
+		height: 12%;
+		border-radius: 50%;
+		background:
+			radial-gradient(circle at 50% 62%, rgb(90 56 64 / 0.45) 0 14%, transparent 16%),
+			radial-gradient(circle at 40% 36%, #f8e6dc 0 50%, #e7b5a6 100%);
+		box-shadow: inset 0 2px 2px rgb(90 48 58 / 0.16);
+	}
+	.expr-tuck .eye {
+		border: none;
+		top: 46%;
+		height: max(3px, calc(var(--s) * 0.03));
+		border-radius: 99px;
+		background: rgb(58 42 50 / 0.78);
+	}
+	.expr-tuck .body { transform: scaleY(0.94); }
+	.is-mini .blush, .is-mini .mouth { display: none; }
+	.is-live .body { animation: breathe var(--duration-breathe) var(--ease-breathe) infinite; }
+	@keyframes breathe {
+		0%, 100% { transform: translateY(0) scale(1); }
+		50% { transform: translateY(1%) scale(1.018); }
+	}
+	.seam-mark {
+		width: 32px; height: 26px;
+		border-radius: 50%;
+		background:
+			radial-gradient(60% 50% at 32% 28%, rgb(255 248 243 / 0.9), transparent 50%),
+			var(--color-clay-cream);
+		box-shadow: inset -3px -4px 5px rgb(90 48 58 / 0.2);
+		position: relative;
+		display: inline-block;
+	}
+	.seam-mark::after {
+		content: "";
+		position: absolute;
+		left: 18%; right: 18%; top: 30%;
+		height: 7px;
+		border-radius: 50%;
+		background: radial-gradient(50% 80% at 50% 0%, rgb(90 48 58 / 0.35), transparent 60%);
+	}
+
+	/* ── reference ───────────────────────────────────────────────── */
+	.swatches, .trio, .control-row, .cast, .expr-row, .pose-row, .sizes, .misuse {
+		display: grid;
+		gap: 12px;
+		margin-top: 18px;
+	}
+	.swatches { grid-template-columns: repeat(4, 1fr); }
+	.swatch { border-radius: var(--radius-md); overflow: hidden; }
+	.swatch i {
+		display: block;
+		height: 72px;
+		background: var(--sw);
+	}
+	.swatch span, .cell small, figcaption, .cmp-note { display: block; padding: 8px 10px 10px; font-size: 12px; font-weight: 700; }
+	.swatch em { font-style: normal; color: var(--color-muted); font-weight: 500; }
+	.trio { grid-template-columns: repeat(3, 1fr); }
+	.orb-card, .cell {
+		background: var(--color-surface-raised);
+		border: 1.5px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		padding: 16px;
+		text-align: center;
+		box-shadow: var(--shadow-sm);
+	}
+	.orb {
+		width: 104px; height: 104px;
+		margin: 0 auto 10px;
+		border-radius: 50%;
+		background: var(--color-clay-apricot);
+	}
+	.orb.light { box-shadow: inset 18px 18px 22px rgb(255 248 243 / 0.95); }
+	.orb.shade { box-shadow: inset -16px -18px 22px rgb(90 48 58 / 0.38); }
+	.orb.full {
+		background:
+			radial-gradient(56% 48% at 30% 24%, var(--volume-light), rgb(255 248 243 / 0) 58%),
+			radial-gradient(78% 68% at 76% 88%, var(--volume-ao), transparent 62%),
+			radial-gradient(circle at 40% 38%, var(--color-clay-apricot), var(--color-clay-apricot-deep));
+		box-shadow:
+			inset 10px 12px 16px rgb(255 248 243 / 0.4),
+			inset -12px -14px 16px var(--volume-shade),
+			var(--shadow-contact);
+	}
+	.orb-card p, .cell p { font-size: 13px; color: var(--color-muted); margin-top: 4px; }
+	.breathe-row { display: flex; align-items: center; gap: 18px; margin-top: 16px; }
+	.control-row { grid-template-columns: 1.2fr 1fr; align-items: start; }
+	.stack { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+	.ref-card { border-radius: var(--radius-lg); padding: 18px; }
+	.ref-card h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+	.type-display { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+	.ring-sample { outline: 3px solid var(--color-lilac-ink); outline-offset: 3px; }
+	.error {
+		background: var(--color-danger-wash);
+		color: var(--color-surface-foreground);
+		border-radius: 16px;
+		padding: 10px 12px;
+		font-size: 14px;
+		font-weight: 700;
+	}
+	.error b { color: var(--color-danger); }
+
+	.sheet { border-radius: var(--radius-xl); padding: 22px; }
+	.identity { display: grid; grid-template-columns: 220px 1fr; gap: 18px; align-items: center; margin-top: 16px; }
+	.identity dl { display: grid; grid-template-columns: 140px 1fr; gap: 6px 12px; margin: 0; font-size: 14px; }
+	.identity dt { font-weight: 800; }
+	.identity dd { margin: 0; color: var(--color-muted); }
+	.cast, .expr-row, .pose-row { grid-template-columns: repeat(4, 1fr); }
+	.sizes { grid-template-columns: repeat(3, 1fr); }
+	.misuse { grid-template-columns: repeat(3, 1fr); }
+	.cell strong { display: block; margin-top: 6px; font-weight: 800; }
+	.bad-face { filter: none; }
+	.gloss .body {
+		background:
+			radial-gradient(circle at 32% 26%, #fff 0 7%, transparent 11%),
+			radial-gradient(circle at 40% 40%, var(--clay), var(--clay-deep));
+	}
+	.stroke .body { box-shadow: 0 0 0 3px #1a1214, inset 0 0 0 1px #1a1214; }
+	.on-black { background: #141214; border-color: #141214; }
+	.on-black p, .on-black strong { color: #fff8f3; }
+
+	.comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+	.cmp-off, .cmp-on { border-radius: var(--radius-lg); padding: 16px; }
+	.cmp-off { background: #ece7f5; border: 1.5px dashed #6b5360; }
+	.cmp-label { font-size: 12px; font-weight: 800; letter-spacing: 0.04em; margin-bottom: 10px; }
+	.bad {
+		background: #d9c6f0;
+		color: #fff;
+		border-radius: 4px;
+		box-shadow: 8px 8px 0 #161616;
+		padding: 14px;
+	}
+	.bad-orb {
+		width: 72px; height: 72px; border-radius: 50%;
+		border: 3px solid #161616;
+		background:
+			radial-gradient(circle at 30% 26%, #fff 0 8%, transparent 12%),
+			#ff8bd2;
+	}
+	.bad strong { display: block; margin: 10px 0; font-size: 18px; letter-spacing: 0.04em; }
+	.bad-go {
+		display: inline-flex; min-height: 36px; align-items: center;
+		padding: 0 12px; border-radius: 4px; background: #ff2d8a; color: #fff;
+		font-weight: 800; letter-spacing: 0.08em;
+	}
+	.cmp-note { padding: 10px 0 0; color: var(--color-muted); font-weight: 500; }
+	.good-mini { display: flex; gap: 12px; align-items: center; }
+	.rules { margin: 12px 0 0; padding-left: 18px; color: var(--color-muted); }
+	.rules li { margin: 4px 0; }
+	.narrow-wrap { display: grid; grid-template-columns: 300px 1fr; gap: 22px; align-items: start; margin-top: 16px; }
+	.phone.narrow { width: 300px; height: auto; min-height: 0; }
+	.phone.narrow .screen-title { font-size: 26px; }
+
+	.phone :focus-visible, .chip:focus-visible, .mood:focus-visible, .pill:focus-visible, .quiet:focus-visible, .tab:focus-visible, .iconbtn:focus-visible, .row:focus-visible, .textlink:focus-visible, .field:focus-visible {
+		outline: 3px solid var(--color-lilac-ink);
+		outline-offset: 2px;
+	}
+
+	@media (hover: hover) and (pointer: fine) {
+		.quiet:hover, .chip:hover, .row:hover { transform: translateY(-1px); }
+	}
+	@media (max-width: 900px) {
+		.swatches, .trio, .cast, .expr-row, .pose-row, .sizes, .misuse { grid-template-columns: 1fr 1fr; }
+		.control-row, .comparison, .identity, .narrow-wrap { grid-template-columns: 1fr; }
+		.block h2 { font-size: 26px; }
+	}
+	@media (max-width: 760px) {
+		.phone { width: min(100%, 400px); height: auto; }
+		.screen-title { font-size: 28px; }
+		.stage, .film { padding-inline: 16px; }
+		.wrap { padding-inline: 16px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		html { scroll-behavior: auto; }
+		.is-live .body { animation: none; }
+		.pill:active, .quiet:hover, .chip:hover, .row:hover { transform: none; }
+	}
+	@media (prefers-contrast: more) {
+		.chip, .row, .hero-card, .mood, .thread li, .field, .tab.is-on, .quiet, .promise, .note-card, .facts span {
+			border-color: var(--color-surface-foreground);
+		}
+		.phone :focus-visible, .chip:focus-visible, .pill:focus-visible {
+			outline-color: var(--color-surface-foreground);
+		}
+	}
+</style>
+</head>
+<body>
+	<p class="stage-mark">Stillhour</p>
+	<div class="stage">
+		<article class="phone" id="today" aria-label="Stillhour today">
+			<div class="status"><span>9:41</span><span class="status-icons" aria-hidden="true"><i class="bars"></i><i class="batt"></i></span></div>
+			<div class="app">
+				<p class="brand">Stillhour</p>
+				<p class="day">Friday</p>
+				<h1 class="screen-title">A softer hour</h1>
+				<p class="sub">One loop, then the pocket stays closed.</p>
+				<div class="chips">
+					<button class="chip is-on" type="button" aria-pressed="true">Any pace</button>
+					<button class="chip" type="button" aria-pressed="false">8 min</button>
+					<button class="chip" type="button" aria-pressed="false">15 min</button>
+					<button class="chip" type="button" aria-pressed="false">Sit</button>
+				</div>
+				<article class="hero-card">
+					<div class="nest" aria-hidden="true">
+						<span class="bead a"></span><span class="bead b"></span><span class="bead c"></span>
+						<span class="bowl"></span>
+						<div class="puffet is-cream pose-sit expr-rest is-live" style="--s:112px"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div>
+					</div>
+					<div class="hero-copy">
+						<h3>The window hour</h3>
+						<p>Stay in. Let the light move.</p>
+					</div>
+				</article>
+				<a class="row" href="#loop">
+					<span class="puffet is-apricot pose-bust expr-glad is-mini" style="--s:56px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></span>
+					<span class="copy"><strong>Around the block</strong><em>15 minutes outside</em></span>
+					<svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 11 8l-5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+				</a>
+				<a class="row" href="#checkin">
+					<span class="puffet is-sage pose-bust expr-listen is-mini" style="--s:56px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></span>
+					<span class="copy"><strong>Five quiet notices</strong><em>8 minutes, anywhere</em></span>
+					<svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 11 8l-5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+				</a>
+				<a class="row" href="#hello">
+					<span class="puffet is-lilac pose-bust expr-rest is-mini" style="--s:56px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></span>
+					<span class="copy"><strong>Pocket silence</strong><em>5 minutes at home</em></span>
+					<svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 11 8l-5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+				</a>
+			</div>
+			<nav class="tabbar" aria-label="Stillhour">
+				<a class="tab is-on" href="#today" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 10.5h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Today</a>
+				<a class="tab" href="#loop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 15c1.5 3 8 3.5 10-1 1-2.2-.2-4-2.4-4H9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 8 7 10.2 9.2 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Hour</a>
+				<a class="tab" href="#checkin"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="12" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 10h6M9 14h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Notes</a>
+				<a class="tab" href="#insights"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="10" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 18.5c1-2.2 2.6-3.3 4.5-3.3s3.5 1.1 4.5 3.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>You</a>
+			</nav>
+		</article>
+
+		<article class="phone" id="loop" aria-label="Around the block">
+			<div class="status"><span>9:41</span><span class="status-icons" aria-hidden="true"><i class="bars"></i><i class="batt"></i></span></div>
+			<div class="app">
+				<div class="navline">
+					<a class="iconbtn" href="#today" aria-label="Back to today"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+					<h2>Around the block</h2>
+					<a class="iconbtn" href="#checkin" aria-label="Save this loop"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5.5h10a1 1 0 0 1 1 1V20l-6-3.2L6 20V6.5a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></a>
+				</div>
+				<div class="stones" aria-hidden="true">
+					<span class="bolster l"></span><span class="bolster r"></span>
+					<span class="stone a"></span><span class="stone b"></span><span class="stone c"></span>
+					<div class="puffet is-apricot pose-lean expr-glad" style="--s:104px"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div>
+				</div>
+				<p class="sub">Take the street you usually skip. Stop once and name what the wall is made of.</p>
+				<p class="facts"><span>15 minutes</span><span>Outside</span></p>
+				<p class="plan-label">How it goes</p>
+				<ol class="thread">
+					<li><b>1</b> Choose the longer corner</li>
+					<li><b>2</b> Match the slower pace nearby</li>
+					<li><b>3</b> Name three textures</li>
+				</ol>
+				<a class="pill" href="#insights">Start the loop</a>
+			</div>
+			<nav class="tabbar" aria-label="Stillhour">
+				<a class="tab" href="#today"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 10.5h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Today</a>
+				<a class="tab is-on" href="#loop" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 15c1.5 3 8 3.5 10-1 1-2.2-.2-4-2.4-4H9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 8 7 10.2 9.2 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Hour</a>
+				<a class="tab" href="#checkin"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="12" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 10h6M9 14h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Notes</a>
+				<a class="tab" href="#insights"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="10" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 18.5c1-2.2 2.6-3.3 4.5-3.3s3.5 1.1 4.5 3.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>You</a>
+			</nav>
+		</article>
+	</div>
+
+	<main class="wrap">
+		<section class="block" id="color-roles">
+			<p class="eyebrow">01 — Color roles</p>
+			<h2>Peach ground, lilac accent, one dark pill.</h2>
+			<p class="lede">Ink does the reading. Clay batches are volumes, not type colors. The seam edge, not the shadow, is what separates a control from the ground.</p>
+			<div class="swatches">
+				<div class="swatch"><i style="--sw: var(--color-surface)"></i><span>surface <em>peach canvas</em></span></div>
+				<div class="swatch"><i style="--sw: var(--color-surface-raised)"></i><span>surface-raised <em>pillow</em></span></div>
+				<div class="swatch"><i style="--sw: var(--color-surface-foreground)"></i><span>surface-foreground <em>about 11:1</em></span></div>
+				<div class="swatch"><i style="--sw: var(--color-muted)"></i><span>muted <em>about 5.7:1</em></span></div>
+				<div class="swatch"><i style="--sw: var(--color-primary)"></i><span>primary <em>the commit pill</em></span></div>
+				<div class="swatch"><i style="--sw: var(--color-accent)"></i><span>accent <em>selected fill</em></span></div>
+				<div class="swatch"><i style="--sw: var(--color-lilac-ink)"></i><span>lilac-ink <em>focus and links</em></span></div>
+				<div class="swatch"><i style="--sw: var(--color-danger)"></i><span>danger <em>about 5.4:1</em></span></div>
+				<div class="swatch"><i style="--sw: var(--color-clay-cream)"></i><span>clay-cream <em>Mallow</em></span></div>
+				<div class="swatch"><i style="--sw: var(--color-clay-apricot)"></i><span>clay-apricot <em>Pippin</em></span></div>
+				<div class="swatch"><i style="--sw: var(--color-clay-sage)"></i><span>clay-sage <em>Thimble</em></span></div>
+				<div class="swatch"><i style="--sw: var(--color-clay-lilac)"></i><span>clay-lilac <em>Lillet</em></span></div>
+			</div>
+		</section>
+
+		<section class="block" id="volume">
+			<p class="eyebrow">02 — Volume</p>
+			<h2>Highlight, body, occlusion, then the ground.</h2>
+			<p class="lede">Light stays upper left. The highlight is a wide disc that dies inside the form. A tight white speck is gloss, and gloss is off the sheet. The contact shadow is a separate soft ellipse.</p>
+			<div class="trio">
+				<div class="orb-card"><div class="orb light"></div><strong>Highlight only</strong><p>Inflated, not yet clay.</p></div>
+				<div class="orb-card"><div class="orb shade"></div><strong>Shade only</strong><p>A hollow, not a body.</p></div>
+				<div class="orb-card"><div class="orb full"></div><strong>Matte volume</strong><p>Both insets, plus contact.</p></div>
+			</div>
+			<div class="breathe-row">
+				<div class="puffet is-cream pose-sit expr-rest is-live" style="--s:120px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div>
+				<p class="lede" style="margin-top:0">Mallow breathes over 4.8s, about 1.8% in scale, settling toward the shadow. One character per screen. Reduced motion holds the resting pose and keeps color changes.</p>
+			</div>
+		</section>
+
+		<section class="block" id="controls">
+			<p class="eyebrow">03 — Type and controls</p>
+			<h2>Rounded, bold, and quiet until the pill.</h2>
+			<div class="control-row">
+				<div class="ref-card">
+					<h3>A softer hour</h3>
+					<p class="type-display">Keep the pocket closed.</p>
+					<p class="lede">34px at 800 for a screen title. 15px at 500 for the sentence under it. The pill is 700, sentence case, never a second one beside it.</p>
+					<div class="stack" style="margin-top:14px">
+						<a class="pill" href="#loop" style="margin-top:0">Start the loop</a>
+						<a class="quiet" href="#checkin">Not this hour</a>
+						<button class="pill is-disabled" type="button" style="margin-top:0" disabled aria-disabled="true">Saved</button>
+					</div>
+				</div>
+				<div class="ref-card">
+					<h3>States that survive without shadow</h3>
+					<div class="stack">
+						<button class="chip is-on" type="button" aria-pressed="true">Any pace</button>
+						<button class="chip" type="button" aria-pressed="false">Sit</button>
+						<button class="chip ring-sample" type="button">Focus ring</button>
+					</div>
+					<label class="field-label" style="margin-top:14px" for="sample-note">A word, if you want one
+						<input class="field" id="sample-note" type="text">
+					</label>
+					<p class="error" style="margin-top:10px" role="status"><b>Still open.</b> Add a feeling or a word before keeping the note.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="block" id="family">
+			<p class="eyebrow">04 — The Puffet family</p>
+			<h2>One seam, four batches, no weather.</h2>
+			<p class="lede">Puffets are Stillhour’s own clay pebbles. Neckless, armless-until-needed, and marked by a pressed crown seam. They do not borrow suns, moons, clouds, or anyone else’s face.</p>
+			<div class="sheet">
+				<div class="identity">
+					<div class="center">
+						<div class="puffet is-cream pose-sit expr-rest" style="--s:168px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div>
+					</div>
+					<dl>
+						<dt>Family mark</dt><dd>Pressed seam, about 22% down, darker on the upper lip.</dd>
+						<dt>Proportion</dt><dd>Width 1, height 0.86. Eyes at 42%. One volume, no neck.</dd>
+						<dt>Light</dt><dd>Upper left only. Broad highlight, no specular dot.</dd>
+						<dt>Ground</dt><dd>Contact ellipse always. About 68% of the width.</dd>
+						<dt>Minimum</dt><dd>Full face from 48px. At 32px, the seam mark only.</dd>
+						<dt>Voice</dt><dd>Unhurried. They lean. They do not cheer or show teeth.</dd>
+					</dl>
+				</div>
+
+				<div class="cast">
+					<div class="cell"><div class="center"><div class="puffet is-cream pose-sit expr-rest" style="--s:96px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Mallow</strong><p>Cream. Host of the hour. Sits. Does not congratulate.</p></div>
+					<div class="cell"><div class="center"><div class="puffet is-apricot pose-lean expr-glad" style="--s:96px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Pippin</strong><p>Apricot. The walker. Glad when a route is chosen, not when it ends.</p></div>
+					<div class="cell"><div class="center"><div class="puffet is-sage pose-sit expr-listen" style="--s:96px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Thimble</strong><p>Sage. The noticer. One soft open eye for a check-in.</p></div>
+					<div class="cell"><div class="center"><div class="puffet is-lilac pose-wave expr-rest" style="--s:96px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Lillet</strong><p>Lilac. The small one. Waves once, then stays beside you.</p></div>
+				</div>
+
+				<h3 style="margin:22px 0 0; font-size:18px; font-weight:800; letter-spacing:-0.02em">Expressions</h3>
+				<div class="expr-row">
+					<div class="cell"><div class="center"><div class="puffet is-cream pose-sit expr-rest" style="--s:88px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Rest</strong><p>Two closed arcs. The default.</p></div>
+					<div class="cell"><div class="center"><div class="puffet is-cream pose-sit expr-glad" style="--s:88px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Glad</strong><p>Arcs lift. A short mouth. No teeth.</p></div>
+					<div class="cell"><div class="center"><div class="puffet is-cream pose-sit expr-listen" style="--s:88px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Listen</strong><p>One arc, one soft oval.</p></div>
+					<div class="cell"><div class="center"><div class="puffet is-cream pose-sit expr-tuck" style="--s:88px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Tuck</strong><p>Dashes. The phone is down.</p></div>
+				</div>
+
+				<h3 style="margin:22px 0 0; font-size:18px; font-weight:800; letter-spacing:-0.02em">Poses and sizes</h3>
+				<div class="pose-row">
+					<div class="cell"><div class="center"><div class="puffet is-apricot pose-sit expr-rest" style="--s:88px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Sit</strong><p>Hero default.</p></div>
+					<div class="cell"><div class="center"><div class="puffet is-apricot pose-lean expr-rest" style="--s:88px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Lean</strong><p>A route, not a run.</p></div>
+					<div class="cell"><div class="center"><div class="puffet is-apricot pose-wave expr-rest" style="--s:88px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Wave</strong><p>One stub, once.</p></div>
+					<div class="cell"><div class="center"><div class="puffet is-apricot pose-bust expr-rest is-mini" style="--s:64px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Bust</strong><p>Lists. Arms off.</p></div>
+				</div>
+				<div class="sizes">
+					<div class="cell"><div class="center"><div class="puffet is-cream pose-sit expr-rest" style="--s:96px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>96px</strong><p>Full face, blush on.</p></div>
+					<div class="cell"><div class="center"><div class="puffet is-cream pose-bust expr-rest is-mini" style="--s:48px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>48px</strong><p>Smallest face. Blush off.</p></div>
+					<div class="cell"><div class="center" style="min-height:72px"><span class="seam-mark" aria-hidden="true"></span></div><strong>32px</strong><p>Seam mark only. No eyes.</p></div>
+				</div>
+
+				<h3 style="margin:22px 0 0; font-size:18px; font-weight:800; letter-spacing:-0.02em">Not a Puffet</h3>
+				<div class="misuse">
+					<div class="cell gloss"><div class="center"><div class="puffet is-cream pose-sit expr-rest" style="--s:80px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Gloss dot</strong><p>A tight specular is vinyl-shine, not this clay.</p></div>
+					<div class="cell stroke"><div class="center"><div class="puffet is-cream pose-sit expr-rest" style="--s:80px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>Outline</strong><p>The silhouette comes from the volume, not a stroke.</p></div>
+					<div class="cell on-black"><div class="center"><div class="puffet is-cream pose-sit expr-rest" style="--s:80px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div></div><strong>On black</strong><p>The ground is peach. Black is only the pill.</p></div>
+				</div>
+			</div>
+		</section>
+
+		<section class="block" id="rooms">
+			<p class="eyebrow">05 — The other rooms</p>
+			<h2>Check-in, the week, a first hello.</h2>
+			<p class="lede">Same clay, three more jobs. Feelings are words. The week is a count of hours, not a streak. The first screen does not cheer.</p>
+		</section>
+	</main>
+
+	<div class="film">
+		<article class="phone" id="checkin" aria-label="Mood check-in">
+			<div class="status"><span>9:41</span><span class="status-icons" aria-hidden="true"><i class="bars"></i><i class="batt"></i></span></div>
+			<div class="app">
+				<div class="navline">
+					<a class="iconbtn" href="#today" aria-label="Back to today"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+					<h2>This hour</h2>
+					<span class="iconbtn" style="visibility:hidden" aria-hidden="true"></span>
+				</div>
+				<div class="center">
+					<div class="puffet is-sage pose-sit expr-listen" style="--s:104px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div>
+				</div>
+				<h3 class="ask">How is the hour sitting?</h3>
+				<div class="moods">
+					<button class="mood is-on" type="button" aria-pressed="true"><span class="mark" aria-hidden="true"></span><strong>Settled</strong><small>Chosen</small></button>
+					<button class="mood" type="button" aria-pressed="false"><span class="mark thin" aria-hidden="true"></span><strong>Thin</strong></button>
+					<button class="mood" type="button" aria-pressed="false"><span class="mark bright" aria-hidden="true"></span><strong>Bright</strong></button>
+					<button class="mood" type="button" aria-pressed="false"><span class="mark heavy" aria-hidden="true"></span><strong>Heavy</strong></button>
+				</div>
+				<label class="field-label" for="hour-note">A word, if you want one
+					<input class="field" id="hour-note" type="text">
+				</label>
+				<a class="pill" href="#insights">Keep this note</a>
+			</div>
+			<nav class="tabbar" aria-label="Stillhour">
+				<a class="tab" href="#today"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 10.5h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Today</a>
+				<a class="tab" href="#loop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 15c1.5 3 8 3.5 10-1 1-2.2-.2-4-2.4-4H9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 8 7 10.2 9.2 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Hour</a>
+				<a class="tab is-on" href="#checkin" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="12" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 10h6M9 14h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Notes</a>
+				<a class="tab" href="#insights"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="10" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 18.5c1-2.2 2.6-3.3 4.5-3.3s3.5 1.1 4.5 3.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>You</a>
+			</nav>
+		</article>
+
+		<article class="phone" id="insights" aria-label="Hours kept this week">
+			<div class="status"><span>9:41</span><span class="status-icons" aria-hidden="true"><i class="bars"></i><i class="batt"></i></span></div>
+			<div class="app">
+				<p class="brand">This week</p>
+				<h2 class="screen-title">4 hours kept</h2>
+				<p class="sub">Nothing here is a streak to protect.</p>
+				<figure class="week">
+					<div class="chart" aria-hidden="true">
+						<span class="bar" style="--h:16px"></span>
+						<span class="bar" style="--h:48px"></span>
+						<span class="bar" style="--h:32px"></span>
+						<span class="bar" style="--h:96px"></span>
+						<span class="bar is-today" style="--h:112px"></span>
+						<span class="bar" style="--h:64px"></span>
+						<span class="bar" style="--h:24px"></span>
+					</div>
+					<div class="days" aria-hidden="true"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span class="is-today">Fr</span><span>Sa</span><span>Su</span></div>
+					<figcaption class="sub" style="margin-top:8px">Friday is the long loop. Mon 0.2, Tue 0.6, Wed 0.4, Thu 1.2, Fri 1.4, Sat 0.8, Sun 0.3.</figcaption>
+				</figure>
+				<div class="note-card">
+					<strong>Friday held the long loop.</strong>
+					<span class="sub">Three textures, then home.</span>
+				</div>
+				<div class="center" style="margin-top:4px">
+					<div class="puffet is-cream pose-sit expr-tuck" style="--s:92px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div>
+				</div>
+			</div>
+			<nav class="tabbar" aria-label="Stillhour">
+				<a class="tab" href="#today"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 10.5h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Today</a>
+				<a class="tab" href="#loop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 15c1.5 3 8 3.5 10-1 1-2.2-.2-4-2.4-4H9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 8 7 10.2 9.2 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Hour</a>
+				<a class="tab" href="#checkin"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="12" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 10h6M9 14h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Notes</a>
+				<a class="tab is-on" href="#insights" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="10" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 18.5c1-2.2 2.6-3.3 4.5-3.3s3.5 1.1 4.5 3.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>You</a>
+			</nav>
+		</article>
+
+		<article class="phone" id="hello" aria-label="Stillhour onboarding">
+			<div class="status"><span>9:41</span><span class="status-icons" aria-hidden="true"><i class="bars"></i><i class="batt"></i></span></div>
+			<div class="app">
+				<p class="brand">Stillhour</p>
+				<div class="center">
+					<div class="puffet is-lilac pose-wave expr-rest" style="--s:132px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div>
+				</div>
+				<h2 class="screen-title">An hour that does not keep score.</h2>
+				<div class="promises">
+					<div class="promise"><b>1</b> A pace you can repeat</div>
+					<div class="promise"><b>2</b> A route with no personal best</div>
+					<div class="promise"><b>3</b> Company that does not cheer</div>
+				</div>
+				<a class="pill" href="#today">Begin with one hour</a>
+				<a class="textlink later" href="#today">Maybe later</a>
+			</div>
+		</article>
+	</div>
+
+	<main class="wrap">
+		<section class="block" id="compare">
+			<p class="eyebrow">06 — On-style and off-style</p>
+			<h2>The boundary is the material, not a pastel.</h2>
+			<div class="comparison">
+				<div class="cmp-off">
+					<p class="cmp-label">Off-style</p>
+					<div class="bad">
+						<div class="bad-orb" aria-hidden="true"></div>
+						<strong>CRUSH THE HOUR</strong>
+						<span class="bad-go">GO NOW</span>
+					</div>
+					<p class="cmp-note">Hard offset, 4px corners, a gloss speck, a black outline, and white words on lilac. The shout would fail contrast even if the volume were right.</p>
+				</div>
+				<div class="cmp-on">
+					<p class="cmp-label">On-style</p>
+					<div class="good-mini">
+						<div class="puffet is-apricot pose-lean expr-glad" style="--s:96px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div>
+						<div>
+							<strong style="font-size:18px; font-weight:800; letter-spacing:-0.02em">Around the block</strong>
+							<p class="sub">Take the longer corner.</p>
+						</div>
+					</div>
+					<a class="pill" href="#loop" style="margin-top:14px">Start the loop</a>
+					<p class="cmp-note">Matte volume, a warm seam, ink on a pillow, and one near-black pill. The character is Pippin, apricot, leaning — not a weather face.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="block" id="mobile">
+			<p class="eyebrow">07 — Small screens</p>
+			<h2>The same hour, closer to the hand.</h2>
+			<p class="lede">Below 760px the board is one column and each phone follows the viewport, up to 390px. This frame is the today screen at 300px.</p>
+			<div class="narrow-wrap">
+				<article class="phone narrow" aria-label="Today at 300 pixels">
+					<div class="status"><span>9:41</span><span class="status-icons" aria-hidden="true"><i class="bars"></i><i class="batt"></i></span></div>
+					<div class="app">
+						<p class="brand">Stillhour</p>
+						<p class="day">Friday</p>
+						<h2 class="screen-title">A softer hour</h2>
+						<p class="sub">One loop, then the pocket stays closed.</p>
+						<div class="chips">
+							<button class="chip is-on" type="button" aria-pressed="true">Any pace</button>
+							<button class="chip" type="button" aria-pressed="false">8 min</button>
+							<button class="chip" type="button" aria-pressed="false">15 min</button>
+							<button class="chip" type="button" aria-pressed="false">Sit</button>
+						</div>
+						<article class="hero-card">
+							<div class="nest" aria-hidden="true">
+								<span class="bowl"></span>
+								<div class="puffet is-cream pose-sit expr-rest" style="--s:92px"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span><span class="blush l"></span><span class="blush r"></span><span class="mouth"></span><span class="arm l"></span><span class="arm r"></span></div><span class="ground"></span></div>
+							</div>
+							<div class="hero-copy"><h3>The window hour</h3><p>Stay in. Let the light move.</p></div>
+						</article>
+						<a class="row" href="#loop">
+							<span class="puffet is-apricot pose-bust expr-rest is-mini" style="--s:48px" aria-hidden="true"><div class="body"><span class="seam"></span><span class="eye l"></span><span class="eye r"></span></div><span class="ground"></span></span>
+							<span class="copy"><strong>Around the block</strong><em>15 minutes outside</em></span>
+							<svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 11 8l-5 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+						</a>
+					</div>
+					<nav class="tabbar" aria-label="Stillhour narrow">
+						<a class="tab is-on" href="#today" aria-current="page">Today</a>
+						<a class="tab" href="#loop">Hour</a>
+						<a class="tab" href="#checkin">Notes</a>
+						<a class="tab" href="#insights">You</a>
+					</nav>
+				</article>
+				<div>
+					<ul class="rules">
+						<li>Chips wrap onto a second line. They do not slide off the side.</li>
+						<li>The hero nest shortens before a row or the plan is removed.</li>
+						<li>Screen titles step from 34px down to 26–28px. Meta stays at 12px or larger.</li>
+						<li>Tabs keep their words. The active tab is still a lilac pillow.</li>
+						<li>Touch targets stay at 44px. The commit pill stays full width.</li>
+						<li>A coarse pointer drops the 1px hover lift. Press, selected, and focus remain.</li>
+						<li>Reduced motion stops the breathe and the press scale. The resting clay stays.</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+	</main>
+</body>
+</html>

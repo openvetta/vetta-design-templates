@@ -1,0 +1,56 @@
+/* Soft 3D — matte clay / vinyl volume on a peach-cream ground.
+   One upper-left light, a broad highlight, lower-right occlusion, and a
+   separate contact shadow. Not a hard offset extrusion, not glass, not gloss.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #2c2428;
+	--color-primary-foreground: #fff8f3;
+	--color-surface: #f6e6da;
+	--color-surface-foreground: #3a2a32;
+	--color-surface-raised: #fff8f3;
+	--color-muted: #6b5360;
+	--color-accent: #d9c6f0;
+	--color-danger: #9d3d4c;
+	--color-border: #946858;
+
+	--color-danger-foreground: #fff8f3;
+	--color-danger-wash: #f8c9c6;
+	--color-lilac-ink: #5c4578;
+	--color-selected: #e7dcf6;
+
+	/* Four clay batches. Each named Puffet is one batch and is not recolored. */
+	--color-clay-cream: #f3d2c0;
+	--color-clay-cream-deep: #e0b094;
+	--color-clay-apricot: #f0b48a;
+	--color-clay-apricot-deep: #dd9468;
+	--color-clay-sage: #c5d2b4;
+	--color-clay-sage-deep: #9aaf86;
+	--color-clay-lilac: #d9c6f0;
+	--color-clay-lilac-deep: #b89edc;
+
+	/* Volume recipe. Highlight stays wide and low-contrast: matte, not a specular dot. */
+	--volume-light: rgb(255 248 243 / 0.92);
+	--volume-shade: rgb(90 48 58 / 0.22);
+	--volume-ao: rgb(74 42 52 / 0.30);
+
+	--radius-sm: 16px;
+	--radius-md: 22px;
+	--radius-lg: 28px;
+	--radius-xl: 36px;
+	--radius-2xl: 44px;
+	--radius-full: 9999px;
+
+	/* Soft contact. Blur is large, alpha stays low, the tint is warm. */
+	--shadow-sm: 0 8px 16px rgb(90 52 62 / 0.08), inset 0 1px 0 rgb(255 248 243 / 0.75);
+	--shadow-md: 0 14px 28px rgb(90 52 62 / 0.12), inset 0 1px 0 rgb(255 248 243 / 0.8);
+	--shadow-lg: 0 22px 40px rgb(90 52 62 / 0.16), inset 0 1px 0 rgb(255 248 243 / 0.85);
+	--shadow-contact: 0 16px 18px rgb(90 50 60 / 0.20);
+	--shadow-focus: 0 0 0 3px #f6e6da, 0 0 0 6px #5c4578;
+
+	--ease-breathe: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+	--ease-soft: cubic-bezier(0.22, 1.12, 0.36, 1);
+	--duration-breathe: 4.8s;
+	--duration-press: 160ms;
+
+	--font-sans: "ui-rounded", "SF Pro Rounded", Nunito, "Avenir Next", "Segoe UI", "Trebuchet MS", sans-serif;
+}
