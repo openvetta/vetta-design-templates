@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Desk — Kinetic Type</title>
+<style>
+	/* Mirrors theme.css. Plain custom properties so this file opens standalone. */
+	:root {
+		--color-primary: #141413;
+		--color-primary-foreground: #f3f1eb;
+		--color-surface: #f3f1eb;
+		--color-surface-foreground: #141413;
+		--color-surface-raised: #faf9f5;
+		--color-muted: #5c5850;
+		--color-accent: #b01c14;
+		--color-danger: #8a1c18;
+		--color-border: #141413;
+		--color-ink-muted: #cdc8be;
+		--color-danger-on-ink: #ffb3ac;
+		--squeeze-rest: 0.68;
+		--squeeze-open: 1;
+		--overlap-shift: 0.28em;
+		--lock-leading: 0.78;
+		--radius-sm: 0px;
+		--radius-md: 0px;
+		--radius-lg: 0px;
+		--radius-xl: 0px;
+		--radius-2xl: 0px;
+		--radius-full: 0px;
+		--shadow-sm: none;
+		--shadow-md: none;
+		--shadow-lg: none;
+		--shadow-focus: 0 0 0 2px #f3f1eb, 0 0 0 5px #141413;
+		--ease-squeeze: cubic-bezier(0.45, 0.02, 0.2, 1);
+		--ease-slide: cubic-bezier(0.4, 0, 0.2, 1);
+		--duration-squeeze: 6.8s;
+		--duration-slide: 18s;
+		--duration-hover: 420ms;
+		--font-display: "Helvetica Neue", Helvetica, Arial, Arimo, "Liberation Sans", "Nimbus Sans", sans-serif;
+		--font-text: "Helvetica Neue", Helvetica, Arial, Arimo, "Liberation Sans", "Nimbus Sans", sans-serif;
+		--font-mono: "Cascadia Mono", "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+	}
+
+	*, *::before, *::after { box-sizing: border-box; }
+	html { overflow-x: clip; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--font-text);
+		font-size: 16px;
+		line-height: 1.5;
+		-webkit-font-smoothing: antialiased;
+		text-rendering: optimizeLegibility;
+	}
+	h1, h2, h3, p, ul, figure { margin: 0; }
+	button, input { font: inherit; color: inherit; }
+	button { cursor: pointer; border: 0; background: none; border-radius: 0; }
+	button:disabled { cursor: not-allowed; }
+	input { border-radius: 0; }
+	:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+	::selection { background: rgb(20 20 19 / 0.14); }
+	.sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	.kicker {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.intro { max-width: 64ch; margin-top: 14px; font-size: 17px; line-height: 1.5; }
+	.section { padding: 68px 48px 4px; }
+	.section h2, .ink-stage h2 {
+		margin-top: 10px;
+		font-family: var(--font-display);
+		font-size: clamp(36px, 4.4vw, 60px);
+		font-weight: 700;
+		letter-spacing: -0.04em;
+		line-height: 0.92;
+	}
+
+	/* —— Hero —— */
+	.hero {
+		min-height: 100vh;
+		min-height: 100dvh;
+		display: flex;
+		flex-direction: column;
+		padding: 22px 48px 26px;
+	}
+	.bar {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 16px;
+		padding-bottom: 12px;
+		border-bottom: 1px solid var(--color-border);
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+	}
+	.lock-block { margin-top: 28px; }
+	.lock {
+		position: relative;
+		font-family: var(--font-display);
+		font-weight: 700;
+		font-size: clamp(64px, 16.2vw, 232px);
+		letter-spacing: -0.048em;
+		line-height: var(--lock-leading);
+		text-transform: uppercase;
+	}
+	.w {
+		display: block;
+		white-space: nowrap;
+		line-height: inherit;
+		transform-origin: 0 50%;
+	}
+	.w-a {
+		transform: scaleX(var(--squeeze-open));
+		animation: squeeze-a var(--duration-squeeze) var(--ease-squeeze) infinite alternate;
+	}
+	.w-b {
+		position: absolute;
+		left: 0;
+		top: 0.46em;
+		color: var(--color-primary);
+		-webkit-text-fill-color: transparent;
+		-webkit-text-stroke: max(1.5px, 0.014em) var(--color-primary);
+		transform: translateX(var(--overlap-shift));
+		animation: slide-b 9s var(--ease-slide) infinite alternate;
+		pointer-events: none;
+	}
+	.w-c {
+		transform: scaleX(var(--squeeze-open));
+		animation: squeeze-c var(--duration-squeeze) var(--ease-squeeze) infinite alternate-reverse;
+	}
+	.rule {
+		height: 1px;
+		margin-top: 16px;
+		background: var(--color-border);
+		transform: scaleX(1);
+		transform-origin: 0 50%;
+		animation: measure var(--duration-squeeze) var(--ease-squeeze) infinite alternate;
+	}
+	.hero-meta {
+		display: flex;
+		justify-content: space-between;
+		align-items: end;
+		gap: 32px;
+		margin-top: 18px;
+	}
+	.hero-meta .badges { margin-top: 0; }
+	.dek {
+		font-family: var(--font-display);
+		font-size: clamp(22px, 2vw, 28px);
+		font-weight: 700;
+		letter-spacing: -0.03em;
+		line-height: 1.2;
+		max-width: 28ch;
+	}
+	.path {
+		margin-top: 10px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+	.hero-foot { margin-top: auto; padding-top: 28px; }
+
+	@keyframes squeeze-a {
+		from { transform: scaleX(var(--squeeze-open)); }
+		to { transform: scaleX(var(--squeeze-rest)); }
+	}
+	@keyframes squeeze-c {
+		from { transform: scaleX(var(--squeeze-open)); }
+		to { transform: scaleX(var(--squeeze-rest)); }
+	}
+	@keyframes slide-b {
+		from { transform: translateX(0.18em); }
+		to { transform: translateX(0.62em); }
+	}
+	@keyframes measure {
+		from { transform: scaleX(1); }
+		to { transform: scaleX(0.4); }
+	}
+	@keyframes rail {
+		to { transform: translateX(-50%); }
+	}
+
+	.rail { overflow: hidden; width: 100%; border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+	.rail-track { display: flex; width: max-content; animation: rail var(--duration-slide) linear infinite; }
+	.rail-track span {
+		font-family: var(--font-display);
+		font-size: clamp(20px, 2.5vw, 32px);
+		font-weight: 700;
+		letter-spacing: -0.04em;
+		line-height: 1;
+		text-transform: uppercase;
+		white-space: nowrap;
+		padding: 10px 0;
+	}
+	.rail-lg .rail-track span { font-size: clamp(32px, 4.6vw, 56px); padding: 12px 0; }
+
+	.ask-label {
+		display: block;
+		margin-top: 18px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.ask-row { display: flex; align-items: flex-end; gap: 18px; margin-top: 6px; }
+	.ask-row input {
+		flex: 1;
+		min-width: 0;
+		min-height: 48px;
+		padding: 10px 0;
+		background: transparent;
+		border: 0;
+		border-bottom: 1px solid var(--color-border);
+		font-family: var(--font-display);
+		font-size: 22px;
+		font-weight: 700;
+		letter-spacing: -0.03em;
+	}
+	.btn-ink, .btn-text, .btn-quiet {
+		min-height: 48px;
+		font-family: var(--font-display);
+		font-weight: 700;
+		font-size: 15px;
+		letter-spacing: -0.03em;
+	}
+	.btn-ink {
+		min-width: 132px;
+		padding: 0 18px;
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+		transition: letter-spacing var(--duration-hover) var(--ease-squeeze);
+	}
+	.btn-ink:disabled { opacity: 0.4; }
+	.btn-ink:active { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+	.btn-text {
+		padding: 0 2px;
+		background-image: linear-gradient(currentColor, currentColor);
+		background-repeat: no-repeat;
+		background-position: left bottom;
+		background-size: 100% 1px;
+		transition: background-size var(--duration-hover) var(--ease-squeeze);
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		height: 28px;
+		padding: 0 8px;
+		border: 1px solid var(--color-border);
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+	.badge-live { color: var(--color-accent); border-color: var(--color-accent); }
+	.badge-quiet { color: var(--color-muted); border-color: var(--color-muted); }
+
+	/* —— 01 grounds —— */
+	.grounds {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		margin-top: 28px;
+		border: 1px solid var(--color-border);
+	}
+	.ground {
+		min-height: 260px;
+		padding: 18px 18px 16px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		overflow: hidden;
+	}
+	.ground + .ground { border-left: 1px solid var(--color-border); }
+	.ground-ink { background: var(--color-primary); color: var(--color-primary-foreground); }
+	.giant {
+		font-family: var(--font-display);
+		font-size: clamp(72px, 9vw, 140px);
+		font-weight: 700;
+		letter-spacing: -0.05em;
+		line-height: 0.8;
+		text-transform: uppercase;
+	}
+	.giant-line {
+		color: var(--color-primary);
+		-webkit-text-fill-color: transparent;
+		-webkit-text-stroke: max(1.5px, 0.012em) var(--color-primary);
+	}
+	.ground-meta { display: flex; justify-content: space-between; gap: 12px; align-items: end; }
+	.live-word {
+		font-family: var(--font-display);
+		font-size: 28px;
+		font-weight: 700;
+		letter-spacing: -0.04em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+	.role { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+
+	/* —— 02 motion —— */
+	.motion {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 18px;
+		margin-top: 28px;
+	}
+	.sq, .ov {
+		border: 1px solid var(--color-border);
+		padding: 16px 16px 14px;
+		overflow: hidden;
+		min-height: 210px;
+		display: flex;
+		flex-direction: column;
+	}
+	.sq-word {
+		display: inline-block;
+		margin-top: auto;
+		font-family: var(--font-display);
+		font-size: clamp(48px, 5vw, 80px);
+		font-weight: 700;
+		letter-spacing: -0.05em;
+		line-height: 0.85;
+		text-transform: uppercase;
+		transform-origin: 0 50%;
+		animation: squeeze-a var(--duration-squeeze) var(--ease-squeeze) infinite alternate;
+	}
+	.mini { font-size: clamp(56px, 5vw, 80px); line-height: 0.84; margin-top: auto; }
+	.mini .w-b { top: 0.5em; }
+	.cap { margin-top: 12px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-muted); }
+	.rail-block { margin-top: 18px; }
+
+	/* —— 03 controls —— */
+	.cards {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		margin-top: 28px;
+		border: 1px solid var(--color-border);
+		background: var(--color-surface-raised);
+	}
+	.card { min-height: 230px; padding: 16px 16px 14px; display: flex; flex-direction: column; }
+	.card + .card { border-left: 1px solid var(--color-border); }
+	.card p { margin-top: 10px; max-width: 28ch; }
+	.card-word {
+		margin-top: auto;
+		padding-top: 18px;
+		font-family: var(--font-display);
+		font-size: clamp(40px, 4vw, 64px);
+		font-weight: 700;
+		letter-spacing: -0.05em;
+		line-height: 0.85;
+		text-transform: uppercase;
+		transition: letter-spacing var(--duration-hover) var(--ease-squeeze);
+	}
+	.panel {
+		margin-top: 18px;
+		padding: 18px;
+		border: 1px solid var(--color-border);
+		background: var(--color-surface-raised);
+	}
+	.btn-row { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
+	.err { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; margin-top: 18px; }
+	.err b {
+		font-family: var(--font-display);
+		font-size: 32px;
+		font-weight: 700;
+		letter-spacing: -0.04em;
+		line-height: 0.9;
+		text-transform: uppercase;
+		color: var(--color-danger);
+	}
+	.err span { color: var(--color-danger); }
+
+	/* —— 04 transcript —— */
+	.ink-stage {
+		margin-top: 72px;
+		padding: 64px 48px 36px;
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+	}
+	.ink-stage .kicker, .ink-stage .who, .ink-stage .path, .ink-stage .ask-label { color: var(--color-ink-muted); }
+	.ink-stage :focus-visible { outline-color: var(--color-primary-foreground); }
+	.turns { margin-top: 28px; border-top: 1px solid var(--color-ink-muted); }
+	.turn { padding: 16px 0 18px; border-bottom: 1px solid var(--color-ink-muted); }
+	.who { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+	.you-line { margin-top: 8px; font-size: 22px; font-weight: 700; letter-spacing: -0.03em; }
+	.answer-word {
+		margin-top: 8px;
+		font-family: var(--font-display);
+		font-size: clamp(64px, 8vw, 112px);
+		font-weight: 700;
+		letter-spacing: -0.05em;
+		line-height: 0.8;
+		text-transform: uppercase;
+	}
+	.answer-body { max-width: 42ch; margin-top: 8px; font-size: 17px; }
+	.stop-line { margin-top: 8px; color: var(--color-danger-on-ink); font-size: 17px; }
+	.stop-line b {
+		display: block;
+		font-family: var(--font-display);
+		font-size: clamp(40px, 5vw, 64px);
+		font-weight: 700;
+		letter-spacing: -0.045em;
+		line-height: 0.85;
+		text-transform: uppercase;
+	}
+	.ink-stage .ask-row input { border-bottom-color: var(--color-primary-foreground); color: var(--color-primary-foreground); }
+	.ink-stage .btn-ink { background: var(--color-primary-foreground); color: var(--color-primary); }
+	.ink-stage .btn-text { color: var(--color-primary-foreground); }
+	.ink-stage .badge { color: var(--color-primary-foreground); border-color: var(--color-primary-foreground); }
+	.ink-stage .rule { background: var(--color-primary-foreground); }
+
+	/* —— 05 narrow —— */
+	.mobile { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 36px; align-items: start; margin-top: 28px; }
+	.sheet {
+		border: 1px solid var(--color-border);
+		padding: 14px 12px 16px;
+		background: var(--color-surface);
+	}
+	.sheet .bar { letter-spacing: 0.12em; }
+	.sheet .lock { font-size: 50px; line-height: 0.9; margin-top: 16px; }
+	.sheet .w-b { top: 0.55em; }
+	.sheet .dek { font-size: 16px; max-width: none; margin-top: 12px; }
+	.sheet .ask-row { flex-direction: column; align-items: stretch; gap: 10px; }
+	.sheet .btn-ink { width: 100%; }
+	.sheet .w-b { -webkit-text-stroke-width: 1.5px; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 12px 0; border-top: 1px solid var(--color-border); }
+	.rules li:last-child { border-bottom: 1px solid var(--color-border); }
+	.rules b { display: block; font-size: 15px; letter-spacing: -0.02em; }
+	.rules span { display: block; margin-top: 2px; color: var(--color-muted); }
+
+	/* —— 06 compare —— */
+	.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 28px; align-items: start; }
+	.compare figure { min-width: 0; }
+	.cmp-off {
+		padding: 16px;
+		background: #e7dcc8;
+		color: #2a2118;
+		border-radius: 22px;
+		box-shadow: 0 18px 40px rgb(40 30 20 / 0.18);
+		font-family: "Liberation Serif", Tinos, Georgia, "Times New Roman", serif;
+	}
+	.cmp-off .np-name { text-align: center; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; font-size: 13px; }
+	.cmp-off .np-rules { height: 4px; margin: 6px 0; background: #2a2118; box-shadow: 0 3px 0 #e7dcc8, 0 4px 0 #2a2118; }
+	.cmp-off .np-kicker { color: #8a332c; font-family: "Liberation Sans", Arial, sans-serif; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+	.cmp-off .np-hed { font-size: 30px; line-height: 0.95; font-weight: 700; margin: 4px 0 8px; }
+	.cmp-off .np-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12.5px; line-height: 1.35; }
+	.cmp-off .drop { float: left; font-size: 28px; line-height: 0.8; padding-right: 4px; font-weight: 700; }
+	.cmp-off .np-pill {
+		margin-top: 14px;
+		border-radius: 999px;
+		background: linear-gradient(90deg, #7c6cff, #ef6bd0);
+		color: #fff;
+		padding: 8px 16px;
+		font-family: "Liberation Sans", Arial, sans-serif;
+		font-size: 13px;
+	}
+	.cmp-on {
+		padding: 14px 14px 16px;
+		border: 1px solid var(--color-border);
+		background: var(--color-surface);
+		display: flex;
+		flex-direction: column;
+	}
+	.cmp-on .lock { font-size: clamp(48px, 4.4vw, 72px); line-height: 0.84; }
+	.cmp-on .w-b { top: 0.48em; }
+	.cmp-on .btn-ink { margin-top: 18px; align-self: flex-start; }
+	.note { margin-top: 10px; color: var(--color-muted); font-size: 14px; max-width: 52ch; }
+
+	.foot {
+		margin-top: 64px;
+		padding: 22px 48px 40px;
+		border-top: 1px solid var(--color-border);
+		color: var(--color-muted);
+		font-size: 14px;
+	}
+
+	@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+		.lock:hover .w-a,
+		.lock:hover .w-c { animation: none; transform: scaleX(1); }
+		.lock:hover .w-b { animation: none; transform: translateX(0.06em); }
+		.btn-ink:hover { letter-spacing: 0.16em; }
+		.btn-text:hover { background-size: 32% 1px; }
+		.card:hover .card-word { letter-spacing: 0.06em; }
+	}
+
+	@media (max-width: 860px) {
+		.hero, .section, .ink-stage, .foot { padding-left: 20px; padding-right: 20px; }
+		.grounds, .motion, .cards, .compare, .mobile { grid-template-columns: 1fr; }
+		.ground + .ground, .card + .card { border-left: 0; border-top: 1px solid var(--color-border); }
+		.ask-row, .hero-meta { flex-direction: column; align-items: stretch; }
+		.btn-ink, .btn-text { width: 100%; }
+		.lock { font-size: clamp(58px, 16.5vw, 104px); }
+		.lock-block { margin-top: 22px; }
+		.dek { max-width: none; }
+		.mobile { gap: 22px; }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		*, *::before, *::after {
+			animation: none !important;
+			transition: none !important;
+		}
+		.lock:hover .w-a,
+		.lock:hover .w-c { transform: scaleX(1); }
+		.lock:hover .w-b { transform: translateX(var(--overlap-shift)); }
+		.btn-ink:hover { letter-spacing: -0.03em; }
+		.btn-text:hover { background-size: 100% 1px; }
+		.card:hover .card-word { letter-spacing: -0.05em; }
+	}
+
+	@media (prefers-contrast: more) {
+		.w-b { -webkit-text-stroke-width: max(2px, 0.028em); }
+		.badge, .card, .cards, .sheet, .grounds, .sq, .ov, .panel, .cmp-on { border-width: 2px; }
+	}
+</style>
+</head>
+<body>
+	<header class="hero">
+		<div class="bar">
+			<span>Desk</span>
+			<span>On this machine</span>
+		</div>
+		<div class="lock-block">
+			<h1 class="lock">
+				<span class="sr">Three lines moved.</span>
+				<span class="w w-a" aria-hidden="true">Three</span>
+				<span class="w w-b" aria-hidden="true">Lines</span>
+				<span class="w w-c" aria-hidden="true">Moved</span>
+			</h1>
+			<div class="rule" aria-hidden="true"></div>
+		</div>
+		<div class="hero-meta">
+			<div>
+				<p class="dek">Three lines in the notes. The folder stayed on this machine.</p>
+				<p class="path">notes/budget.md</p>
+			</div>
+			<div class="badges">
+				<span class="badge badge-live">Live</span>
+				<span class="badge">Local</span>
+			</div>
+		</div>
+		<div class="hero-foot">
+			<div class="rail" aria-hidden="true">
+				<div class="rail-track">
+					<span>notes/budget.md · three lines moved · still on this machine ·&nbsp;</span>
+					<span>notes/budget.md · three lines moved · still on this machine ·&nbsp;</span>
+				</div>
+			</div>
+			<label class="ask-label" for="ask-hero">Ask the desk</label>
+			<div class="ask-row">
+				<input id="ask-hero" type="text" value="what changed in the notes" readonly>
+				<button class="btn-ink" type="button">Send</button>
+				<button class="btn-text" type="button">Clear</button>
+			</div>
+		</div>
+	</header>
+
+	<main>
+		<section class="section">
+			<p class="kicker">01 — Paper and ink</p>
+			<h2>Two grounds, one red</h2>
+			<p class="intro">Paper holds the lockup. Ink holds the transcript. The red is a word, used once, and only on paper. Rules are the ink itself, one pixel, never a shadow.</p>
+			<div class="grounds">
+				<div class="ground">
+					<div class="giant giant-line">Paper</div>
+					<div class="ground-meta">
+						<span class="role">surface</span>
+						<span class="live-word">Live</span>
+					</div>
+				</div>
+				<div class="ground ground-ink">
+					<div class="giant">Ink</div>
+					<div class="ground-meta">
+						<span class="role">primary</span>
+						<span class="role">Type inverts</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<p class="kicker">02 — Motion</p>
+			<h2>Squeeze, slide, overlap</h2>
+			<p class="intro">A product screen keeps one lockup. Here the three motions are separated so each can be seen. Squeeze scales from the left edge. Slide stays inside a clipped measure. Overlap is out of flow. None of them move the neighbors.</p>
+			<div class="motion">
+				<div class="sq">
+					<p class="kicker">Squeeze · 0.68 to 1</p>
+					<div class="sq-word">Squeeze</div>
+					<p class="cap">Origin at the left. The box does not reflow.</p>
+				</div>
+				<div class="ov">
+					<p class="kicker">Overlap · outline across the seam</p>
+					<div class="lock mini" aria-hidden="true">
+						<span class="w w-a">Type</span>
+						<span class="w w-b">Face</span>
+						<span class="w w-c">Here</span>
+					</div>
+					<p class="cap">Filled, outline, filled. One size.</p>
+				</div>
+			</div>
+			<div class="rail-block">
+				<p class="kicker">Slide · clipped measure</p>
+				<div class="rail rail-lg">
+					<div class="rail-track">
+						<span>Folder stayed here · notes/budget.md · one new row ·&nbsp;</span>
+						<span>Folder stayed here · notes/budget.md · one new row ·&nbsp;</span>
+					</div>
+				</div>
+				<p class="cap">The phrase is doubled so the loop has no gap. The page does not scroll sideways.</p>
+			</div>
+		</section>
+
+		<section class="section">
+			<p class="kicker">03 — Controls</p>
+			<h2>The word is the control</h2>
+			<p class="intro">Three equal columns for what Desk does. Below them, the commit, the quiet word, a disabled wait, the field, and the error. Square corners. One ink fill on this sheet.</p>
+			<div class="cards">
+				<article class="card">
+					<p class="kicker">01</p>
+					<p>The model runs here. A question does not leave the machine.</p>
+					<h3 class="card-word">Stays</h3>
+				</article>
+				<article class="card">
+					<p class="kicker">02</p>
+					<p>Point it at a folder. The path stays on the screen.</p>
+					<h3 class="card-word">Reads</h3>
+				</article>
+				<article class="card">
+					<p class="kicker">03</p>
+					<p>One answer, set in type, and then it stops.</p>
+					<h3 class="card-word">Says</h3>
+				</article>
+			</div>
+			<div class="panel">
+				<div class="btn-row">
+					<button class="btn-ink" type="button">Send</button>
+					<button class="btn-text" type="button">Clear</button>
+					<button class="btn-ink" type="button" disabled>Wait</button>
+					<span class="badge badge-live">Live</span>
+					<span class="badge">Local</span>
+					<span class="badge badge-quiet">Queued</span>
+				</div>
+				<label class="ask-label" for="ask-sample">Ask the desk</label>
+				<div class="ask-row">
+					<input id="ask-sample" type="text" value="what changed in the notes" readonly>
+				</div>
+				<p class="err"><b>Stop</b><span>That folder is not on this machine.</span></p>
+			</div>
+		</section>
+
+		<section class="ink-stage">
+			<p class="kicker">04 — The desk</p>
+			<h2>A transcript, set in type</h2>
+			<p class="intro">The working field is ink. The answer’s first word is display size and still — the hero already moves. Stop is named. The commit inverts so it can be seen.</p>
+			<div class="badges">
+				<span class="badge">Live</span>
+				<span class="badge">Local</span>
+			</div>
+			<div class="turns">
+				<article class="turn">
+					<p class="who">Desk · 14:01</p>
+					<p class="stop-line"><b>Stop</b> That folder is not on this machine.</p>
+				</article>
+				<article class="turn">
+					<p class="who">You · 14:02</p>
+					<p class="you-line">what changed in the notes</p>
+				</article>
+				<article class="turn">
+					<p class="who">Desk · 14:02</p>
+					<p class="answer-word">Three</p>
+					<p class="answer-body">lines moved. The budget table gained a row. The folder stayed on this machine.</p>
+					<p class="path">notes/budget.md</p>
+				</article>
+			</div>
+			<label class="ask-label" for="ask-desk">Ask the desk</label>
+			<div class="ask-row">
+				<input id="ask-desk" type="text" value="show me the row" readonly>
+				<button class="btn-ink" type="button">Send</button>
+				<button class="btn-text" type="button">Clear</button>
+			</div>
+		</section>
+
+		<section class="section">
+			<p class="kicker">05 — Narrow sheet</p>
+			<h2>The same lockup, in one column</h2>
+			<p class="intro">Under 860px the sentence and the badges stack, the ask line stacks, and the commit goes full width. The sheet here is that column, framed.</p>
+			<div class="mobile">
+				<div class="sheet" aria-hidden="true">
+					<div class="bar"><span>Desk</span><span>Local</span></div>
+					<div class="lock">
+						<span class="w w-a">Three</span>
+						<span class="w w-b">Lines</span>
+						<span class="w w-c">Moved</span>
+					</div>
+					<p class="dek">Three lines in the notes.</p>
+					<p class="path">notes/budget.md</p>
+					<div class="badges"><span class="badge badge-live">Live</span></div>
+					<label class="ask-label">Ask the desk</label>
+					<div class="ask-row">
+						<input type="text" value="what changed" readonly>
+						<button class="btn-ink" type="button">Send</button>
+					</div>
+				</div>
+				<ul class="rules">
+					<li><b>Stack at 860px</b><span>The sentence and the badges leave one row and sit under the lockup. Feature columns follow, top to bottom. Nothing becomes a sideways scroller.</span></li>
+					<li><b>Display follows the width</b><span>About 230px on a wide sheet, about 64px on a phone, 50px inside this frame. The three words stay one line each.</span></li>
+					<li><b>Overlap tightens</b><span>The outline shift stays in ems, so it shrinks with the type and remains inside the frame.</span></li>
+					<li><b>Targets stay 48px</b><span>Send, Clear, and the field do not shrink. Badges stay 28px because they are status, not the control.</span></li>
+					<li><b>Hover leaves</b><span>A coarse pointer keeps the resting width. Press on Send draws the red outline. The focus ring stays.</span></li>
+					<li><b>The ink field survives</b><span>The transcript does not turn back into paper. Its commit stays paper-on-ink. Inset drops from 48px to 20px.</span></li>
+					<li><b>Slide stays clipped</b><span>The moving line is cut by its own rule, on a phone the same as on a desk. The document does not gain a horizontal scrollbar.</span></li>
+					<li><b>Still means overlapped</b><span>Reduced motion pins the filled words open and leaves the outline across them. The answer does not wait on the animation.</span></li>
+				</ul>
+			</div>
+		</section>
+
+		<section class="section">
+			<p class="kicker">06 — Off-style</p>
+			<h2>A paper column is a different object</h2>
+			<p class="intro">The left side borrows a broadsheet and a pill. Serif, a thick-and-thin rule, two body columns, a drop cap, a gradient button. The right side is the lockup.</p>
+			<div class="compare">
+				<figure>
+					<div class="cmp-off">
+						<div class="np-name">Evening</div>
+						<div class="np-rules" aria-hidden="true"></div>
+						<div class="np-kicker">Desk notes</div>
+						<div class="np-hed">Three lines moved in the late edition</div>
+						<div class="np-cols">
+							<p><span class="drop">T</span>he paper sets the news in columns of serif, with a kicker, a folio, and a rule.</p>
+							<p>A second column continues the story. The button is a pill on a gradient.</p>
+						</div>
+						<button class="np-pill" type="button">Ask nicely</button>
+					</div>
+					<figcaption class="note">Off. Nameplate, serif columns, drop cap, rounded gradient pill.</figcaption>
+				</figure>
+				<figure>
+					<div class="cmp-on">
+						<div class="lock" aria-hidden="true">
+							<span class="w w-a">Three</span>
+							<span class="w w-b">Lines</span>
+							<span class="w w-c">Moved</span>
+						</div>
+						<p class="path">notes/budget.md</p>
+						<button class="btn-ink" type="button">Send</button>
+					</div>
+					<figcaption class="note">On. One grotesque, an outline through the seam, an ink commit.</figcaption>
+				</figure>
+			</div>
+		</section>
+	</main>
+	<footer class="foot">
+		<p>Desk is the worked example. The lockup is the interface. Paper and ink are the only grounds.</p>
+	</footer>
+</body>
+</html>

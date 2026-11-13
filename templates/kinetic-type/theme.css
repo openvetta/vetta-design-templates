@@ -1,0 +1,46 @@
+/* Kinetic Type — oversized grotesque on warm paper, one ink field.
+   Words squeeze, slide, and overlap. Near-monochrome: paper, ink, one signal red.
+   Original system authored by Grok Bot. No remote fonts. */
+@theme {
+	--color-primary: #141413;
+	--color-primary-foreground: #f3f1eb;
+	--color-surface: #f3f1eb;
+	--color-surface-foreground: #141413;
+	--color-surface-raised: #faf9f5;
+	--color-muted: #5c5850;
+	--color-accent: #b01c14;
+	--color-danger: #8a1c18;
+	--color-border: #141413;
+
+	/* Secondary ink on the inverted field. Not for type on paper. */
+	--color-ink-muted: #cdc8be;
+	--color-danger-on-ink: #ffb3ac;
+
+	/* The lockup. scaleX is the squeeze; a variable wdth axis may replace it. */
+	--squeeze-rest: 0.68;
+	--squeeze-open: 1;
+	--overlap-shift: 0.28em;
+	--lock-leading: 0.78;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 2px #f3f1eb, 0 0 0 5px #141413;
+
+	--ease-squeeze: cubic-bezier(0.45, 0.02, 0.2, 1);
+	--ease-slide: cubic-bezier(0.4, 0, 0.2, 1);
+	--duration-squeeze: 6.8s;
+	--duration-slide: 18s;
+	--duration-hover: 420ms;
+
+	--font-display: "Helvetica Neue", Helvetica, Arial, Arimo, "Liberation Sans", "Nimbus Sans", sans-serif;
+	--font-text: "Helvetica Neue", Helvetica, Arial, Arimo, "Liberation Sans", "Nimbus Sans", sans-serif;
+	--font-mono: "Cascadia Mono", "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
