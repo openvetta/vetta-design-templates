@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arco — Memphis Pop</title>
+<style>
+	/* Mirrors theme.css so this file opens on its own. */
+	:root {
+		--color-primary: #ffd23a;
+		--color-primary-foreground: #1c1412;
+		--color-surface: #f4ebdf;
+		--color-surface-foreground: #1c1412;
+		--color-surface-raised: #fff8f1;
+		--color-muted: #5e463c;
+		--color-accent: #1e4ad8;
+		--color-danger: #c41832;
+		--color-border: #1c1412;
+		--color-accent-foreground: #fff8f1;
+		--color-danger-foreground: #fff8f1;
+		--color-danger-wash: #f8d5d8;
+		--color-pop-pink: #f4a0c4;
+		--color-pop-mint: #7ddec0;
+		--color-pop-lilac: #cdb6f5;
+		--pattern-stripe: repeating-linear-gradient(-45deg, #1c1412 0 6px, #f4a0c4 6px 12px);
+		--shadow-shift: 12px;
+		--radius-sm: 2px;
+		--radius-md: 4px;
+		--radius-lg: 6px;
+		--radius-xl: 8px;
+		--radius-2xl: 12px;
+		--radius-full: 9999px;
+		--shadow-sm: 4px 4px 0 0 #f4a0c4;
+		--shadow-md: 4px 4px 0 0 #1c1412;
+		--shadow-lg: 12px 12px 0 0 #f4a0c4;
+		--shadow-focus: 0 0 0 3px #f4ebdf, 0 0 0 6px #1e4ad8;
+		--ease-press: cubic-bezier(0.2, 0, 0, 1);
+		--duration-press: 140ms;
+		--duration-drift: 9s;
+		--font-sans: Futura, "Avenir Next", "Century Gothic", "Trebuchet MS", Inter, "Noto Sans", "Liberation Sans", sans-serif;
+		--font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", monospace;
+		--squiggle: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='40' viewBox='0 0 140 40'><path d='M0 20C22 20 22 8 46 8C70 8 70 32 94 32C118 32 118 20 140 20' fill='none' stroke='%231C1412' stroke-width='6' stroke-linecap='round'/></svg>");
+		--terra: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><rect width='160' height='160' fill='%231C1412'/><circle cx='22' cy='28' r='8' fill='%23FFD23A'/><rect x='54' y='16' width='14' height='14' fill='%23F4A0C4' transform='rotate(18 61 23)'/><polygon points='112,14 126,36 98,36' fill='%237DDEC0'/><circle cx='142' cy='52' r='5' fill='%23FFF8F1'/><rect x='16' y='64' width='22' height='7' fill='%231E4AD8' transform='rotate(-16 27 67)'/><circle cx='78' cy='72' r='10' fill='%23CDB6F5'/><polygon points='124,78 138,102 110,102' fill='%23FFD23A'/><rect x='34' y='108' width='12' height='12' fill='%23F4A0C4'/><circle cx='96' cy='120' r='6' fill='%237DDEC0'/><rect x='122' y='128' width='24' height='6' fill='%23FFF8F1' transform='rotate(-18 134 131)'/><circle cx='22' cy='138' r='4' fill='%231E4AD8'/><polygon points='66,126 76,146 56,146' fill='%23FFD23A'/></svg>");
+		--zig: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='8' viewBox='0 0 18 8'><path d='M0 8L9 0L18 8L16.2 8L9 1.7L1.8 8Z' fill='%231C1412'/></svg>");
+	}
+
+	*, *::before, *::after { box-sizing: border-box; }
+	html { overflow-x: clip; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--font-sans);
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 1.5;
+		overflow-x: clip;
+		-webkit-font-smoothing: antialiased;
+	}
+	h1, h2, h3, p { margin: 0; }
+	button, input { font: inherit; color: inherit; }
+	button { cursor: pointer; }
+	::selection { background: var(--color-primary); color: var(--color-primary-foreground); }
+	:focus { outline: none; }
+	:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 3px; }
+
+	.wrap, .inner { width: min(1080px, calc(100% - 96px)); margin-inline: auto; }
+	.wrap { position: relative; z-index: 1; padding-top: 28px; padding-bottom: 12px; }
+
+	.hero { position: relative; overflow: hidden; }
+	.ornament { position: absolute; pointer-events: none; z-index: 0; }
+	.orn-circle {
+		width: 200px; height: 200px; border-radius: var(--radius-full);
+		background: var(--color-pop-pink); border: 3px solid var(--color-border);
+		top: -56px; right: -36px;
+	}
+	.orn-tri { width: 180px; height: 156px; color: var(--color-accent); left: -48px; bottom: 36px; }
+	.orn-tri polygon { fill: currentColor; stroke: var(--color-border); stroke-width: 5; }
+	.orn-sq {
+		width: 56px; height: 56px; background: var(--color-primary);
+		border: 3px solid var(--color-border); right: 11%; bottom: 28px;
+		transform: rotate(16deg);
+	}
+
+	.object { position: relative; }
+	.tab {
+		display: inline-block; margin: 0 0 -2px 22px; position: relative; z-index: 2;
+		background: var(--color-primary); color: var(--color-primary-foreground);
+		border: 2px solid var(--color-border); border-bottom: 0;
+		border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+		padding: 6px 14px 5px; font-size: 12px; font-weight: 700;
+		letter-spacing: 0.14em; text-transform: uppercase;
+	}
+	.desk {
+		position: relative; z-index: 1;
+		background: var(--color-surface);
+		border: 2px solid var(--color-border);
+	}
+	.desk::before, .card::before, .mini::before, .cmp-on .sheet::before {
+		content: "";
+		position: absolute; z-index: -1;
+		inset: var(--shadow-shift) calc(var(--shadow-shift) * -1) calc(var(--shadow-shift) * -1) var(--shadow-shift);
+		background: var(--pattern-stripe);
+		clip-path: polygon(
+			calc(100% - var(--shadow-shift)) 0,
+			100% 0,
+			100% 100%,
+			0 100%,
+			0 calc(100% - var(--shadow-shift)),
+			calc(100% - var(--shadow-shift)) calc(100% - var(--shadow-shift))
+		);
+	}
+	.squig {
+		height: 44px;
+		background-color: var(--color-primary);
+		background-image: var(--squiggle);
+		background-repeat: repeat-x;
+		background-position: 0 50%;
+		background-size: 140px 40px;
+	}
+	.squig-live { animation: drift var(--duration-drift) linear infinite; }
+	@keyframes drift { to { background-position: -140px 50%; } }
+	.zig {
+		height: 8px;
+		background-image: var(--zig);
+		background-repeat: repeat-x;
+		background-size: 18px 8px;
+		background-position: center;
+	}
+
+	.head {
+		display: grid;
+		grid-template-columns: 1fr auto auto;
+		align-items: center;
+		gap: 12px 16px;
+		padding: 14px 18px 16px;
+		background: var(--color-surface-raised);
+	}
+	.brand { display: flex; align-items: center; gap: 8px; min-width: 0; }
+	h1 { font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+	.mark { width: 26px; height: 24px; flex: none; }
+	.mark polygon, .mark circle { stroke: var(--color-border); stroke-width: 2; }
+	.mark-tri { fill: var(--color-pop-pink); }
+	.mark-dot { fill: var(--color-accent); }
+	.status { color: var(--color-muted); font-size: 15px; }
+	.head-actions { display: flex; align-items: center; gap: 10px; }
+
+	.desk-body { display: grid; grid-template-columns: 232px 1fr; }
+	.side, .thread { min-width: 0; }
+	.side {
+		display: flex; flex-direction: column; gap: 8px;
+		padding: 14px; border-right: 2px solid var(--color-border);
+	}
+	.side-label, .composer label, .kicker {
+		font-size: 13px; font-weight: 700; letter-spacing: 0.14em;
+		text-transform: uppercase; color: var(--color-accent);
+	}
+	.side-label { color: var(--color-muted); font-size: 12px; }
+	.runs { display: flex; flex-direction: column; gap: 8px; }
+	.run {
+		display: flex; align-items: center; gap: 10px;
+		width: 100%; text-align: left; min-height: 52px; padding: 8px 10px;
+		border: 2px solid var(--color-border); border-radius: var(--radius-sm);
+		background: var(--color-surface-raised);
+	}
+	.run[aria-pressed="true"] { background: var(--color-pop-mint); }
+	.run b { display: block; font-weight: 700; font-size: 15px; }
+	.run small { display: block; color: var(--color-muted); font-size: 13px; }
+	.run[aria-pressed="true"] small { color: var(--color-surface-foreground); }
+	.run-shape { width: 18px; height: 18px; flex: none; }
+	.run-shape * { stroke: var(--color-border); stroke-width: 1.5; }
+	.fill-pink { fill: var(--color-pop-pink); }
+	.fill-blue { fill: var(--color-accent); }
+	.fill-yellow { fill: var(--color-primary); }
+	.terra {
+		position: relative; flex: 1; min-height: 148px; margin-top: 8px;
+		border: 2px solid var(--color-border);
+		background-image: var(--terra); background-size: 160px 160px;
+	}
+	.terra-plate {
+		position: absolute; left: 10px; right: 10px; bottom: 10px;
+		background: var(--color-surface-raised);
+		border: 2px solid var(--color-border);
+		padding: 8px 10px;
+	}
+	.terra-plate b { display: block; font-size: 14px; }
+	.terra-plate span { font-family: var(--font-mono); font-size: 13px; color: var(--color-muted); }
+
+	.thread { display: flex; flex-direction: column; gap: 12px; padding: 14px; }
+	.msg {
+		background: var(--color-surface-raised);
+		border: 2px solid var(--color-border);
+		border-radius: var(--radius-md);
+		padding: 12px 14px;
+	}
+	.msg-agent { border-left-width: 8px; border-left-color: var(--color-primary); }
+	.who { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+	.tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+	.badge {
+		display: inline-flex; align-items: center; min-height: 24px; padding: 2px 8px;
+		border: 2px solid var(--color-border); border-radius: var(--radius-sm);
+		background: var(--color-pop-mint); color: var(--color-surface-foreground);
+		font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+	}
+	.badge-lilac { background: var(--color-pop-lilac); }
+	.badge-pink { background: var(--color-pop-pink); }
+	.badge-blue { background: var(--color-accent); color: var(--color-accent-foreground); }
+	.composer label { display: block; margin-bottom: 6px; }
+	.composer-row { display: flex; gap: 10px; align-items: stretch; }
+	.field {
+		flex: 1; min-width: 0; width: 100%; min-height: 48px; padding: 0 12px;
+		background: var(--color-surface-raised);
+		border: 2px solid var(--color-border); border-radius: var(--radius-md);
+	}
+	.field-error { border-color: var(--color-danger); }
+	.btn {
+		min-height: 44px; padding: 0 16px; border: 2px solid var(--color-border);
+		border-radius: var(--radius-md); font-weight: 700; white-space: nowrap;
+		background: var(--color-surface-raised); box-shadow: var(--shadow-md);
+		transition: transform var(--duration-press) var(--ease-press), background var(--duration-press) var(--ease-press), box-shadow var(--duration-press) var(--ease-press);
+	}
+	.btn-commit { background: var(--color-primary); color: var(--color-primary-foreground); box-shadow: var(--shadow-sm); }
+	.btn-danger { background: var(--color-danger); color: var(--color-danger-foreground); }
+	.btn:disabled { opacity: 0.4; box-shadow: none; cursor: not-allowed; }
+	.btn:active:not(:disabled) { transform: translate(4px, 4px); box-shadow: none; }
+	.card, .card::before { transition: transform var(--duration-press) var(--ease-press); }
+
+	.under { margin: 16px 0 20px; color: var(--color-muted); max-width: 46ch; }
+
+	.band { padding: 52px 0 8px; }
+	.band:last-child { padding-bottom: 72px; }
+	h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin-top: 6px; }
+	.lede { max-width: 62ch; font-size: 17px; margin-top: 10px; }
+	.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 22px; }
+	.card {
+		position: relative; z-index: 0;
+		background: var(--color-surface-raised);
+		border: 2px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		padding: 22px 18px 18px;
+	}
+	.card h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; padding-right: 36px; }
+	.card p { margin-top: 8px; }
+	.bite { position: absolute; top: -14px; right: 18px; border: 2px solid var(--color-border); }
+	.bite-circle { width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--color-accent); }
+	.bite-sq { width: 28px; height: 28px; background: var(--color-pop-pink); }
+	.bite-tri { width: 32px; height: 28px; border: 0; background: transparent; }
+	.bite-tri polygon { fill: var(--color-primary); stroke: var(--color-border); stroke-width: 2; }
+
+	.fan { display: flex; height: 72px; margin-top: 22px; border: 2px solid var(--color-border); }
+	.fan i { flex: 1; display: block; }
+	.legend { list-style: none; padding: 0; margin: 14px 0 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 14px; }
+	.legend li { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+	.sw { width: 14px; height: 14px; border: 2px solid var(--color-border); flex: none; }
+
+	.motifs { list-style: none; padding: 0; margin: 22px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+	.motif {
+		background: var(--color-surface-raised);
+		border: 2px solid var(--color-border);
+		border-radius: var(--radius-md);
+		padding: 12px; min-height: 168px;
+		display: flex; flex-direction: column; gap: 8px;
+	}
+	.motif b { font-size: 16px; }
+	.motif span { color: var(--color-muted); font-size: 14px; line-height: 1.4; }
+	.stage { flex: 1; min-height: 72px; display: grid; align-items: center; }
+	.stage-shadow { padding: 6px 16px 16px 4px; justify-items: center; }
+	.mini {
+		position: relative; z-index: 0;
+		display: inline-flex; align-items: center; justify-content: center;
+		min-width: 128px; min-height: 64px; padding: 0 16px;
+		background: var(--color-surface-raised);
+		border: 2px solid var(--color-border);
+		font-weight: 700;
+	}
+	.terra-stage { border: 2px solid var(--color-border); background-image: var(--terra); background-size: 140px 140px; min-height: 88px; }
+
+	.control-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+	.control-grid { display: grid; gap: 18px; margin-top: 18px; }
+	.stack { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+	.stack label { font-weight: 700; font-size: 14px; }
+	.fault { color: var(--color-danger); }
+	.err {
+		background: var(--color-danger-wash);
+		border: 2px solid var(--color-danger);
+		border-radius: var(--radius-sm);
+		padding: 8px 10px;
+	}
+	.sample-card { margin-top: 18px; max-width: 360px; }
+
+	.pair { display: grid; gap: 18px; margin-top: 18px; }
+	.cmp-off {
+		background: #eef2f6; color: #64748b;
+		border-radius: 28px; padding: 16px 16px 18px;
+		box-shadow: 0 18px 40px rgb(15 23 42 / 0.14);
+		font-family: "Comic Sans MS", "Segoe Print", "Segoe Script", cursive;
+	}
+	.cmp-off h3 { color: #1e293b; font-weight: 400; font-size: 22px; }
+	.cmp-off p { margin-top: 6px; color: #334155; }
+	.wobble { display: block; width: 140px; height: 28px; margin-top: 8px; }
+	.pill {
+		margin-top: 12px; min-height: 40px; padding: 0 18px; border: 0; border-radius: 999px;
+		background: linear-gradient(90deg, #c4b5fd, #f9a8d4); color: #1e1b4b;
+		box-shadow: 0 8px 16px rgb(167 139 250 / 0.45); font: inherit;
+	}
+	.cmp-on { padding: 0 16px 16px 0; }
+	.sheet {
+		position: relative; z-index: 0;
+		background: var(--color-surface-raised);
+		border: 2px solid var(--color-border);
+		border-radius: var(--radius-md);
+	}
+	.sheet .pad { padding: 12px 14px 14px; }
+	.sheet h3 { font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+	.sheet p { margin: 6px 0 12px; }
+
+	.narrow { display: grid; gap: 22px; margin-top: 18px; align-items: start; }
+	.phone {
+		width: min(300px, 100%);
+		background: var(--color-border);
+		border: 3px solid var(--color-border);
+		border-radius: 28px; padding: 12px;
+	}
+	.phone-screen { background: var(--color-surface); border-radius: 16px; overflow: hidden; }
+	.phone-screen .squig { height: 32px; background-size: 110px 32px; }
+	.phone-pad { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+	.phone-name { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; display: flex; align-items: center; gap: 6px; }
+	.phone-name .mark { width: 18px; height: 16px; }
+	.phone-runs { display: flex; flex-direction: column; gap: 6px; }
+	.phone-runs .run { width: 100%; min-height: 44px; }
+	.phone-screen .msg { font-size: 14px; }
+	.phone-screen .composer-row { flex-direction: column; }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { padding: 12px 0; border-bottom: 2px solid var(--color-border); }
+	.rules b { display: block; font-weight: 700; }
+	.rules span { color: var(--color-muted); }
+
+	@media (hover: hover) and (pointer: fine) {
+		.btn:hover:not(:disabled) { transform: translate(1px, 1px); }
+		.btn:active:not(:disabled) { transform: translate(4px, 4px); }
+		.card:hover { transform: translate(5px, 5px); }
+		.card:hover::before { transform: translate(-5px, -5px); }
+	}
+	@media (max-width: 860px) {
+		.cards { grid-template-columns: 1fr; }
+		.legend { grid-template-columns: 1fr 1fr; }
+	}
+	@media (max-width: 760px) {
+		:root { --shadow-shift: 7px; }
+		.wrap, .inner { width: min(1080px, calc(100% - 32px)); }
+		.orn-tri, .orn-sq { display: none; }
+		.orn-circle { width: 84px; height: 84px; top: -16px; right: -20px; border-width: 2px; }
+		h1 { font-size: 32px; }
+		.head { grid-template-columns: 1fr auto; }
+		.status { grid-column: 1 / -1; grid-row: 2; }
+		.head-actions { grid-column: 2; grid-row: 1; }
+		.desk-body { grid-template-columns: 1fr; }
+		.side { border-right: 0; border-bottom: 2px solid var(--color-border); }
+		.runs { flex-direction: row; flex-wrap: wrap; }
+		.run { width: auto; flex: 1 1 9rem; }
+		.terra { min-height: 108px; flex: none; }
+		.composer-row { flex-direction: column; }
+		.composer-row .btn { width: 100%; }
+		.motifs { grid-template-columns: 1fr; }
+	}
+	@media (min-width: 860px) {
+		.control-grid { grid-template-columns: 1fr 1fr; }
+		.pair { grid-template-columns: 1fr 1fr; align-items: start; }
+		.narrow { grid-template-columns: 300px 1fr; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.squig-live { animation: none; }
+		.btn, .card, .card::before { transition: none; }
+		.btn:hover:not(:disabled),
+		.btn:active:not(:disabled),
+		.card:hover,
+		.card:hover::before { transform: none; }
+		.btn-commit:active:not(:disabled) { box-shadow: var(--shadow-sm); }
+		.btn-quiet:active:not(:disabled),
+		.btn-danger:active:not(:disabled) { box-shadow: var(--shadow-md); }
+		.btn:active:not(:disabled) { outline: 3px solid var(--color-border); outline-offset: 2px; }
+	}
+	@media (prefers-contrast: more) {
+		:focus-visible { outline-color: var(--color-surface-foreground); }
+		.btn-quiet { border-color: var(--color-surface-foreground); }
+	}
+</style>
+</head>
+<body>
+<header class="hero">
+	<div class="ornament orn-circle" aria-hidden="true"></div>
+	<svg class="ornament orn-tri" viewBox="0 0 160 140" aria-hidden="true"><polygon points="80,8 152,132 8,132"/></svg>
+	<div class="ornament orn-sq" aria-hidden="true"></div>
+	<div class="wrap">
+		<div class="object">
+			<div class="tab">Desk</div>
+			<article class="desk">
+				<div class="squig squig-live" aria-hidden="true"></div>
+				<div class="head">
+					<div class="brand">
+						<h1>Arco</h1>
+						<svg class="mark mark-tri" viewBox="0 0 24 22" aria-hidden="true"><polygon points="12,2 22,20 2,20"/></svg>
+						<svg class="mark mark-dot" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>
+					</div>
+					<p class="status">Notes stay in this folder.</p>
+					<div class="head-actions">
+						<span class="badge">On device</span>
+						<button class="btn btn-commit" type="button">Run</button>
+					</div>
+				</div>
+				<div class="zig" aria-hidden="true"></div>
+				<div class="desk-body">
+					<div class="side">
+						<p class="side-label">Runs</p>
+						<div class="runs" role="group" aria-label="Runs">
+							<button class="run" type="button" aria-pressed="true">
+								<svg class="run-shape fill-pink" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13"/></svg>
+								<span><b>Field notes</b><small>6 files · Open</small></span>
+							</button>
+							<button class="run" type="button" aria-pressed="false">
+								<svg class="run-shape fill-blue" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/></svg>
+								<span><b>Invoice draft</b><small>Left closed</small></span>
+							</button>
+							<button class="run" type="button" aria-pressed="false">
+								<svg class="run-shape fill-yellow" viewBox="0 0 16 16" aria-hidden="true"><polygon points="8,1.5 14.5,14.5 1.5,14.5"/></svg>
+								<span><b>Travel bits</b><small>3 places</small></span>
+							</button>
+						</div>
+						<div class="terra">
+							<div class="terra-plate">
+								<b>Kept here</b>
+								<span>~/notes/week</span>
+							</div>
+						</div>
+					</div>
+					<div class="thread">
+						<article class="msg">
+							<p class="who">You</p>
+							<p>Sort this week's field notes. Leave the invoices where they are.</p>
+						</article>
+						<article class="msg msg-agent">
+							<p class="who">Arco <span class="badge">On device</span></p>
+							<p>Six notes stayed on this machine. I grouped them by place and left the invoices closed.</p>
+							<div class="tools">
+								<span class="badge">Read 6 notes</span>
+								<span class="badge badge-lilac">Skipped invoices</span>
+							</div>
+						</article>
+						<div class="composer">
+							<label for="ask">Ask Arco</label>
+							<div class="composer-row">
+								<input id="ask" class="field" type="text" placeholder="A folder, a limit, a name">
+								<button class="btn btn-commit" type="button">Send</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</article>
+		</div>
+		<p class="under">A local agent. The thread, the notes, and the run stay on this machine.</p>
+	</div>
+</header>
+<main>
+	<section class="band" id="features">
+		<div class="inner">
+			<p class="kicker">The desk</p>
+			<h2>Flat color, then the work.</h2>
+			<p class="lede">Arco is a laminate object. The reading sits on a plain plate. Color is a band, a chip, or a shape beside the words.</p>
+			<div class="cards">
+				<article class="card">
+					<span class="bite bite-circle" aria-hidden="true"></span>
+					<h3>On this machine</h3>
+					<p>The thread and the files stay in the folder you named. A cloud mark does not appear on this desk.</p>
+				</article>
+				<article class="card">
+					<span class="bite bite-sq" aria-hidden="true"></span>
+					<h3>Tools keep a shape</h3>
+					<p>Each tool wears a square, a circle, or a triangle. The word next to it says what the tool actually does.</p>
+				</article>
+				<article class="card">
+					<svg class="bite bite-tri" viewBox="0 0 32 28" aria-hidden="true"><polygon points="16,2 30,26 2,26"/></svg>
+					<h3>A short memory</h3>
+					<p>The last run is a single plate you can read. It does not grow into a feed.</p>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<section class="band" id="color">
+		<div class="inner">
+			<p class="kicker">01 — Color</p>
+			<h2>Lemon commits. Pastels sit beside it.</h2>
+			<p class="lede">Ink does the reading. Lemon is the commit and the squiggle band. Cobalt is focus and a shape. Pink, mint, and lilac are chips. Crimson is the fault.</p>
+			<div class="fan" aria-hidden="true">
+				<i style="background:var(--color-primary)"></i>
+				<i style="background:var(--color-pop-pink)"></i>
+				<i style="background:var(--color-accent)"></i>
+				<i style="background:var(--color-pop-mint)"></i>
+				<i style="background:var(--color-pop-lilac)"></i>
+				<i style="background:var(--color-danger)"></i>
+				<i style="background:var(--color-surface-foreground)"></i>
+			</div>
+			<ul class="legend">
+				<li><i class="sw" style="background:var(--color-primary)"></i> primary</li>
+				<li><i class="sw" style="background:var(--color-pop-pink)"></i> pop-pink</li>
+				<li><i class="sw" style="background:var(--color-accent)"></i> accent</li>
+				<li><i class="sw" style="background:var(--color-pop-mint)"></i> pop-mint</li>
+				<li><i class="sw" style="background:var(--color-pop-lilac)"></i> pop-lilac</li>
+				<li><i class="sw" style="background:var(--color-danger)"></i> danger</li>
+				<li><i class="sw" style="background:var(--color-surface)"></i> surface</li>
+				<li><i class="sw" style="background:var(--color-surface-raised)"></i> raised</li>
+			</ul>
+		</div>
+	</section>
+
+	<section class="band" id="shape">
+		<div class="inner">
+			<p class="kicker">02 — Shape</p>
+			<h2>A squiggle, a chip field, a hard shadow.</h2>
+			<p class="lede">Four motifs, used once each on the desk. The stroke is even. The chips do not spell anything. The shadow is a stripe, not a blur.</p>
+			<ul class="motifs">
+				<li class="motif">
+					<div class="squig" aria-hidden="true"></div>
+					<b>Squiggle</b>
+					<span>One lemon band. A printed wave of even weight. The desk copy may drift. This one stays put.</span>
+				</li>
+				<li class="motif">
+					<div class="stage terra-stage" aria-hidden="true"></div>
+					<b>Terrazzo</b>
+					<span>A dark binder and a sparse scatter of circles, squares, and triangles. Words sit on a plate.</span>
+				</li>
+				<li class="motif">
+					<div class="stage"><div class="zig" aria-hidden="true"></div></div>
+					<b>Zigzag</b>
+					<span>An 8px ink rule under the header. It divides. It is not a wallpaper.</span>
+				</li>
+				<li class="motif">
+					<div class="stage stage-shadow"><div class="mini">Notes</div></div>
+					<b>Patterned shadow</b>
+					<span>Ink and pink stripes, shifted down and right. Zero blur. The plate stays plain.</span>
+				</li>
+			</ul>
+		</div>
+	</section>
+
+	<section class="band" id="controls">
+		<div class="inner">
+			<p class="kicker">03 — Controls</p>
+			<h2>Black line, square corner, one offset.</h2>
+			<p class="lede">Commit is lemon with a flat pink offset. Quiet and danger use an ink offset. The card behind them keeps the stripe.</p>
+			<div class="control-row">
+				<button class="btn btn-commit" type="button">Run</button>
+				<button class="btn btn-quiet" type="button">Hold</button>
+				<button class="btn btn-danger" type="button">Discard</button>
+				<button class="btn btn-quiet" type="button" disabled>Disabled</button>
+			</div>
+			<div class="control-grid">
+				<div class="stack">
+					<label for="folder">Folder</label>
+					<input id="folder" class="field" type="text" value="~/notes/week">
+				</div>
+				<div class="stack">
+					<label for="missing">Missing path</label>
+					<input id="missing" class="field field-error" type="text" value="not a folder" aria-invalid="true" aria-describedby="missing-msg">
+					<p id="missing-msg"><b class="fault">Error.</b> <span class="err">That path is not on this machine.</span></p>
+				</div>
+			</div>
+			<div class="tools" style="margin-top:16px">
+				<span class="badge">On device</span>
+				<span class="badge badge-pink">Read 6 notes</span>
+				<span class="badge badge-lilac">Skipped</span>
+				<span class="badge badge-blue">Pinned</span>
+			</div>
+			<article class="card sample-card">
+				<span class="bite bite-circle" aria-hidden="true"></span>
+				<h3>Today's run</h3>
+				<p>Six notes, grouped by place. Invoices were left closed.</p>
+			</article>
+		</div>
+	</section>
+
+	<section class="band" id="compare">
+		<div class="inner">
+			<p class="kicker">04 — Off-style</p>
+			<h2>Printed, not sketched.</h2>
+			<p class="lede">A marker line, a blur, and a pill are a different sheet. The laminate keeps an even stroke, a square corner, and a striped offset.</p>
+			<div class="pair">
+				<div>
+					<p class="kicker">Off-style</p>
+					<div class="cmp-off">
+						<h3>Arco ✦</h3>
+						<svg class="wobble" viewBox="0 0 140 28" aria-hidden="true"><path d="M2 16 C12 6 16 26 32 12 S52 4 66 20 S92 30 108 10 S126 8 138 16" fill="none" stroke="#334155" stroke-width="3" stroke-linecap="round"/></svg>
+						<p>sort of fun!! notes maybe in the cloud?</p>
+						<button class="pill" type="button">Nice!</button>
+					</div>
+				</div>
+				<div>
+					<p class="kicker">On-style</p>
+					<div class="cmp-on">
+						<div class="sheet">
+							<div class="squig" aria-hidden="true"></div>
+							<div class="pad">
+								<h3>Arco</h3>
+								<p>Six notes stayed on this machine.</p>
+								<button class="btn btn-commit" type="button">Run</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="band" id="narrow">
+		<div class="inner">
+			<p class="kicker">05 — Narrow</p>
+			<h2>The same desk, in one column.</h2>
+			<p class="lede">The phone is the narrow desk, not a second product. Runs wrap, and inside the phone they stack. The send stacks. The label on the terrazzo stays on a plate.</p>
+			<div class="narrow">
+				<div class="phone">
+					<div class="phone-screen">
+						<div class="squig" aria-hidden="true"></div>
+						<div class="phone-pad">
+							<p class="phone-name">Arco <svg class="mark mark-tri" viewBox="0 0 24 22" aria-hidden="true"><polygon points="12,2 22,20 2,20"/></svg></p>
+							<div class="phone-runs" role="group" aria-label="Runs">
+								<button class="run" type="button" aria-pressed="true">
+									<svg class="run-shape fill-pink" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="13" height="13"/></svg>
+									<span><b>Field notes</b><small>Open</small></span>
+								</button>
+								<button class="run" type="button" aria-pressed="false">
+									<svg class="run-shape fill-blue" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/></svg>
+									<span><b>Invoices</b><small>Closed</small></span>
+								</button>
+							</div>
+							<article class="msg msg-agent">
+								<p class="who">Arco</p>
+								<p>Six notes stayed on this machine.</p>
+							</article>
+							<div class="terra" style="min-height:96px;flex:none">
+								<div class="terra-plate"><b>Kept here</b><span>~/notes/week</span></div>
+							</div>
+							<div class="composer">
+								<label for="ask-narrow">Ask Arco</label>
+								<div class="composer-row">
+									<input id="ask-narrow" class="field" type="text" placeholder="A folder, a limit">
+									<button class="btn btn-commit" type="button">Send</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<ul class="rules">
+					<li><b>The side column leaves.</b><span>Below 760px the runs become a wrapping row. Inside the phone they stack so a name stays on one line. Neither one scrolls sideways.</span></li>
+					<li><b>The shadow steps in.</b><span>The stripe shifts 12px on a wide screen and 7px below 760px. The page inset stays wider than the shift.</span></li>
+					<li><b>Type and targets hold.</b><span>The name steps from 40px to 32px. Body stays 16px. Buttons and fields stay at least 44px tall.</span></li>
+					<li><b>Send stacks.</b><span>The field and the commit become a column, and the commit stretches to the row.</span></li>
+					<li><b>Hover is optional.</b><span>A coarse pointer does not get the 1px nudge. The press travel stops when reduced motion is requested, and an ink outline remains.</span></li>
+					<li><b>Ornaments get out of the way.</b><span>The triangle and the square drop off. One small circle stays in the corner, behind the desk.</span></li>
+					<li><b>The sample keeps its plate.</b><span>Terrazzo gets shorter. The path stays on a solid plate, never on the chips.</span></li>
+				</ul>
+			</div>
+		</div>
+	</section>
+</main>
+</body>
+</html>

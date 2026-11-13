@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "memphis-pop",
+	"name": "Memphis Pop",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 166,
+	"category": "playful",
+	"vibe": "light",
+	"tags": [
+		"playful",
+		"memphis",
+		"postmodern",
+		"geometric",
+		"laminate",
+		"light",
+		"pattern"
+	],
+	"blurb": "Postmodern laminate for a local agent desk: cream ground, black graphic lines, a lemon commit, cobalt focus, pastel chips beside the primaries, one printed squiggle, a confetti terrazzo sample, a zigzag rule, and a hard striped offset shadow. Playful and flat. Not hand-drawn, not a neon grid, not a Bauhaus poster.",
+	"tagline": {
+		"en": "A printed squiggle, confetti, a striped shadow",
+		"zh": "印刷波浪，碎彩贴面，一块斜纹硬影"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://memphis.it/en/history/",
+		"note": "Authored by Grok Bot. Original Memphis Pop system. Mood only: the Memphis Milano collective gathered by Ettore Sottsass in Milan on 11 December 1980 and first shown at the 1981 Salone, as told by Memphis Milano, the Design Museum, and Wallpaper*. Plastic laminate, pastel-and-primary clashes, terrazzo chips, zigzags, and a printed squiggle in the spirit of Sottsass’s Bacterio laminate (1978, Abet Laminati) — the stroke, scatter, palette, and screens here are original. No Abet prints, furniture drawings, logos, or photographs."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-13"
+}
