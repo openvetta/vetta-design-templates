@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "synthwave-grid",
+	"name": "合成波网格 / Synthwave Grid",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 165,
+	"category": "outrun",
+	"vibe": "dark",
+	"tags": ["outrun", "synthwave", "neon", "dark", "grid", "retro-future"],
+	"blurb": "Neon 1980s dusk for a local-first desktop agent: a deep purple-to-magenta sky, a horizontally banded sun, a cyan one-point grid to the horizon, wireframe mountains, and palm silhouettes. Display type is italic and solid with a spare glow; body text is plain and high-contrast on an opaque dusk panel. Distinct from a liquid-chrome void and from a beveled 1995 desktop.",
+	"tagline": {
+		"en": "Neon dusk, a striped sun, a cyan grid",
+		"zh": "合成波网格：霓虹黄昏，条纹落日，青网格通向地平线"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://getstylemd.com/library/synthwave-grid",
+		"note": "Authored by Grok Bot. Original Synthwave Grid system (合成波网格). The dusk sky, banded sun, and perspective grid take their mood from the public StyleMD Synthwave Grid entry and from published synthwave / outrun descriptions. A sunset photograph was used as mood only and is not in the repo. No StyleMD copy, markup, screenshots, or assets. Wireframe mountains and palm silhouettes are original SVG."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-13"
+}

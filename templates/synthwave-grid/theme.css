@@ -1,0 +1,50 @@
+/* Synthwave Grid — neon dusk, a banded sun, a cyan grid to the horizon.
+   Display type is solid italic with a spare glow. Body type sits on opaque dusk.
+   Not liquid chrome, not beveled 1995 chrome, not glass over a photograph.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #d41470;
+	--color-primary-foreground: #ffffff;
+	--color-surface: #14071c;
+	--color-surface-foreground: #f7f2ff;
+	--color-surface-raised: #241230;
+	--color-muted: #d4c4e4;
+	--color-accent: #5cefff;
+	--color-danger: #ff9aa8;
+	--color-border: #9a6cbc;
+
+	/* Hero only. sun-0 may color one display line. The rest are not type. */
+	--color-sun-0: #fff4b0;
+	--color-sun-1: #ffb03a;
+	--color-sun-2: #ff4b7a;
+	--color-sky-top: #10051a;
+	--color-sky-mid: #5c1874;
+	--color-sky-hot: #c43378;
+	--color-sky-deep: #3a1248;
+	--color-wire: #ff6aa8;
+	--color-palm: #12061a;
+
+	--grid-line: rgb(92 239 255 / 0.62);
+	--glow-display: 0 0 8px rgb(255 61 138 / 0.55), 0 0 22px rgb(255 61 138 / 0.28);
+	--glow-gold: 0 0 8px rgb(255 180 60 / 0.4), 0 0 20px rgb(255 61 138 / 0.22);
+
+	--radius-sm: 4px;
+	--radius-md: 6px;
+	--radius-lg: 10px;
+	--radius-xl: 14px;
+	--radius-2xl: 18px;
+	--radius-full: 9999px;
+
+	--shadow-sm: 0 0 0 1px rgb(154 108 188 / 0.45);
+	--shadow-md: 0 0 18px rgb(212 20 112 / 0.35);
+	--shadow-lg: 0 0 12px rgb(255 77 154 / 0.55), 0 0 36px rgb(92 239 255 / 0.18);
+	--shadow-focus: 0 0 0 2px #14071c, 0 0 0 5px #5cefff;
+
+	--ease-ui: cubic-bezier(0.2, 0, 0, 1);
+	--duration-drive: 8s;
+	--duration-ui: 160ms;
+
+	--font-display: Inter, "Noto Sans Display", "Segoe UI", "Helvetica Neue", sans-serif;
+	--font-body: Inter, "Segoe UI", "Helvetica Neue", "Noto Sans", "Liberation Sans", sans-serif;
+	--font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", monospace;
+}
