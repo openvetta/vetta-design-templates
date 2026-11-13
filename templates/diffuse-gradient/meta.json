@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "diffuse-gradient",
+	"name": "Diffuse Gradient",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 158,
+	"category": "atmosphere",
+	"vibe": "light",
+	"tags": ["atmosphere", "gradient", "frost", "grain", "light", "wellness"],
+	"blurb": "Pale porcelain washed by four blurred pools — blush, lilac, peach, and mint — under film grain, with milky frost cards, airy bold type, and pill actions. A separate night field is near-black with one warm amber-to-mauve glow. Not colorless night glass, not clay, not chrome.",
+	"tagline": {
+		"en": "Soaked color, milky frost, a grain of film",
+		"zh": "色晕渗开，乳白磨砂，一层细颗粒"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"sourceUrl": "https://www.uisdc.com/dispersion-gradient-style",
+		"note": "Authored by Grok Bot. Original Diffuse Gradient system: a pale porcelain field, four blurred color pools, milky frost, and film grain, plus a near-black night field with one warm glow. Mood reference only. No third-party assets, screenshots, or marks."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-13"
+}
