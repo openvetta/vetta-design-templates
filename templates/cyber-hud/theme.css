@@ -1,0 +1,56 @@
+/* Cyber HUD — a dark field instrument for an agent console.
+   Chamfered plates, targeting brackets, scanlines, monospace readouts.
+   Acid yellow is live, cyan is structure, magenta is a fault.
+   Not a sunset grid, not beveled desktop chrome, not liquid metal.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #e4ff4a;
+	--color-primary-foreground: #10140a;
+	--color-surface: #080b0e;
+	--color-surface-foreground: #e8fff4;
+	--color-surface-raised: #12181f;
+	--color-muted: #a8c0b4;
+	--color-accent: #4eefd2;
+	--color-danger: #ff6b9a;
+	--color-border: #6e8f86;
+
+	--color-danger-foreground: #14060e;
+	--color-rule: #243833;
+	--color-live-wash: rgb(228 255 74 / 0.10);
+	--color-link-wash: rgb(78 239 210 / 0.10);
+	--color-fault-wash: rgb(255 107 154 / 0.12);
+
+	/* Radius stays 0. Shape lives in the chamfer tokens. */
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--chamfer-sm: 8px;
+	--chamfer-md: 14px;
+	--chamfer-lg: 18px;
+	--bracket-arm: 16px;
+	--bracket-arm-lg: 22px;
+	--bracket-gap: 8px;
+
+	--shadow-sm: 0 0 0 1px rgb(78 239 210 / 0.35);
+	--shadow-md: 0 0 0 1px rgb(228 255 74 / 0.55);
+	--shadow-lg: 0 16px 32px rgb(0 0 0 / 0.45);
+	--shadow-focus: 0 0 0 2px #080b0e, 0 0 0 4px #4eefd2;
+
+	--grid-size: 28px;
+	--grid-line: rgb(78 239 210 / 0.07);
+	--scan-size: 3px;
+	--scan-ink: rgb(232 255 244 / 0.075);
+
+	--ease-ui: cubic-bezier(0.2, 0, 0, 1);
+	--duration-ui: 140ms;
+	--duration-scan: 9s;
+	--duration-glitch: 6.4s;
+	--duration-lamp: 3.4s;
+
+	--font-sans: "Segoe UI", "Helvetica Neue", "Noto Sans", "Liberation Sans", sans-serif;
+	--font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", "DejaVu Sans Mono", monospace;
+}

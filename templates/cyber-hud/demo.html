@@ -1,0 +1,917 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kite — Cyber HUD</title>
+<style>
+	/* Mirrors theme.css. Plain custom properties so this file opens standalone. */
+	:root {
+		--color-primary: #e4ff4a;
+		--color-primary-foreground: #10140a;
+		--color-surface: #080b0e;
+		--color-surface-foreground: #e8fff4;
+		--color-surface-raised: #12181f;
+		--color-muted: #a8c0b4;
+		--color-accent: #4eefd2;
+		--color-danger: #ff6b9a;
+		--color-border: #6e8f86;
+		--color-danger-foreground: #14060e;
+		--color-rule: #243833;
+		--color-live-wash: rgb(228 255 74 / 0.10);
+		--color-link-wash: rgb(78 239 210 / 0.10);
+		--color-fault-wash: rgb(255 107 154 / 0.12);
+		--radius-sm: 0px;
+		--radius-md: 0px;
+		--radius-lg: 0px;
+		--radius-xl: 0px;
+		--radius-2xl: 0px;
+		--radius-full: 0px;
+		--chamfer-sm: 8px;
+		--chamfer-md: 14px;
+		--chamfer-lg: 18px;
+		--bracket-arm: 16px;
+		--bracket-arm-lg: 22px;
+		--bracket-gap: 8px;
+		--shadow-sm: 0 0 0 1px rgb(78 239 210 / 0.35);
+		--shadow-md: 0 0 0 1px rgb(228 255 74 / 0.55);
+		--shadow-lg: 0 16px 32px rgb(0 0 0 / 0.45);
+		--shadow-focus: 0 0 0 2px #080b0e, 0 0 0 4px #4eefd2;
+		--grid-size: 28px;
+		--grid-line: rgb(78 239 210 / 0.07);
+		--scan-size: 3px;
+		--scan-ink: rgb(232 255 244 / 0.075);
+		--ease-ui: cubic-bezier(0.2, 0, 0, 1);
+		--duration-ui: 140ms;
+		--duration-scan: 9s;
+		--duration-glitch: 6.4s;
+		--duration-lamp: 3.4s;
+		--font-sans: "Segoe UI", "Helvetica Neue", "Noto Sans", "Liberation Sans", sans-serif;
+		--font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", "DejaVu Sans Mono", monospace;
+		--cut: var(--chamfer-sm);
+		--arm: 12px;
+		--gap: 6px;
+	}
+
+	*, *::before, *::after { box-sizing: border-box; }
+	html { overflow-x: hidden; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--font-sans);
+		font-size: 16px;
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+		overflow-x: hidden;
+	}
+	body::before {
+		content: "";
+		position: fixed;
+		inset: 0;
+		pointer-events: none;
+		z-index: 0;
+		background-image:
+			linear-gradient(var(--grid-line) 1px, transparent 1px),
+			linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+		background-size: var(--grid-size) var(--grid-size);
+	}
+	h1, h2, h3, p, ul, ol, dl, figure, dd { margin: 0; }
+	button, input { font: inherit; color: inherit; }
+	button { cursor: pointer; }
+	img, svg { max-width: 100%; display: block; }
+	:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+	::selection { background: rgb(228 255 74 / 0.28); color: var(--color-primary-foreground); }
+	.wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 16px 16px 56px; }
+	.quiet { color: var(--color-muted); }
+	.num { font-variant-numeric: tabular-nums; }
+
+	.kicker {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+		margin-bottom: 8px;
+	}
+	h1 {
+		font-family: var(--font-mono);
+		font-weight: 600;
+		font-size: clamp(22px, 2.6vw, 34px);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		line-height: 1.15;
+	}
+	h1::after {
+		content: "";
+		display: block;
+		width: 2.2em;
+		height: 2px;
+		margin-top: 8px;
+		background: var(--color-primary);
+	}
+	h2 {
+		font-size: clamp(26px, 3vw, 36px);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.15;
+		margin-bottom: 10px;
+	}
+	h3 { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+	.lede { max-width: 62ch; color: var(--color-muted); }
+	.block { margin-top: 56px; }
+	.intro { max-width: 66ch; margin-bottom: 18px; }
+
+	.plate {
+		position: relative;
+		isolation: isolate;
+		background-color: var(--color-surface-raised);
+		background-image:
+			linear-gradient(var(--ink, var(--color-accent)), var(--ink, var(--color-accent))),
+			linear-gradient(var(--ink, var(--color-accent)), var(--ink, var(--color-accent))),
+			linear-gradient(var(--ink, var(--color-accent)), var(--ink, var(--color-accent))),
+			linear-gradient(var(--ink, var(--color-accent)), var(--ink, var(--color-accent))),
+			linear-gradient(var(--ink, var(--color-accent)), var(--ink, var(--color-accent))),
+			linear-gradient(var(--ink, var(--color-accent)), var(--ink, var(--color-accent))),
+			linear-gradient(var(--ink, var(--color-accent)), var(--ink, var(--color-accent))),
+			linear-gradient(var(--ink, var(--color-accent)), var(--ink, var(--color-accent)));
+		background-repeat: no-repeat;
+		background-size:
+			var(--arm) 1px, 1px var(--arm),
+			var(--arm) 1px, 1px var(--arm),
+			var(--arm) 1px, 1px var(--arm),
+			var(--arm) 1px, 1px var(--arm);
+		background-position:
+			left var(--gap) top var(--gap), left var(--gap) top var(--gap),
+			right var(--gap) top var(--gap), right var(--gap) top var(--gap),
+			left var(--gap) bottom var(--gap), left var(--gap) bottom var(--gap),
+			right var(--gap) bottom var(--gap), right var(--gap) bottom var(--gap);
+		clip-path: polygon(
+			var(--cut) 0, calc(100% - var(--cut)) 0,
+			100% var(--cut), 100% calc(100% - var(--cut)),
+			calc(100% - var(--cut)) 100%, var(--cut) 100%,
+			0 calc(100% - var(--cut)), 0 var(--cut)
+		);
+		min-width: 0;
+	}
+	.plate.live { --ink: var(--color-primary); }
+	.ribbed::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		z-index: 3;
+		background: repeating-linear-gradient(
+			to bottom,
+			transparent 0,
+			transparent calc(var(--scan-size) - 1px),
+			var(--scan-ink) calc(var(--scan-size) - 1px),
+			var(--scan-ink) var(--scan-size)
+		);
+	}
+	.scanband {
+		display: none;
+		position: absolute;
+		left: 0;
+		right: 0;
+		height: 34%;
+		top: 0;
+		z-index: 0;
+		pointer-events: none;
+		background: linear-gradient(to bottom, transparent, rgb(78 239 210 / 0.08), transparent);
+		animation: sweep var(--duration-scan) linear infinite;
+	}
+	.plate > * { position: relative; z-index: 1; }
+
+	.console { padding: 16px; }
+	.status {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: center;
+		gap: 8px 16px;
+		min-height: 36px;
+	}
+	.brand {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		min-width: 0;
+		font-family: var(--font-mono);
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		font-size: 15px;
+		font-weight: 600;
+	}
+	.brand .quiet { letter-spacing: 0.12em; font-size: 12px; font-weight: 500; }
+	.glitch { display: inline-block; }
+	.diamond {
+		width: 8px;
+		height: 8px;
+		background: var(--color-primary);
+		transform: rotate(45deg);
+		flex: none;
+		animation: lamp var(--duration-lamp) var(--ease-ui) infinite;
+	}
+	.statline {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px 12px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.ruler {
+		height: 8px;
+		margin: 8px 0 14px;
+		background-image:
+			linear-gradient(var(--color-accent), var(--color-accent)),
+			repeating-linear-gradient(90deg, var(--color-accent) 0 1px, transparent 1px 8px);
+		background-repeat: no-repeat, repeat-x;
+		background-size: 100% 1px, 8px 5px;
+		background-position: 0 100%, 0 0;
+		opacity: 0.55;
+	}
+	.title-row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 10px 28px;
+	}
+	.title-main { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+	.title-main .badge { margin-top: 7px; }
+	.title-row .lede { max-width: 36ch; margin: 0 0 4px; color: var(--color-surface-foreground); }
+
+	.console-grid {
+		display: grid;
+		gap: 14px;
+		margin-top: 16px;
+		min-width: 0;
+	}
+	.rail, .log, .side { min-width: 0; }
+	.log, .side { border-top: 1px solid var(--color-rule); padding-top: 12px; }
+	.thread {
+		display: grid;
+		grid-template-columns: 28px minmax(0, 1fr) auto;
+		gap: 8px;
+		align-items: center;
+		width: 100%;
+		min-height: 48px;
+		padding: 6px 8px;
+		text-align: left;
+		background: transparent;
+		border: 0;
+		border-left: 2px solid transparent;
+		font-family: var(--font-mono);
+		font-size: 13px;
+	}
+	.thread .idx { color: var(--color-accent); }
+	.thread .name { overflow-wrap: break-word; }
+	.thread[aria-current="true"] {
+		border-left-color: var(--color-primary);
+		background: var(--color-live-wash);
+	}
+	.line {
+		display: grid;
+		grid-template-columns: 68px 42px minmax(0, 1fr);
+		gap: 8px;
+		align-items: baseline;
+		padding: 5px 0;
+		font-family: var(--font-mono);
+		font-size: 13px;
+		line-height: 1.45;
+		min-width: 0;
+	}
+	.line span:last-child { overflow-wrap: break-word; }
+	.t, .who { color: var(--color-muted); }
+	.lock {
+		--cut: 0px;
+		--arm: 12px;
+		--gap: 4px;
+		margin-top: 6px;
+		padding: 8px 10px 10px;
+		background-color: var(--color-live-wash);
+	}
+	.lock .who { color: var(--color-primary); }
+	.tools {
+		display: grid;
+		grid-template-columns: 68px 42px minmax(0, 1fr);
+		gap: 8px;
+		margin-top: 4px;
+		color: var(--color-accent);
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.04em;
+	}
+	.tools span { grid-column: 3; min-width: 0; overflow-wrap: break-word; }
+	.readout { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+	.readout div { min-width: 0; }
+	.readout dt {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.readout dd { font-family: var(--font-mono); font-size: 16px; margin-top: 2px; }
+	.readout .fault { color: var(--color-danger); }
+	.meter { height: 4px; margin-top: 8px; background: var(--color-rule); }
+	.meter span { display: block; height: 100%; width: 57%; background: var(--color-primary); }
+	.reticle { display: none; width: 88px; margin: 18px auto 0; color: var(--color-accent); text-align: center; }
+	.reticle p {
+		margin-top: 6px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.blip { fill: var(--color-primary); }
+
+	.composer {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 8px;
+		margin-top: 16px;
+		padding-top: 14px;
+		border-top: 1px solid var(--color-rule);
+		align-items: end;
+	}
+	.call { display: grid; gap: 6px; min-width: 0; }
+	.call span, .field span {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	input {
+		width: 100%;
+		min-width: 0;
+		min-height: 48px;
+		padding: 0 12px;
+		background: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 0;
+		color: var(--color-surface-foreground);
+		font-family: var(--font-mono);
+		font-size: 16px;
+		caret-color: var(--color-primary);
+	}
+	input::placeholder { color: var(--color-muted); opacity: 1; }
+	.field .err {
+		color: var(--color-danger);
+		font-family: var(--font-sans);
+		font-size: 14px;
+		letter-spacing: 0;
+		text-transform: none;
+	}
+	input[aria-invalid="true"] { border-color: var(--color-danger); }
+	.hit { display: flex; min-width: 0; }
+	.hit:focus-within { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+	.btn {
+		min-height: 48px;
+		width: 100%;
+		padding: 0 16px;
+		border: 1px solid var(--color-accent);
+		background: transparent;
+		color: var(--color-surface-foreground);
+		font-family: var(--font-mono);
+		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+		transition: transform var(--duration-ui) var(--ease-ui), filter var(--duration-ui) var(--ease-ui), background var(--duration-ui) var(--ease-ui);
+	}
+	.btn:focus-visible { outline: none; }
+	.btn-go {
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+		border-color: var(--color-primary);
+	}
+	.btn-danger {
+		background: var(--color-danger);
+		color: var(--color-danger-foreground);
+		border-color: var(--color-danger);
+	}
+	.btn:disabled {
+		background: transparent;
+		color: var(--color-muted);
+		border-color: var(--color-border);
+		cursor: not-allowed;
+		filter: none;
+	}
+	.btn:active { transform: translateY(1px); }
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		min-height: 22px;
+		padding: 0 6px;
+		border: 1px solid var(--color-border);
+		color: var(--color-muted);
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		white-space: nowrap;
+		line-height: 1;
+	}
+	.badge.live { color: var(--color-primary); border-color: var(--color-primary); }
+	.badge.link { color: var(--color-accent); border-color: var(--color-accent); }
+	.badge.fault { color: var(--color-danger); border-color: var(--color-danger); }
+
+	.features { display: grid; gap: 12px; margin-top: 14px; }
+	.card { padding: 18px 16px 16px; height: 100%; }
+	.card .idx {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.14em;
+		color: var(--color-accent);
+	}
+	.card h3 { margin: 8px 0 6px; }
+	.card p { color: var(--color-muted); font-size: 15px; }
+
+	.swatches {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 148px), 1fr));
+		gap: 10px;
+		padding: 0;
+		list-style: none;
+	}
+	.swatches li {
+		display: grid;
+		grid-template-columns: 36px minmax(0, 1fr);
+		gap: 10px;
+		align-items: center;
+		min-height: 56px;
+		padding: 8px;
+		background: var(--color-surface-raised);
+		border: 1px solid var(--color-rule);
+	}
+	.swatches i { width: 36px; height: 36px; display: block; }
+	.swatches b { display: block; color: var(--color-surface-foreground); font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; }
+	.swatches span { display: block; color: var(--color-muted); font-size: 13px; }
+	.sw-primary { background: var(--color-primary); }
+	.sw-accent { background: var(--color-accent); }
+	.sw-danger { background: var(--color-danger); }
+	.sw-surface { background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border); }
+	.sw-raised { background: var(--color-surface-raised); box-shadow: inset 0 0 0 1px var(--color-border); }
+	.sw-ink { background: var(--color-surface-foreground); }
+	.sw-muted { background: var(--color-muted); }
+	.sw-border { background: var(--color-border); }
+
+	.tokens { display: grid; gap: 10px 24px; margin-top: 16px; }
+	.tokens div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 8px; align-items: baseline; }
+	.tokens dt { font-family: var(--font-mono); font-size: 13px; color: var(--color-accent); }
+	.tokens dd { color: var(--color-muted); font-size: 15px; }
+
+	.bench { padding: 18px 16px; display: grid; gap: 14px; }
+	.btn-row, .badge-row { display: flex; flex-wrap: wrap; gap: 8px; }
+	.btn-row .hit { width: auto; }
+	.btn-row .btn { width: auto; min-width: 128px; }
+	.fields { display: grid; gap: 12px; }
+	.field { display: grid; gap: 6px; min-width: 0; }
+	.alert { border: 1px solid var(--color-danger); background: var(--color-fault-wash); }
+	.hazard {
+		height: 8px;
+		background: repeating-linear-gradient(-45deg, var(--color-primary) 0 6px, var(--color-danger) 6px 12px);
+	}
+	.alert p { padding: 10px 12px 12px; }
+	.alert b { color: var(--color-danger); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; margin-right: 8px; }
+
+	.narrow { display: grid; gap: 22px; align-items: start; }
+	.handset {
+		width: min(100%, 300px);
+		background: #05070a;
+		border: 1px solid var(--color-border);
+		padding: 12px 12px 16px;
+	}
+	.handset::before {
+		content: "";
+		display: block;
+		width: 42px;
+		height: 4px;
+		margin: 2px auto 12px;
+		background: var(--color-rule);
+	}
+	.phone { padding: 14px 12px 12px; --cut: 8px; --arm: 10px; --gap: 5px; }
+	.phone .status { min-height: 28px; }
+	.phone h3 {
+		font-family: var(--font-mono);
+		font-size: 18px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		margin: 10px 0 8px;
+	}
+	.phone h3::after {
+		content: "";
+		display: block;
+		width: 2.2em;
+		height: 2px;
+		margin-top: 6px;
+		background: var(--color-primary);
+	}
+	.phone .lock { --cut: 0px; }
+	.ph-k { font-family: var(--font-mono); font-size: 12px; color: var(--color-muted); }
+	.ph-k .who { color: var(--color-primary); margin-left: 8px; }
+	.ph-msg { margin-top: 4px; font-family: var(--font-mono); font-size: 13px; line-height: 1.45; }
+	.ph-tools { margin-top: 6px; color: var(--color-accent); font-family: var(--font-mono); font-size: 12px; }
+	.phone .queue {
+		margin-top: 10px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.rules { list-style: none; padding: 0; display: grid; gap: 12px; }
+	.rules li { font-size: 15px; color: var(--color-muted); }
+	.rules b { display: block; color: var(--color-surface-foreground); font-weight: 600; margin-bottom: 2px; }
+
+	.compare { display: grid; gap: 16px; }
+	.compare figure { min-width: 0; }
+	.cmp-off {
+		min-height: 280px;
+		background: #c3c3c3;
+		color: #111;
+		border-radius: 22px;
+		overflow: hidden;
+		font-family: "Segoe UI", sans-serif;
+	}
+	.winbar {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		height: 28px;
+		padding: 0 8px;
+		background: #000080;
+		color: #fff;
+		font-size: 12px;
+		font-weight: 700;
+	}
+	.winbar i { width: 10px; height: 10px; background: #c3c3c3; border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #5a5a5a; border-bottom: 1px solid #5a5a5a; }
+	.sunset {
+		margin: 10px;
+		padding: 18px 16px 16px;
+		border-radius: 18px;
+		background: linear-gradient(180deg, #2a0a44 0%, #e23a8a 48%, #ffb000 100%);
+		color: #fff;
+		text-align: center;
+	}
+	.glowword {
+		font-style: italic;
+		font-weight: 800;
+		font-size: 32px;
+		letter-spacing: 0.08em;
+		text-shadow: 0 0 12px #ff4d9a, 0 0 24px #5cefff;
+	}
+	.sunset p { margin-top: 6px; font-size: 14px; }
+	.wrongpill {
+		margin-top: 12px;
+		min-height: 40px;
+		padding: 0 18px;
+		border: 0;
+		border-radius: 999px;
+		background: #ff4db8;
+		color: #fff;
+		font-weight: 700;
+	}
+	.bubble {
+		margin: 12px auto 0;
+		width: fit-content;
+		max-width: 100%;
+		padding: 8px 14px;
+		border-radius: 16px 16px 16px 4px;
+		background: #fff;
+		color: #7a2ea8;
+		font-style: italic;
+	}
+	.cmp-on { min-height: 280px; padding: 18px 16px; --cut: 12px; }
+	.cmp-on h3 {
+		font-family: var(--font-mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		font-size: 20px;
+		margin: 12px 0 8px;
+	}
+	.cmp-on .lede { color: var(--color-surface-foreground); font-size: 15px; }
+	.cmp-on .hit { margin-top: 16px; max-width: 220px; }
+	.note { margin-top: 8px; color: var(--color-muted); font-size: 14px; }
+	footer {
+		margin-top: 56px;
+		padding-top: 16px;
+		border-top: 1px solid var(--color-rule);
+		color: var(--color-muted);
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+		@media (max-width: 719px) {
+		.title-row { align-items: flex-start; }
+		.title-row .lede { max-width: none; flex: 1 0 100%; margin: 0; }
+	}
+	@media (min-width: 720px) {
+		.wrap { padding: 28px 32px 72px; }
+		.composer { grid-template-columns: minmax(0, 1fr) auto auto; }
+		.hit, .composer .btn { width: auto; }
+		.composer .btn { min-width: 132px; }
+		.fields { grid-template-columns: 1fr 1fr; }
+		.tokens { grid-template-columns: 1fr 1fr; }
+	}
+	@media (min-width: 800px) {
+		.features { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+		.swatches { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+		.compare, .narrow { grid-template-columns: 1fr 1fr; }
+	}
+	@media (min-width: 1040px) {
+		:root { --cut: var(--chamfer-md); --arm: var(--bracket-arm-lg); --gap: var(--bracket-gap); }
+		.console { padding: 20px 20px 16px; }
+		.console-grid { grid-template-columns: 232px minmax(0, 1fr) 220px; gap: 0 16px; }
+		.log, .side { border-top: 0; padding-top: 0; }
+		.log { padding: 0 8px 0 16px; border-left: 1px solid var(--color-rule); }
+		.side { padding-left: 16px; border-left: 1px solid var(--color-rule); }
+		.readout { grid-template-columns: 1fr; }
+		.reticle { display: block; }
+		.scanband { display: block; }
+		.card { --cut: var(--chamfer-md); --arm: var(--bracket-arm); }
+	}
+	@media (hover: hover) and (pointer: fine) {
+		.thread:hover { background: var(--color-link-wash); }
+		.btn-quiet:hover { background: var(--color-link-wash); }
+		.btn-go:hover { filter: brightness(1.06); }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.scanband { display: none; }
+		.diamond { animation: none; }
+		.glitch { animation: none; text-shadow: none; }
+		.btn:active { transform: none; }
+	}
+	@media (prefers-contrast: more) {
+		.plate { --ink: var(--color-surface-foreground); }
+		input, .btn-quiet, .swatches li { border-color: var(--color-surface-foreground); }
+		.log, .side, .composer { border-color: var(--color-surface-foreground); }
+	}
+	@media (forced-colors: active) {
+		.plate, .btn, input, .handset { border: 1px solid CanvasText; forced-color-adjust: auto; }
+	}
+
+	@keyframes sweep {
+		from { transform: translateY(-120%); }
+		to { transform: translateY(320%); }
+	}
+	@keyframes lamp {
+		0%, 100% { opacity: 1; }
+		50% { opacity: 0.45; }
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		.glitch { animation: glitch var(--duration-glitch) steps(1, end) infinite; }
+	}
+	@keyframes glitch {
+		0%, 88%, 100% { text-shadow: none; transform: none; }
+		90% { text-shadow: -1px 0 var(--color-accent), 1px 0 var(--color-danger); transform: translateX(-1px); }
+		93% { text-shadow: 1px 0 var(--color-accent), -1px 0 var(--color-danger); transform: translateX(1px); }
+		95% { text-shadow: none; transform: none; }
+	}
+</style>
+</head>
+<body>
+<main class="wrap">
+	<section class="hero" aria-label="Kite, local agent">
+		<div class="plate ribbed console">
+			<div class="scanband" aria-hidden="true"></div>
+			<div class="status">
+				<p class="brand"><i class="diamond" aria-hidden="true"></i><span class="glitch">Kite</span><span class="quiet">Local agent</span></p>
+				<p class="statline"><span>Node 7F</span><span>On device</span><time class="num" datetime="04:12:08">04:12:08</time></p>
+			</div>
+			<div class="ruler" aria-hidden="true"></div>
+			<div class="title-row">
+				<div class="title-main">
+					<h1>Mail triage</h1>
+					<span class="badge live">Live</span>
+				</div>
+				<p class="lede">Three invoices held on this machine. The draft is parked. Send stays armed.</p>
+			</div>
+			<div class="console-grid">
+				<div class="rail">
+					<p class="kicker">Queue</p>
+					<button class="thread" type="button" aria-current="true">
+						<span class="idx num">04</span><span class="name">Mail triage</span><span class="badge live">Live</span>
+					</button>
+					<button class="thread" type="button">
+						<span class="idx num">05</span><span class="name">Notes index</span><span class="badge">Hold</span>
+					</button>
+					<button class="thread" type="button">
+						<span class="idx num">06</span><span class="name">Calendar</span><span class="badge">Hold</span>
+					</button>
+					<button class="thread" type="button">
+						<span class="idx num">07</span><span class="name">Draft review</span><span class="badge">Queue</span>
+					</button>
+				</div>
+				<div class="log">
+					<p class="kicker">Trace</p>
+					<div class="line"><span class="t num">04:11:02</span><span class="who">You</span><span>Hold the three invoices. Leave the rest.</span></div>
+					<div class="line"><span class="t num">04:11:06</span><span class="who">Kite</span><span>Three held on this machine. The inbox is untouched.</span></div>
+					<div class="plate live lock">
+						<div class="line"><span class="t num">04:11:18</span><span class="who">Kite</span><span>Draft parked in /mail/holds. Send stays armed.</span></div>
+						<p class="tools"><span>files.read · mail.hold</span></p>
+					</div>
+				</div>
+				<aside class="side">
+					<p class="kicker">Telemetry</p>
+					<dl class="readout">
+						<div>
+							<dt>Context</dt>
+							<dd class="num">18.4k <span class="quiet">/ 32k</span></dd>
+							<div class="meter" aria-hidden="true"><span></span></div>
+						</div>
+						<div><dt>Memory</dt><dd>On device</dd></div>
+						<div><dt>Tools</dt><dd>3 armed</dd></div>
+						<div><dt class="fault">Fault</dt><dd>Clear</dd></div>
+					</dl>
+					<div class="reticle" aria-hidden="true">
+						<svg viewBox="0 0 80 80" width="88" height="88">
+							<circle cx="40" cy="40" r="30" fill="none" stroke="currentColor" stroke-width="1"/>
+							<circle cx="40" cy="40" r="16" fill="none" stroke="currentColor" stroke-width="1"/>
+							<path d="M40 4v10M40 66v10M4 40h10M66 40h10" fill="none" stroke="currentColor" stroke-width="1"/>
+							<circle class="blip" cx="54" cy="30" r="2.4"/>
+						</svg>
+						<p>Target</p>
+					</div>
+				</aside>
+			</div>
+			<div class="composer">
+				<label class="call"><span>Call</span><input type="text" value="Ready to dispatch."></label>
+				<div class="hit"><button class="btn btn-quiet" type="button">Hold</button></div>
+				<div class="hit"><button class="btn btn-go" type="button">Dispatch</button></div>
+			</div>
+		</div>
+	</section>
+
+	<section class="block" aria-labelledby="jobs">
+		<p class="kicker">The instrument</p>
+		<h2 id="jobs">Three jobs, one plate</h2>
+		<div class="features">
+			<article class="plate card">
+				<p class="idx">01</p>
+				<h3>On device</h3>
+				<p>The index, the draft, and the hold stay on this machine.</p>
+			</article>
+			<article class="plate card">
+				<p class="idx">02</p>
+				<h3>Named tools</h3>
+				<p>Files, mail, and calendar are lines in the trace, not a tray of icons.</p>
+			</article>
+			<article class="plate card">
+				<p class="idx">03</p>
+				<h3>A readable trace</h3>
+				<p>Every step is a time, a role, and one sentence.</p>
+			</article>
+		</div>
+	</section>
+
+	<section class="block">
+		<p class="kicker">01 — Signal</p>
+		<h2>Yellow is live. Cyan is structure. Magenta is a fault.</h2>
+		<p class="intro">The three neons are a code, not a palette. A plate that fills all three as decoration has nothing left to say. Neutrals carry the reading.</p>
+		<ul class="swatches">
+			<li><i class="sw-primary"></i><span><b>primary</b><span>Live, and the one commit</span></span></li>
+			<li><i class="sw-accent"></i><span><b>accent</b><span>Brackets, focus, tools</span></span></li>
+			<li><i class="sw-danger"></i><span><b>danger</b><span>Fault only</span></span></li>
+			<li><i class="sw-ink"></i><span><b>foreground</b><span>Sentences</span></span></li>
+			<li><i class="sw-muted"></i><span><b>muted</b><span>Times and meta</span></span></li>
+			<li><i class="sw-border"></i><span><b>border</b><span>Field edge</span></span></li>
+			<li><i class="sw-surface"></i><span><b>surface</b><span>The field</span></span></li>
+			<li><i class="sw-raised"></i><span><b>raised</b><span>The plate</span></span></li>
+		</ul>
+	</section>
+
+	<section class="block">
+		<p class="kicker">02 — Cut and bracket</p>
+		<h2>The corner is cut. The target is bracketed.</h2>
+		<p class="intro">Radius stays at zero. A plate loses a small triangle at each corner. Brackets sit inside that cut, cyan for the instrument and yellow for the one locked line. The grid in the margin is square. It does not run to a horizon.</p>
+		<dl class="tokens">
+			<div><dt>Chamfer</dt><dd>8px narrow, 14px on the wide plate</dd></div>
+			<div><dt>Bracket arm</dt><dd>12px narrow, 22px on the console</dd></div>
+			<div><dt>Scan</dt><dd>Static ribs on the plate. The sweep is wide-only.</dd></div>
+			<div><dt>Grid</dt><dd>28px, flat, outside the plate</dd></div>
+		</dl>
+	</section>
+
+	<section class="block">
+		<p class="kicker">03 — Controls</p>
+		<h2>One yellow commit. The rest is structure.</h2>
+		<p class="intro">The product screen keeps a single Dispatch. The row below is a specimen, so the other states can sit together without becoming a second console.</p>
+		<div class="plate bench">
+			<div>
+				<p class="kicker">Actions</p>
+				<div class="btn-row">
+					<div class="hit"><button class="btn btn-go" type="button">Dispatch</button></div>
+					<div class="hit"><button class="btn btn-quiet" type="button">Hold</button></div>
+					<div class="hit"><button class="btn btn-danger" type="button">Discard</button></div>
+					<div class="hit"><button class="btn" type="button" disabled>Dispatch</button></div>
+				</div>
+			</div>
+			<div class="fields">
+				<label class="field"><span>Call</span><input type="text" value="Ready to dispatch."></label>
+				<label class="field">
+					<span>Path</span>
+					<input type="text" value="" placeholder="holds/" aria-invalid="true">
+					<span class="err">The path is empty. The hold was not written.</span>
+				</label>
+			</div>
+			<div>
+				<p class="kicker">Badges</p>
+				<div class="badge-row">
+					<span class="badge live">Live</span>
+					<span class="badge">Hold</span>
+					<span class="badge">Queue</span>
+					<span class="badge link">Local</span>
+					<span class="badge fault">Fault</span>
+				</div>
+			</div>
+			<div>
+				<p class="kicker">Fault</p>
+				<div class="alert" role="alert">
+					<div class="hazard" aria-hidden="true"></div>
+					<p><b>Fault</b>The draft path was missing. The hold is unchanged.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="block">
+		<p class="kicker">04 — Narrow</p>
+		<h2>The same console, held in one hand</h2>
+		<p class="intro">Telemetry leaves the side first. The queue becomes a count. The sweep stops. The commit stays a full-width cut.</p>
+		<div class="narrow">
+			<div class="handset">
+				<div class="plate ribbed phone">
+					<div class="status">
+						<p class="brand"><i class="diamond" aria-hidden="true"></i><span>Kite</span></p>
+						<time class="num quiet" datetime="04:12:08">04:12:08</time>
+					</div>
+					<h3>Mail triage</h3>
+					<div class="plate live lock">
+						<p class="ph-k"><span class="num">04:11:18</span><span class="who">Kite</span></p>
+						<p class="ph-msg">Send stays armed.</p>
+						<p class="ph-tools">files.read · mail.hold</p>
+					</div>
+					<p class="queue">Queue 03 · 18.4k · On device</p>
+					<div class="hit" style="margin-top:12px"><button class="btn btn-go" type="button">Dispatch</button></div>
+				</div>
+			</div>
+			<ul class="rules">
+				<li><b>Telemetry drops first</b>Below 1040px the readout leaves the side and sits under the trace. The queue stays above the log.</li>
+				<li><b>Then the queue collapses</b>On the handset the other threads become one count. The active trace stays.</li>
+				<li><b>Title 34 to 22</b>It stays mono and uppercase. The yellow tick stays. It does not grow a glow.</li>
+				<li><b>Chamfer 14 to 8</b>Bracket arms step from 22px to 12px, and to 10px inside the handset. The cut still clears the type.</li>
+				<li><b>Sweep stops</b>The moving band is wide-only. Scanlines on the plate stay, and they do not scroll.</li>
+				<li><b>Reticle leaves</b>The rings are decoration. The figures remain: context, memory, and the fault channel.</li>
+				<li><b>Targets stay 48px</b>Dispatch, Hold, the field, and each thread row. Badges stay labels.</li>
+				<li><b>Hover leaves</b>A fine pointer may wash a row. Press shifts the commit 1px. The focus ring stays, drawn outside the cut.</li>
+				<li><b>Inset 32 to 16</b>The grid remains in the margin. Nothing scrolls sideways.</li>
+			</ul>
+		</div>
+	</section>
+
+	<section class="block">
+		<p class="kicker">05 — Off-style</p>
+		<h2>A sunset and a title bar are other machines</h2>
+		<p class="intro">The left plate borrows a beveled desktop bar, a dusk gradient, an italic glow, and a pill. The right plate is this system.</p>
+		<div class="compare">
+			<figure>
+				<div class="cmp-off">
+					<div class="winbar"><i></i><i></i><i></i>kite.exe</div>
+					<div class="sunset">
+						<p class="glowword">Jack in</p>
+						<p>The night is a gradient and the action is a pill.</p>
+						<button class="wrongpill" type="button">Connect</button>
+						<div class="bubble">hey~</div>
+					</div>
+				</div>
+				<figcaption class="note">Off. Beveled chrome, a sunset fill, italic glow, a pill, a chat bubble.</figcaption>
+			</figure>
+			<figure>
+				<div class="plate cmp-on">
+					<p class="brand"><i class="diamond" aria-hidden="true"></i><span>Kite</span><span class="quiet">Local</span></p>
+					<h3>Mail triage</h3>
+					<p class="lede">One cut plate. Cyan brackets. A flat yellow commit.</p>
+					<div class="hit"><button class="btn btn-go" type="button">Dispatch</button></div>
+				</div>
+				<figcaption class="note">On. Clipped plate, brackets, mono title, one acid signal.</figcaption>
+			</figure>
+		</div>
+	</section>
+
+	<footer>
+		<p>Kite is the worked example. Brackets, scanlines, and the three signals are the system.</p>
+	</footer>
+</main>
+</body>
+</html>
