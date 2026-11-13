@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Folio — Bento Grid</title>
+<style>
+	/* Mirrors theme.css. Plain custom properties so this file opens standalone. */
+	:root {
+		--color-primary: #1c1d21;
+		--color-primary-foreground: #fbfaf6;
+		--color-surface: #ddd9cf;
+		--color-surface-foreground: #1c1d21;
+		--color-surface-raised: #fbfaf6;
+		--color-muted: #5e5c56;
+		--color-accent: #1e4ec8;
+		--color-danger: #9d1c2c;
+		--color-border: #6e6b64;
+		--color-primary-hover: #2c2e34;
+		--color-seam: #d5d1c7;
+		--color-danger-foreground: #ffffff;
+		--color-danger-wash: #f8e4e6;
+		--color-accent-wash: #e7ecfb;
+		--color-accent-on-ink: #c9d4ff;
+		--color-tile-ink: #17181c;
+		--color-tile-ink-foreground: #f6f4ee;
+		--color-tile-ink-muted: #c4c0b6;
+		--color-tile-ink-raised: #24262c;
+		--glow-ink: radial-gradient(80% 70% at 100% 0%, rgb(30 78 200 / 0.22), transparent 58%);
+		--radius-sm: 10px;
+		--radius-md: 14px;
+		--radius-lg: 20px;
+		--radius-xl: 28px;
+		--radius-2xl: 36px;
+		--radius-full: 9999px;
+		--shadow-sm: 0 1px 2px rgb(28 29 33 / 0.05), 0 12px 28px rgb(28 29 33 / 0.08);
+		--shadow-md: 0 2px 6px rgb(28 29 33 / 0.06), 0 18px 40px rgb(28 29 33 / 0.12);
+		--shadow-lg: 0 24px 56px rgb(28 29 33 / 0.16);
+		--shadow-ink: 0 14px 34px rgb(23 24 28 / 0.28);
+		--shadow-focus: 0 0 0 3px #ddd9cf, 0 0 0 6px #1e4ec8;
+		--gap-bento: 16px;
+		--gap-bento-tight: 10px;
+		--ease-tile: cubic-bezier(0.22, 1, 0.36, 1);
+		--duration-tile: 220ms;
+		--duration-pulse: 2.8s;
+		--font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "Helvetica Neue", "Noto Sans", "Liberation Sans", sans-serif;
+		--font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", "Helvetica Neue", "Noto Sans", sans-serif;
+	}
+
+	*, *::before, *::after { box-sizing: border-box; }
+	html { background: var(--color-surface); }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--font-sans);
+		font-size: 16px;
+		line-height: 1.5;
+		-webkit-font-smoothing: antialiased;
+	}
+	h1, h2, h3, p, ul, ol, dl, figure { margin: 0; }
+	button, input { font: inherit; color: inherit; }
+	button { cursor: pointer; }
+	:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+	::selection { background: rgb(30 78 200 / 0.18); }
+	.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+	.quiet { color: var(--color-muted); }
+
+	.bar {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		min-height: 72px;
+		padding: 12px 0;
+	}
+	.brand {
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		color: inherit;
+		text-decoration: none;
+		min-width: 0;
+	}
+	.brand-name {
+		font-family: var(--font-display);
+		font-size: 18px;
+		font-weight: 600;
+		letter-spacing: -0.03em;
+	}
+	.mark {
+		width: 18px;
+		height: 18px;
+		display: grid;
+		grid-template-columns: 1.35fr 1fr;
+		grid-template-rows: 1fr 1fr;
+		gap: 2px;
+		flex: none;
+	}
+	.mark i { display: block; background: var(--color-surface-foreground); border-radius: 3px; }
+	.mark i:first-child { grid-row: span 2; background: var(--color-accent); }
+
+	.cell {
+		background: var(--color-surface-raised);
+		color: var(--color-surface-foreground);
+		border-radius: var(--radius-xl);
+		border: 1px solid rgb(28 29 33 / 0.06);
+		box-shadow: var(--shadow-sm), inset 0 1px 0 rgb(255 255 255 / 0.75);
+		padding: 22px;
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		min-height: 0;
+		transition: transform var(--duration-tile) var(--ease-tile), box-shadow var(--duration-tile) var(--ease-tile);
+	}
+	.cell-ink {
+		background: var(--color-tile-ink);
+		color: var(--color-tile-ink-foreground);
+		border-color: rgb(255 255 255 / 0.06);
+		box-shadow: var(--shadow-ink), inset 0 1px 0 rgb(255 255 255 / 0.08);
+	}
+	.cell-ink .quiet, .cell-ink .kicker, .cell-ink .field { color: var(--color-tile-ink-muted); }
+	.cell-agent { position: relative; overflow: hidden; }
+	.cell-agent::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: var(--glow-ink);
+		pointer-events: none;
+	}
+	.cell-agent > * { position: relative; }
+
+	.kicker {
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.tile-title {
+		font-family: var(--font-display);
+		font-size: 30px;
+		font-weight: 600;
+		letter-spacing: -0.035em;
+		line-height: 1.08;
+		margin-top: 10px;
+	}
+	.lead { margin-top: 10px; font-size: 15px; line-height: 1.45; max-width: 36ch; }
+	.foot-meta { margin-top: auto; padding-top: 16px; font-size: 13px; }
+
+	.desk {
+		display: grid;
+		grid-template-columns: repeat(6, minmax(0, 1fr));
+		gap: var(--gap-bento);
+		padding-bottom: 8px;
+	}
+	.desk .cell-agent { grid-column: 1 / span 4; grid-row: 1 / span 2; }
+	.desk .cell-brief { grid-column: 5 / span 2; grid-row: 1 / span 2; }
+	.desk .cell-files { grid-column: 1 / span 2; grid-row: 3; }
+	.desk .cell-machine { grid-column: 3 / span 2; grid-row: 3; }
+	.desk .cell-count { grid-column: 5 / span 2; grid-row: 3; }
+	.desk .cell-jobs { grid-column: 1 / span 4; grid-row: 4; }
+	.desk .cell-memory { grid-column: 5 / span 2; grid-row: 4; }
+
+	.who {
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--color-accent-on-ink);
+		margin: 12px 0 4px;
+	}
+	.who-dim { color: var(--color-tile-ink-muted); }
+	.said { font-size: 15px; line-height: 1.45; margin: 0; max-width: 52ch; }
+	.composer { margin-top: auto; padding-top: 18px; }
+	.composer .field { margin-bottom: 6px; }
+	.composer-row { display: flex; gap: 8px; align-items: center; }
+	.field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; }
+	.field input, .composer-row input {
+		font-weight: 450;
+		font-size: 16px;
+		min-height: 44px;
+		min-width: 0;
+		width: 100%;
+		padding: 0 14px;
+		border-radius: var(--radius-md);
+		border: 1px solid var(--color-border);
+		background: var(--color-surface-raised);
+		color: var(--color-surface-foreground);
+	}
+	.composer-row input { flex: 1; }
+	.cell-ink .field input, .cell-ink .composer-row input {
+		background: var(--color-tile-ink-raised);
+		color: var(--color-tile-ink-foreground);
+		border-color: rgb(246 244 238 / 0.28);
+	}
+	.cell-ink :focus-visible { outline-color: var(--color-accent-on-ink); }
+	.field.is-error input { border-color: var(--color-danger); }
+	.err {
+		font-weight: 500;
+		font-size: 13px;
+		color: var(--color-danger);
+		background: var(--color-danger-wash);
+		border-radius: var(--radius-sm);
+		padding: 8px 10px;
+	}
+
+	.pill {
+		min-height: 44px;
+		padding: 0 18px;
+		border-radius: var(--radius-full);
+		border: 1px solid transparent;
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+		font-size: 14px;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		flex: none;
+	}
+	.pill:active { transform: scale(0.985); }
+	.pill-quiet {
+		background: transparent;
+		color: var(--color-surface-foreground);
+		border-color: var(--color-border);
+	}
+	.pill-danger { background: var(--color-danger); color: var(--color-danger-foreground); }
+	.pill:disabled { opacity: 0.42; cursor: not-allowed; }
+	.cell-ink .pill { background: var(--color-tile-ink-foreground); color: var(--color-tile-ink); }
+	.cell-ink .pill-quiet {
+		background: transparent;
+		color: var(--color-tile-ink-foreground);
+		border-color: var(--color-tile-ink-muted);
+	}
+	.cell-ink .pill-danger { background: var(--color-danger); color: var(--color-danger-foreground); }
+	.bar .pill { margin-left: auto; }
+	.textlink {
+		align-self: flex-start;
+		margin-top: 12px;
+		min-height: 44px;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: var(--color-accent);
+		font-weight: 600;
+		font-size: 14px;
+	}
+
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		min-height: 28px;
+		padding: 0 10px;
+		border-radius: var(--radius-full);
+		background: var(--color-surface-raised);
+		border: 1px solid rgb(28 29 33 / 0.08);
+		box-shadow: var(--shadow-sm);
+		font-size: 12px;
+		font-weight: 600;
+		white-space: nowrap;
+		flex: none;
+	}
+	.badge-live { background: var(--color-accent-wash); color: var(--color-accent); border-color: transparent; box-shadow: none; }
+	.badge-quiet { background: var(--color-surface); color: var(--color-muted); box-shadow: none; }
+	.badge-done { background: var(--color-surface); color: var(--color-surface-foreground); box-shadow: none; }
+	.cell-ink .badge { background: var(--color-tile-ink-raised); color: var(--color-tile-ink-foreground); border-color: transparent; box-shadow: none; }
+	.cell-ink .badge-live { background: rgb(201 212 255 / 0.16); color: var(--color-accent-on-ink); }
+	.headrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+
+	.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-seam); flex: none; }
+	.dot-live { background: var(--color-accent); animation: pulse var(--duration-pulse) var(--ease-tile) infinite; }
+	.dot-done { background: var(--color-surface-foreground); }
+	.cell-ink .dot-live { background: var(--color-accent-on-ink); }
+	@keyframes pulse { 50% { opacity: 0.45; } }
+
+	.files, .specs, .jobs { list-style: none; margin: 14px 0 0; padding: 0; }
+	.file, .spec {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 12px;
+		min-height: 40px;
+		border-bottom: 1px solid var(--color-seam);
+		font-size: 14px;
+	}
+	.file:last-child, .spec:last-child { border-bottom: 0; }
+	.file b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+	.cell-ink .spec { border-bottom-color: rgb(246 244 238 / 0.14); }
+	.figure {
+		font-family: var(--font-display);
+		font-size: 56px;
+		font-weight: 600;
+		letter-spacing: -0.05em;
+		line-height: 0.9;
+		font-variant-numeric: tabular-nums;
+		margin: 12px 0 6px;
+	}
+	.bars { display: flex; align-items: flex-end; gap: 7px; height: 44px; margin-top: auto; padding-top: 18px; }
+	.bars i { display: block; width: 10px; height: 12px; border-radius: var(--radius-full); background: rgb(28 29 33 / 0.18); }
+	.bars .b1 { height: 14px; } .bars .b2 { height: 22px; } .bars .b3 { height: 16px; }
+	.bars .b4 { height: 28px; } .bars .b5 { height: 24px; } .bars .b6 { height: 34px; }
+	.bars .b7 { height: 44px; background: var(--color-accent); }
+	.job {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		width: 100%;
+		min-height: 44px;
+		padding: 6px 2px;
+		background: transparent;
+		border: 0;
+		border-bottom: 1px solid var(--color-seam);
+		text-align: left;
+		color: inherit;
+	}
+	.job:last-child { border-bottom: 0; }
+	.job-name { min-width: 0; flex: 1; font-weight: 600; }
+	.jobs { margin-top: 8px; }
+
+	.band { margin-top: 56px; }
+	.feature-bento {
+		display: grid;
+		grid-template-columns: 1.35fr 1fr 0.85fr;
+		gap: var(--gap-bento);
+		margin-top: 22px;
+	}
+	.feature-bento .tile-title { font-size: 26px; }
+
+	.section { margin-top: 72px; }
+	.sec-kicker { color: var(--color-accent); font-size: 13px; font-weight: 600; letter-spacing: 0.01em; margin-bottom: 8px; }
+	.section h2, .band h2 {
+		font-family: var(--font-display);
+		font-size: 40px;
+		font-weight: 600;
+		letter-spacing: -0.035em;
+		line-height: 1.08;
+	}
+	.intro { margin-top: 12px; max-width: 62ch; color: var(--color-muted); font-size: 17px; }
+
+	.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 12px; margin-top: 22px; list-style: none; padding: 0; }
+	.swatches li { min-width: 0; }
+	.swatches i { display: block; height: 64px; border-radius: var(--radius-lg); border: 1px solid rgb(28 29 33 / 0.14); }
+	.swatches i.swatch-ink { background: var(--color-tile-ink); display: grid; place-items: center; }
+	.swatches i.swatch-ink em { width: 62%; height: 22px; border-radius: var(--radius-full); background: var(--color-accent-on-ink); display: block; }
+	.swatches b { display: block; margin-top: 8px; font-size: 14px; }
+	.swatches span { display: block; color: var(--color-muted); font-size: 13px; }
+
+	.split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: var(--gap-bento); margin-top: 22px; align-items: stretch; }
+	.diagram { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--gap-bento-tight); }
+	.d-agent { grid-column: span 4; grid-row: span 2; min-height: 148px; }
+	.d-brief { grid-column: span 2; grid-row: span 2; }
+	.d-bit { grid-column: span 2; min-height: 88px; }
+	.diagram b { font-family: var(--font-display); font-size: 22px; letter-spacing: -0.03em; }
+	.diagram span { color: var(--color-muted); font-size: 14px; margin-top: 6px; }
+	.cell-ink.wide span { color: var(--color-tile-ink-muted); }
+	.tokens { display: grid; align-content: start; margin: 0; }
+	.tokens div { display: flex; justify-content: space-between; gap: 16px; min-height: 48px; align-items: center; border-bottom: 1px solid rgb(28 29 33 / 0.1); }
+	.tokens dt { font-weight: 600; }
+	.tokens dd { margin: 0; color: var(--color-muted); text-align: right; }
+
+	.studio { gap: 16px; }
+	.actions, .chip-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+	.chip {
+		min-height: 44px;
+		padding: 0 14px;
+		border-radius: var(--radius-full);
+		border: 1px solid var(--color-border);
+		background: var(--color-surface-raised);
+		font-size: 14px;
+		font-weight: 600;
+	}
+	.chip.is-chosen { background: var(--color-accent-wash); border-color: var(--color-accent); color: var(--color-accent); }
+	.chip-note { font-weight: 500; margin-left: 6px; }
+	.fields { display: grid; gap: 14px; }
+
+	.phone-wrap { display: grid; grid-template-columns: minmax(0, 390px) minmax(0, 1fr); gap: 28px; margin-top: 22px; align-items: start; }
+	.device {
+		width: 100%;
+		max-width: 390px;
+		background: var(--color-tile-ink);
+		border-radius: 40px;
+		padding: 12px;
+		box-shadow: var(--shadow-lg);
+	}
+	.device-bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		color: var(--color-tile-ink-foreground);
+		padding: 6px 10px 10px;
+		font-size: 13px;
+		font-weight: 600;
+	}
+	.device-screen {
+		background: var(--color-surface);
+		border-radius: 28px;
+		padding: 12px;
+		display: grid;
+		gap: 10px;
+	}
+	.device .cell { border-radius: 20px; padding: 14px; }
+	.device .tile-title { font-size: 22px; }
+	.device .figure { font-size: 36px; }
+	.device .said { font-size: 14px; }
+	.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+	.rules { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+	.rules li { padding-top: 14px; border-top: 1px solid rgb(28 29 33 / 0.1); font-size: 15px; }
+	.rules b { display: block; font-size: 15px; margin-bottom: 2px; }
+
+	.cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 22px; }
+	.cmp-fig { margin: 0; min-width: 0; }
+	.cmp-fig figcaption {
+		font-size: 12px;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+		margin-bottom: 8px;
+	}
+	.cmp-off, .cmp-on { border-radius: var(--radius-xl); padding: 14px; min-height: 280px; }
+	.cmp-off { background: linear-gradient(120deg, #ff8bd2, #ffe56a 42%, #7af0ff); overflow: hidden; }
+	.cmp-on { background: var(--color-surface); border: 1px solid rgb(28 29 33 / 0.08); }
+	.bad-title {
+		font-size: 22px;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		background: linear-gradient(90deg, #ff2d95, #7c4dff 50%, #00e5ff);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+		margin-bottom: 10px;
+	}
+	.bad-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+	.bad-card {
+		background: #fff;
+		border-radius: 4px;
+		border: 3px solid #ff2d95;
+		box-shadow: 5px 5px 0 #111;
+		padding: 8px;
+		min-height: 132px;
+	}
+	.bad-card:nth-child(2) { border-color: #00e5ff; }
+	.bad-card:nth-child(3) { border-color: #c6ff00; }
+	.bad-card b { display: block; font-size: 13px; }
+	.bad-tiny { display: block; margin-top: 4px; font-size: 10px; line-height: 1.3; color: #9a9a9a; }
+	.bad-nest {
+		margin-top: 8px;
+		background: rgb(255 255 255 / 0.45);
+		border: 1px solid #fff;
+		border-radius: 4px;
+		padding: 6px;
+		font-size: 10px;
+		color: #333;
+	}
+	.mini {
+		display: grid;
+		grid-template-columns: 1.4fr 1fr;
+		grid-template-rows: 1fr 1fr;
+		gap: var(--gap-bento-tight);
+		min-height: 252px;
+	}
+	.mini-agent { grid-column: 1; grid-row: 1 / span 2; }
+	.mini-stat { grid-column: 2; grid-row: 1; }
+	.mini-file { grid-column: 2; grid-row: 2; }
+	.mini .tile-title { font-size: 22px; margin-top: 8px; }
+	.mini .figure { font-size: 40px; margin: 4px 0 0; }
+	.colophon { margin: 56px 0 32px; font-size: 13px; color: var(--color-muted); }
+
+	@media (hover: hover) and (pointer: fine) {
+		.cell:hover { transform: translateY(-2px); box-shadow: var(--shadow-md), inset 0 1px 0 rgb(255 255 255 / 0.8); }
+		.cell-ink:hover { box-shadow: var(--shadow-lg), inset 0 1px 0 rgb(255 255 255 / 0.12); }
+		.pill:hover { background: var(--color-primary-hover); }
+		.pill-quiet:hover { background: rgb(28 29 33 / 0.04); }
+		.cell-ink .pill:hover { background: var(--color-tile-ink-foreground); }
+		.cell-ink .pill-quiet:hover { background: rgb(246 244 238 / 0.08); }
+		.pill-danger:hover, .cell-ink .pill-danger:hover { background: var(--color-danger); }
+		.pill:disabled:hover, .pill:disabled:active { background: var(--color-primary); transform: none; }
+		.device .cell:hover { transform: none; }
+	}
+	@media (pointer: coarse) {
+		.cell:active { border-color: var(--color-border); }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.cell, .pill, .dot-live { animation: none; transition: none; }
+		.cell:hover, .pill:active { transform: none; }
+	}
+	@media (prefers-contrast: more) {
+		.cell { border-color: var(--color-surface-foreground); }
+		.cell-ink { border-color: var(--color-tile-ink-foreground); }
+		.pill-quiet { border-color: var(--color-surface-foreground); }
+	}
+
+	@media (max-width: 900px) {
+		.desk { grid-template-columns: 1fr 1fr; }
+		.desk .cell-agent { grid-column: 1 / -1; grid-row: 1; }
+		.desk .cell-brief { grid-column: 1 / -1; grid-row: 2; }
+		.desk .cell-files { grid-column: 1; grid-row: 3; }
+		.desk .cell-machine { grid-column: 2; grid-row: 3; }
+		.desk .cell-count { grid-column: 1; grid-row: 4; }
+		.desk .cell-memory { grid-column: 2; grid-row: 4; }
+		.desk .cell-jobs { grid-column: 1 / -1; grid-row: 5; }
+		.section h2, .band h2 { font-size: 32px; }
+		.split, .phone-wrap, .cmp { grid-template-columns: 1fr; }
+		.device { max-width: none; }
+	}
+	@media (max-width: 800px) {
+		.feature-bento { grid-template-columns: 1fr; }
+	}
+	@media (max-width: 700px) {
+		.diagram { grid-template-columns: 1fr 1fr; }
+		.d-agent, .d-brief { grid-column: 1 / -1; grid-row: auto; min-height: 108px; }
+		.d-bit { grid-column: auto; min-height: 88px; }
+	}
+	@media (max-width: 560px) {
+		.wrap { padding: 0 16px; }
+		.desk { grid-template-columns: 1fr; gap: var(--gap-bento-tight); }
+		.desk .cell-agent,
+		.desk .cell-brief,
+		.desk .cell-files,
+		.desk .cell-machine,
+		.desk .cell-count,
+		.desk .cell-jobs,
+		.desk .cell-memory { grid-column: 1; grid-row: auto; }
+		.desk .cell-agent { order: 1; }
+		.desk .cell-brief { order: 2; }
+		.desk .cell-files { order: 3; }
+		.desk .cell-machine { order: 4; }
+		.desk .cell-count { order: 5; }
+		.desk .cell-jobs { order: 6; }
+		.desk .cell-memory { order: 7; }
+		.cell { padding: 16px; border-radius: 22px; }
+		.tile-title { font-size: 26px; }
+		.figure { font-size: 44px; }
+		.section { margin-top: 48px; }
+		.band { margin-top: 36px; }
+		.bad-grid, .mini, .pair { grid-template-columns: 1fr; }
+		.mini-agent, .mini-stat, .mini-file { grid-column: auto; grid-row: auto; }
+		.diagram { grid-template-columns: 1fr; }
+		.d-agent, .d-brief, .d-bit { grid-column: auto; grid-row: auto; }
+	}
+</style>
+</head>
+<body>
+	<header>
+		<div class="wrap bar">
+			<a class="brand" href="#desk">
+				<span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>
+				<h1 class="brand-name">Folio</h1>
+			</a>
+			<span class="badge"><i class="dot dot-live" aria-hidden="true"></i>Local</span>
+			<button class="pill" type="button">New job</button>
+		</div>
+	</header>
+
+	<main class="wrap">
+		<section class="desk" id="desk" aria-label="Folio desk">
+			<article class="cell cell-ink cell-agent">
+				<div class="headrow">
+					<p class="kicker">Agent</p>
+					<span class="badge badge-live"><i class="dot dot-live" aria-hidden="true"></i>Running</span>
+				</div>
+				<p class="who who-dim">You</p>
+				<p class="said">Sort the field notes by place.</p>
+				<p class="who">Folio</p>
+				<p class="said">Twelve notes are on this machine. Valley, ridge, and shore. The wording stays as it was written.</p>
+				<div class="composer">
+					<label class="field" for="folio-msg">Message</label>
+					<div class="composer-row">
+						<input id="folio-msg" value="File the rest by place.">
+						<button class="pill" type="button">Send</button>
+					</div>
+				</div>
+			</article>
+
+			<article class="cell cell-brief">
+				<p class="kicker">Brief</p>
+				<h2 class="tile-title">Field notes, by place</h2>
+				<p class="lead">Keep the original wording. File each note under the place named in its first line.</p>
+				<div class="foot-meta">
+					<div class="actions">
+						<span class="badge">Local only</span>
+						<span class="badge badge-quiet">12 notes</span>
+					</div>
+					<button class="textlink" type="button">See the index</button>
+				</div>
+			</article>
+
+			<article class="cell cell-files">
+				<p class="kicker">On disk</p>
+				<ul class="files">
+					<li class="file"><b>ridge-notes.md</b><span class="quiet">18 KB</span></li>
+					<li class="file"><b>shore-log.md</b><span class="quiet">9 KB</span></li>
+					<li class="file"><b>valley.txt</b><span class="quiet">4 KB</span></li>
+				</ul>
+			</article>
+
+			<article class="cell cell-ink cell-machine">
+				<p class="kicker">This machine</p>
+				<ul class="specs">
+					<li class="spec"><span class="quiet">Model</span><b>On device</b></li>
+					<li class="spec"><span class="quiet">Network</span><b>Not used</b></li>
+					<li class="spec"><span class="quiet">Vault</span><b>~/folio</b></li>
+				</ul>
+			</article>
+
+			<article class="cell cell-count">
+				<p class="kicker">Today</p>
+				<p class="figure">12</p>
+				<p class="quiet">notes filed by place</p>
+				<div class="bars" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i><i class="b5"></i><i class="b6"></i><i class="b7"></i></div>
+			</article>
+
+			<article class="cell cell-jobs">
+				<p class="kicker">Queue</p>
+				<div class="jobs">
+					<button class="job" type="button"><i class="dot dot-live" aria-hidden="true"></i><span class="job-name">Group by place</span><span class="badge badge-live">Running</span></button>
+					<button class="job" type="button"><i class="dot" aria-hidden="true"></i><span class="job-name">Keep the wording</span><span class="badge badge-quiet">Queued</span></button>
+					<button class="job" type="button"><i class="dot dot-done" aria-hidden="true"></i><span class="job-name">Write the index</span><span class="badge badge-done">Done</span></button>
+				</div>
+			</article>
+
+			<article class="cell cell-ink cell-memory">
+				<p class="kicker">Memory</p>
+				<p class="lead">Only places the notes already name. The agent does not invent a valley.</p>
+				<p class="foot-meta quiet">~/folio/vault</p>
+			</article>
+		</section>
+
+		<section class="band" aria-labelledby="feat-title">
+			<p class="sec-kicker">Features</p>
+			<h2 id="feat-title">Three promises, still one grid</h2>
+			<p class="intro">The same gutter, the same two fills. Each promise is a tile, and the spans still add up to the desk.</p>
+			<div class="feature-bento">
+				<article class="cell">
+					<p class="kicker">Local-first</p>
+					<h3 class="tile-title">The vault is a folder.</h3>
+					<p class="lead">The thread, the notes, and the index are files. Closing the desk leaves them where they are.</p>
+				</article>
+				<article class="cell cell-ink">
+					<p class="kicker">One job</p>
+					<h3 class="tile-title">A tile does not share.</h3>
+					<p class="lead">The running agent has the large ink cell. The file list does not move in with it.</p>
+				</article>
+				<article class="cell">
+					<p class="kicker">Depth</p>
+					<h3 class="tile-title">A shadow, not a slab.</h3>
+					<p class="lead">Porcelain sits on warm stone. Ink marks the work that is happening now.</p>
+				</article>
+			</div>
+		</section>
+
+		<section class="section" aria-labelledby="s-color">
+			<p class="sec-kicker">01 — Color roles</p>
+			<h2 id="s-color">Stone, porcelain, ink, one iris</h2>
+			<p class="intro">The canvas is warm stone. Tiles are porcelain or ink. Iris is a signal — a live dot, a link, a focus ring — and never a third tile. The commit pill is ink, the same ink as the type.</p>
+			<ul class="swatches">
+				<li><i style="background:var(--color-surface)"></i><b>surface</b><span>Warm stone</span></li>
+				<li><i style="background:var(--color-surface-raised)"></i><b>porcelain</b><span>Light tile</span></li>
+				<li><i style="background:var(--color-surface-foreground)"></i><b>ink</b><span>Type and commit</span></li>
+				<li><i style="background:var(--color-tile-ink)"></i><b>tile-ink</b><span>Dark tile</span></li>
+				<li><i style="background:var(--color-tile-ink-foreground)"></i><b>on ink</b><span>Type on a dark tile</span></li>
+				<li><i style="background:var(--color-muted)"></i><b>muted</b><span>Secondary, on stone</span></li>
+				<li><i style="background:var(--color-accent)"></i><b>accent</b><span>Iris signal</span></li>
+				<li><i class="swatch-ink" aria-hidden="true"><em></em></i><b>on-ink iris</b><span>Signal on a dark tile</span></li>
+				<li><i style="background:var(--color-danger)"></i><b>danger</b><span>Errors only</span></li>
+			</ul>
+		</section>
+
+		<section class="section" aria-labelledby="s-shape">
+			<p class="sec-kicker">02 — Shape and depth</p>
+			<h2 id="s-shape">One gutter, unequal spans</h2>
+			<p class="intro">Six columns, a 16px gutter, a 28px radius. The large cell is the job in progress. Smaller cells are one fact each. The shadow is soft and warm. The corner of the agent tile carries a single iris light; the type still sits on solid ink.</p>
+			<div class="split">
+				<div class="diagram">
+					<div class="cell cell-ink d-agent"><b>4 × 2</b><span>Agent. One job.</span></div>
+					<div class="cell d-brief"><b>2 × 2</b><span>Brief. One job.</span></div>
+					<div class="cell d-bit"><b>2 × 1</b><span>Files.</span></div>
+					<div class="cell d-bit"><b>2 × 1</b><span>Machine.</span></div>
+					<div class="cell d-bit"><b>2 × 1</b><span>A count.</span></div>
+				</div>
+				<dl class="tokens">
+					<div><dt>Columns</dt><dd>6, then 2, then 1</dd></div>
+					<div><dt>Gutter</dt><dd>16px · 10px narrow</dd></div>
+					<div><dt>Tile radius</dt><dd>28px · 22px narrow</dd></div>
+					<div><dt>Padding</dt><dd>22px · 16px narrow</dd></div>
+					<div><dt>Shadow</dt><dd>Soft, warm, low</dd></div>
+					<div><dt>Ink light</dt><dd>One corner, hero only</dd></div>
+					<div><dt>Commit</dt><dd>One pill per tile</dd></div>
+					<div><dt>Target</dt><dd>44px, the whole row</dd></div>
+				</dl>
+			</div>
+		</section>
+
+		<section class="section" aria-labelledby="s-controls">
+			<p class="sec-kicker">03 — Controls</p>
+			<h2 id="s-controls">Pills, fields, badges</h2>
+			<p class="intro">On porcelain the commit is an ink pill. On an ink tile that pill inverts, so it stays visible. Quiet actions keep a real edge. A chosen chip says so in words. An error keeps its sentence.</p>
+			<div class="split">
+				<div class="cell studio">
+					<p class="kicker">On porcelain</p>
+					<div class="actions">
+						<button class="pill" type="button">File notes</button>
+						<button class="pill pill-quiet" type="button">Later</button>
+						<button class="pill" type="button" disabled>Holding</button>
+						<button class="pill pill-danger" type="button">Remove</button>
+					</div>
+					<div class="chip-row">
+						<button class="chip is-chosen" type="button" aria-pressed="true">By place <span class="chip-note">Chosen</span></button>
+						<button class="chip" type="button" aria-pressed="false">By date</button>
+						<span class="badge badge-live">Running</span>
+						<span class="badge badge-quiet">Queued</span>
+						<span class="badge badge-done">Done</span>
+					</div>
+					<div class="fields">
+						<label class="field">Index name
+							<input value="Places">
+						</label>
+						<label class="field is-error">Vault path
+							<input value="folio/vault" aria-invalid="true">
+							<span class="err">Add the home prefix. The vault lives at ~/folio/vault.</span>
+						</label>
+					</div>
+				</div>
+				<div class="cell cell-ink studio">
+					<p class="kicker">On ink</p>
+					<div class="actions">
+						<button class="pill" type="button">Send</button>
+						<button class="pill pill-quiet" type="button">Pause</button>
+						<button class="pill pill-danger" type="button">Stop</button>
+					</div>
+					<div class="chip-row">
+						<span class="badge badge-live"><i class="dot dot-live" aria-hidden="true"></i>Running</span>
+						<span class="badge">On device</span>
+					</div>
+					<label class="field">Message
+						<input value="Keep the original wording.">
+					</label>
+					<p class="quiet">Muted lines on ink use the light gray, never the stone gray. The iris here is the pale one.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="section" aria-labelledby="s-phone">
+			<p class="sec-kicker">04 — The narrow desk</p>
+			<h2 id="s-phone">Same tiles, one column</h2>
+			<p class="intro">The frame is the desk at a phone width. Ink stays ink. The agent shortens, the figure steps down, and the row is still the target.</p>
+			<div class="phone-wrap">
+				<div class="device" aria-label="Folio at a narrow width">
+					<div class="device-bar"><span>Folio</span><span>Local</span></div>
+					<div class="device-screen">
+						<article class="cell cell-ink">
+							<div class="headrow">
+								<p class="kicker">Agent</p>
+								<span class="badge badge-live">Running</span>
+							</div>
+							<p class="who">Folio</p>
+							<p class="said">Twelve notes. Valley, ridge, and shore.</p>
+							<div class="composer">
+								<label class="field" for="folio-narrow">Message</label>
+								<div class="composer-row">
+									<input id="folio-narrow" value="File the rest.">
+									<button class="pill" type="button">Send</button>
+								</div>
+							</div>
+						</article>
+						<article class="cell">
+							<p class="kicker">Brief</p>
+							<h3 class="tile-title">Field notes, by place</h3>
+							<p class="lead">Original wording. Filed by the first line.</p>
+						</article>
+						<article class="cell">
+							<p class="kicker">Today</p>
+							<p class="figure">12</p>
+							<p class="quiet">notes filed by place</p>
+						</article>
+						<article class="cell cell-ink">
+							<p class="kicker">Machine</p>
+							<p class="lead">On device. Network not used.</p>
+						</article>
+						<article class="cell">
+							<button class="job" type="button"><i class="dot dot-live" aria-hidden="true"></i><span class="job-name">Group by place</span><span class="badge badge-live">Running</span></button>
+						</article>
+					</div>
+				</div>
+				<ol class="rules">
+					<li><b>At 900px the six columns become two.</b> The agent, the brief, and the queue span both. Files sit beside the machine. The count sits beside memory. The agent gives up its double height.</li>
+					<li><b>At 560px the desk is one column.</b> Order: agent, brief, files, machine, count, queue, memory. The gutter goes from 16px to 10px. Nothing scrolls sideways.</li>
+					<li><b>Radius eases from 28px to 22px.</b> Padding goes from 22px to 16px, so the corner does not eat the sentence. The page inset goes from 24px to 16px.</li>
+					<li><b>Type steps down, it does not vanish.</b> The figure goes from 56px to 44px. The brief title goes from 30px to 26px. Body stays 16px. Eyebrows stay 12px.</li>
+					<li><b>Targets stay 44px.</b> Send, New job, chips, fields, and every job row. The whole row is the control. Badges that are only status may be shorter, and they still use words.</li>
+					<li><b>Hover is a fine-pointer courtesy.</b> A precise pointer lifts a tile 2px and deepens the shadow. A coarse pointer does not lift; a pressed pill or row darkens its edge. Inside this frame, tiles do not lift.</li>
+					<li><b>Ink does not invert on a small screen.</b> The agent and the machine stay dark. Reduced motion stops the lift, the press scale, and the live pulse. Color still changes.</li>
+				</ol>
+			</div>
+		</section>
+
+		<section class="section" aria-labelledby="s-cmp">
+			<p class="sec-kicker">05 — Off-style</p>
+			<h2 id="s-cmp">Where the mosaic breaks</h2>
+			<p class="intro">The left breaks the desk on purpose: equal cells, a candy field, a hard shadow, two jobs in one cell, type too small to read. The right is the same news as three tiles with one job each.</p>
+			<div class="cmp">
+				<figure class="cmp-fig">
+					<figcaption>Off-style</figcaption>
+					<div class="cmp-off">
+						<p class="bad-title">All the features</p>
+						<div class="bad-grid">
+							<div class="bad-card">
+								<b>Chat + files</b>
+								<span class="bad-tiny">Twelve notes, a chart, and the thread, stacked in one box.</span>
+								<div class="bad-nest">A blurred card inside the card.</div>
+							</div>
+							<div class="bad-card">
+								<b>Stats</b>
+								<span class="bad-tiny">Same width as the others. The number is an afterthought.</span>
+							</div>
+							<div class="bad-card">
+								<b>More</b>
+								<span class="bad-tiny">A third hue, a hard offset, a 4px corner.</span>
+							</div>
+						</div>
+					</div>
+				</figure>
+				<figure class="cmp-fig">
+					<figcaption>On-style</figcaption>
+					<div class="cmp-on">
+						<div class="mini">
+							<article class="cell cell-ink mini-agent">
+								<p class="kicker">Agent</p>
+								<h3 class="tile-title">Sorting by place</h3>
+								<p class="lead">Twelve notes. Nothing leaves the disk.</p>
+							</article>
+							<article class="cell mini-stat">
+								<p class="kicker">Today</p>
+								<p class="figure">12</p>
+							</article>
+							<article class="cell mini-file">
+								<p class="kicker">On disk</p>
+								<p class="lead">ridge-notes.md</p>
+							</article>
+						</div>
+					</div>
+				</figure>
+			</div>
+		</section>
+
+		<p class="colophon">Bento Grid · Folio is the reference desk for this system.</p>
+	</main>
+</body>
+</html>

@@ -1,0 +1,52 @@
+/* Bento Grid — unequal rounded tiles on a warm stone canvas.
+   Porcelain beside ink. One job per tile. A soft shadow, not clay, not glass.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #1c1d21;
+	--color-primary-foreground: #fbfaf6;
+	--color-surface: #ddd9cf;
+	--color-surface-foreground: #1c1d21;
+	--color-surface-raised: #fbfaf6;
+	--color-muted: #5e5c56;
+	--color-accent: #1e4ec8;
+	--color-danger: #9d1c2c;
+	--color-border: #6e6b64;
+
+	--color-primary-hover: #2c2e34;
+	--color-seam: #d5d1c7;
+	--color-danger-foreground: #ffffff;
+	--color-danger-wash: #f8e4e6;
+	--color-accent-wash: #e7ecfb;
+	--color-accent-on-ink: #c9d4ff;
+
+	--color-tile-ink: #17181c;
+	--color-tile-ink-foreground: #f6f4ee;
+	--color-tile-ink-muted: #c4c0b6;
+	--color-tile-ink-raised: #24262c;
+
+	/* One corner light, only on the largest ink tile. Not a page background. */
+	--glow-ink: radial-gradient(80% 70% at 100% 0%, rgb(30 78 200 / 0.22), transparent 58%);
+
+	--radius-sm: 10px;
+	--radius-md: 14px;
+	--radius-lg: 20px;
+	--radius-xl: 28px;
+	--radius-2xl: 36px;
+	--radius-full: 9999px;
+
+	--shadow-sm: 0 1px 2px rgb(28 29 33 / 0.05), 0 12px 28px rgb(28 29 33 / 0.08);
+	--shadow-md: 0 2px 6px rgb(28 29 33 / 0.06), 0 18px 40px rgb(28 29 33 / 0.12);
+	--shadow-lg: 0 24px 56px rgb(28 29 33 / 0.16);
+	--shadow-ink: 0 14px 34px rgb(23 24 28 / 0.28);
+	--shadow-focus: 0 0 0 3px #ddd9cf, 0 0 0 6px #1e4ec8;
+
+	--gap-bento: 16px;
+	--gap-bento-tight: 10px;
+
+	--ease-tile: cubic-bezier(0.22, 1, 0.36, 1);
+	--duration-tile: 220ms;
+	--duration-pulse: 2.8s;
+
+	--font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "Helvetica Neue", "Noto Sans", "Liberation Sans", sans-serif;
+	--font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", "Helvetica Neue", "Noto Sans", sans-serif;
+}

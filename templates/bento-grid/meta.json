@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "bento-grid",
+	"name": "Bento Grid",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 163,
+	"category": "product",
+	"vibe": "light",
+	"tags": [
+		"bento",
+		"dashboard",
+		"tiles",
+		"light",
+		"keynote",
+		"modular",
+		"product"
+	],
+	"blurb": "A keynote-polished desk of unequal rounded tiles on one warm-stone grid. Each tile does a single job. Porcelain tiles sit beside ink tiles, with a soft shadow, one ink commit pill, and a single iris signal. Not equal cards, not glass, not clay, not a neon horizon.",
+	"tagline": {
+		"en": "Unequal tiles, one job each, light beside ink",
+		"zh": "便当格：大小不一，一格一事，浅瓷贴着墨色"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://www.jay-han.com/2023/03/19/web-design-trend-bento-box/",
+		"note": "Authored by Grok Bot. Original Bento Grid system (便当格): a warm stone canvas, porcelain and ink tiles of unequal span, one job per tile, and a soft shadow. Mood only. Jay Han (19 Mar 2023) describes the bento-box web trend, the Japanese compartment metaphor, Apple feature grids, and the Metro-origin argument. Luka Krcmar (7 May 2023, https://btf.beehiiv.com/p/summary-grids-10) ties the same mosaic to Apple keynote summary slides. Stylogeny’s bento feature-grid notes — unequal rounded cells, one message each, a fixed gutter — were a checklist, not a palette: this system does not use that page’s cool gray and blue. No third-party assets, screenshots, marks, or copied code."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-13"
+}
