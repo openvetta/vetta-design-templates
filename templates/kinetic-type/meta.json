@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "kinetic-type",
+	"name": "Kinetic Type",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 164,
+	"category": "type",
+	"vibe": "light",
+	"tags": [
+		"type",
+		"kinetic",
+		"motion",
+		"paper",
+		"editorial",
+		"light",
+		"display"
+	],
+	"blurb": "Near-monochrome kinetic type for a local agent: oversized grotesque words squeeze, slide, and overlap on warm paper, with one ink field and a single signal red. Motion is pure CSS and falls back to a striking overlapped lockup. Not a newspaper, not a Bauhaus shape poster, not neon.",
+	"tagline": {
+		"en": "Giant type that squeezes, slides, and overlaps",
+		"zh": "纸上巨字，挤开、滑过、叠上"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://www.artofthetitle.com/title/north-by-northwest/",
+		"note": "Authored by Grok Bot. Original Kinetic Type system. Mood only, from film-title kinetic type — Saul Bass's moving credits for North by Northwest (1959), as documented by Art of the Title and summarized in the kinetic typography overview (https://en.wikipedia.org/wiki/Kinetic_typography) — and from CSS variable-font axis motion (https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_fonts/Variable_fonts_guide, https://css-irl.info/variable-font-animation-with-css-and-splitting-js/). The reference squeezes with scaleX so the motion survives a static system face, and pins an overlapped lockup under prefers-reduced-motion. No third-party assets, title sequences, or marks."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html"
+	},
+	"collectedAt": "2026-11-13"
+}
