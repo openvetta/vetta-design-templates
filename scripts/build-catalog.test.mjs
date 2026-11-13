@@ -65,7 +65,9 @@ test("LF and CRLF checkouts produce identical catalogs and UTF-8 byte counts", t
 
 test("inline boundary is stable while binary downloads retain their original byte counts", t => {
 	const f = fixture(t);
-	f.files["limit.txt"] = "x\n".repeat(INLINE_LIMIT / 2);
+	// ASCII at the 256KB byte cap is past the client JS-string cap, so the inline
+	// side stops at 65536 characters. Bytes over 256KB still fall back to binary.
+	f.files["limit.txt"] = "字\n".repeat(32 * 1024);
 	f.files["large.txt"] = "x\n".repeat(INLINE_LIMIT / 2 + 1);
 	f.write("\r\n");
 	const imageBytes = Buffer.from([0x89, 0x50, 0x0d, 0x0a, 0xff, 0x00]);
@@ -74,7 +76,8 @@ test("inline boundary is stable while binary downloads retain their original byt
 	const resources = JSON.parse(f.catalogText()).templates[0].resources;
 	const limit = resources.find(r => r.path === "limit.txt");
 	assert.equal(limit.encoding, "text");
-	assert.equal(limit.bytes, INLINE_LIMIT);
+	assert.equal(limit.content.length, 64 * 1024);
+	assert.equal(limit.bytes, Buffer.byteLength(limit.content, "utf8"));
 	assert.equal(limit.content, f.files["limit.txt"]);
 	const large = resources.find(r => r.path === "large.txt");
 	assert.equal(large.encoding, "binary");
@@ -85,4 +88,31 @@ test("inline boundary is stable while binary downloads retain their original byt
 	assert.equal(image.bytes, imageBytes.length);
 	assert.deepEqual(readFileSync(join(f.entry, "sample.png")), imageBytes);
 	f.run("--check");
+});
+
+test("inlined text over the client JS string limit fails before it can be dropped", t => {
+	const f = fixture(t);
+	f.files["wide.txt"] = "字".repeat(60000);
+	f.files["edge.txt"] = "e".repeat(64 * 1024);
+	f.write("\n");
+	f.run();
+	const resources = JSON.parse(f.catalogText()).templates[0].resources;
+	const wide = resources.find(r => r.path === "wide.txt");
+	assert.equal(wide.encoding, "text");
+	assert.equal(wide.content.length, 60000);
+	assert.ok(wide.bytes > 64 * 1024, "UTF-8 bytes can pass 64KiB while the JS string stays under the client limit");
+	const edge = resources.find(r => r.path === "edge.txt");
+	assert.equal(edge.encoding, "text");
+	assert.equal(edge.content.length, 64 * 1024);
+
+	f.files["over.txt"] = "o".repeat(64 * 1024 + 1);
+	f.write("\n");
+	assert.throws(() => f.run("--check"), (error) => {
+		assert.equal(error.status, 1);
+		assert.match(error.stderr, /example: 资源 over\.txt/);
+		assert.match(error.stderr, /65537/);
+		assert.match(error.stderr, /超过客户端上限 65536/);
+		assert.match(error.stderr, /静默丢弃/);
+		return true;
+	});
 });
