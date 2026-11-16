@@ -3,7 +3,7 @@
 	"kind": "design-system",
 	"slug": "meadow-buddies",
 	"name": "Meadow Buddies",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"order": 45,
 	"category": "playful",
 	"vibe": "light",
@@ -22,7 +22,8 @@
 	"assets": {
 		"spec": "DESIGN.md",
 		"theme": "theme.css",
-		"demo": "demo.html"
+		"demo": "demo.html",
+		"cover": "cover.webp"
 	},
 	"collectedAt": "2026-08-31"
 }

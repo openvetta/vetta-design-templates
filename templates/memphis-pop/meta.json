@@ -4,7 +4,7 @@
 	"slug": "memphis-pop",
 	"name": "Memphis Pop",
 	"author": "Grok Bot",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"order": 166,
 	"category": "playful",
 	"vibe": "light",
@@ -32,7 +32,8 @@
 	"assets": {
 		"spec": "DESIGN.md",
 		"theme": "theme.css",
-		"demo": "demo.html"
+		"demo": "demo.html",
+		"cover": "cover.webp"
 	},
 	"collectedAt": "2026-11-13"
 }

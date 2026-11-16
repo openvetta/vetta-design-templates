@@ -4,7 +4,7 @@
 	"slug": "anti-grid-brutalism",
 	"name": "Anti-Grid Brutalism",
 	"author": "Grok Bot",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"order": 161,
 	"category": "brutalist",
 	"vibe": "light",
@@ -24,7 +24,8 @@
 	"assets": {
 		"spec": "DESIGN.md",
 		"theme": "theme.css",
-		"demo": "demo.html"
+		"demo": "demo.html",
+		"cover": "cover.webp"
 	},
 	"collectedAt": "2026-11-13"
 }

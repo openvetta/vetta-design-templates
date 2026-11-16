@@ -51,6 +51,17 @@ const MAX_INLINE_BYTES = 256 * 1024;
  */
 const MAX_INLINE_JS_CHARS = 64 * 1024;
 
+/**
+ * 封面（assets.cover）：客户端风格墙上每张卡的静态缩略图。
+ *
+ * 没有封面客户端只能退回一块色板，想显示真实界面就得给每张卡挂一个 iframe 去解析整份
+ * demo——风格墙几十张连排，滚动会被拖垮。封面是预渲染好的一张图，浏览器异步解码，几乎
+ * 没有成本。所以 design-system 必须带一张，由 `node scripts/build-covers.mjs` 从 demo.html 生成。
+ */
+const COVER_EXTENSION = ".webp";
+const COVER_MAX_BYTES = 150 * 1024;
+const COVER_MIN_WIDTH = 640;
+
 const errors = [];
 const fail = (slug, message) => errors.push(`${slug}: ${message}`);
 
@@ -219,6 +230,59 @@ function validateDemo(slug, meta) {
 	}
 }
 
+/**
+ * 读 webp 的像素尺寸：只解析文件头，不解码。三种容器都要认——lossy（VP8）、lossless
+ * （VP8L）和扩展格式（VP8X）。不是 webp 或头部不完整返回 null。
+ */
+function readWebpSize(buffer) {
+	if (buffer.length < 30) return null;
+	if (buffer.toString("ascii", 0, 4) !== "RIFF" || buffer.toString("ascii", 8, 12) !== "WEBP") return null;
+	const chunk = buffer.toString("ascii", 12, 16);
+	if (chunk === "VP8 ") {
+		if (buffer[23] !== 0x9d || buffer[24] !== 0x01 || buffer[25] !== 0x2a) return null;
+		return { width: buffer.readUInt16LE(26) & 0x3fff, height: buffer.readUInt16LE(28) & 0x3fff };
+	}
+	if (chunk === "VP8L") {
+		if (buffer[20] !== 0x2f) return null;
+		const bits = buffer.readUInt32LE(21);
+		return { width: (bits & 0x3fff) + 1, height: ((bits >>> 14) & 0x3fff) + 1 };
+	}
+	if (chunk === "VP8X") {
+		return { width: buffer.readUIntLE(24, 3) + 1, height: buffer.readUIntLE(27, 3) + 1 };
+	}
+	return null;
+}
+
+function validateCover(slug, meta) {
+	if (meta.kind !== "design-system") return;
+	const rel = meta.assets?.cover;
+	if (typeof rel !== "string") {
+		fail(slug, "design-system 必须有 assets.cover：运行 node scripts/build-covers.mjs 生成，并在 meta.json 的 assets 里声明 \"cover\": \"cover.webp\"");
+		return;
+	}
+	if (!rel.toLowerCase().endsWith(COVER_EXTENSION)) {
+		fail(slug, `cover 必须是 ${COVER_EXTENSION} 文件`);
+		return;
+	}
+	const coverPath = join(TEMPLATES_DIR, slug, rel);
+	if (!existsSync(coverPath)) return;
+	const bytes = readFileSync(coverPath);
+	if (bytes.length > COVER_MAX_BYTES) {
+		fail(slug, `cover 体积 ${Math.round(bytes.length / 1024)}KB，超过上限 ${COVER_MAX_BYTES / 1024}KB：它是缩略图，不是原图`);
+	}
+	const size = readWebpSize(bytes);
+	if (!size) {
+		fail(slug, "cover 不是有效的 webp 文件");
+		return;
+	}
+	if (size.width < COVER_MIN_WIDTH) {
+		fail(slug, `cover 宽度 ${size.width}px 太小，至少 ${COVER_MIN_WIDTH}px（高分屏下卡片会糊）`);
+	}
+	if (Math.abs(size.width * 3 - size.height * 4) > 4) {
+		fail(slug, `cover 必须是 4:3（当前 ${size.width}×${size.height}）：卡片封面区是 4:3，别的比例会被裁切`);
+	}
+}
+
 function validateTheme(slug, meta) {
 	if (typeof meta.assets?.theme !== "string") return;
 	const themePath = join(TEMPLATES_DIR, slug, meta.assets.theme);
@@ -284,12 +348,18 @@ function validateEntry(slug, meta) {
 	validateSpec(slug, meta);
 	validateTheme(slug, meta);
 	validateDemo(slug, meta);
+	validateCover(slug, meta);
+	if (meta.author !== undefined && (typeof meta.author !== "string" || meta.author.trim().length === 0)) {
+		fail(slug, "author 必须是非空字符串（署名；没有就不要写这个字段）");
+	}
 
 	if (assets === null) return null;
 	return {
 		kind: meta.kind,
 		slug: meta.slug,
 		name: meta.name,
+		// 署名：客户端在风格详情里显示。meta.json 里没写就不进清单，客户端也不会猜。
+		...(typeof meta.author === "string" && meta.author.trim() ? { author: meta.author.trim() } : {}),
 		version: meta.version,
 		order: meta.order,
 		category: meta.category,

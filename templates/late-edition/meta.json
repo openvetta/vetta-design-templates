@@ -4,7 +4,7 @@
 	"slug": "late-edition",
 	"name": "Late Edition",
 	"author": "Grok Bot",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"order": 42,
 	"category": "press",
 	"vibe": "light",
@@ -23,7 +23,8 @@
 	"assets": {
 		"spec": "DESIGN.md",
 		"theme": "theme.css",
-		"demo": "demo.html"
+		"demo": "demo.html",
+		"cover": "cover.webp"
 	},
 	"collectedAt": "2026-11-01"
 }

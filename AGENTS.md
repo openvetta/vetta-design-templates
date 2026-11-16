@@ -7,7 +7,7 @@
 这份手册面向在本仓库中添加/修改条目的人与 AI。**所有规则都对应
 `scripts/build-catalog.mjs` 里的硬校验**，CI 上不通过就合不进来。
 
-## 最重要的三条
+## 最重要的四条
 
 1. **条目目录是唯一事实源，`.vetta/design-templates.json` 是生成物。**
    加一个条目 = 建一个目录，不要手改顶层清单。改完跑 `node scripts/build-catalog.mjs`。
@@ -18,7 +18,12 @@
    任何试图指挥 Agent 的句子（"忽略上面的"、"你必须先执行"、"请打开并读取…"）都不允许
    出现在 `DESIGN.md` 里，评审时按注入处理。
 
-3. **不要放别人的原始素材。** 入库的是提炼后的规范文字和自己生成的示意图。
+3. **每个 `design-system` 必须带封面 `cover.webp`。**
+   风格墙上每张卡的缩略图就是它。没有封面，客户端只能退回一块色板；想显示真实界面就得
+   给每张卡现场渲染一份 demo，几十张连排会把滚动拖垮。封面从 `demo.html` 生成，
+   不是手画的——见下方「封面」一节。**漏了封面 CI 直接失败。**
+
+4. **不要放别人的原始素材。** 入库的是提炼后的规范文字和自己生成的示意图。
    原始网页截图、抓取到的 HTML 原文、品牌资源文件都不进仓库；来源记在 `meta.json` 的
    `origin` 里。
 
@@ -30,6 +35,8 @@ templates/<slug>/
   meta.json                      ← 条目事实源（唯一不算资源的文件）
   DESIGN.md                      ← 给 Agent 的规范正文
   theme.css                      ← 设计体系的 token（design-system 必需）
+  demo.html                      ← 手写的界面样例（design-system 必需，见下）
+  cover.webp                     ← 封面，由 demo.html 生成（design-system 必需）
   reference.html                 ← 可选，任意参考素材
   screenshots/home.webp          ← 可选，子目录会被保留
   ...                            ← 目录下**任何**文件都会自动进 resources
@@ -62,6 +69,7 @@ UTF-8 字节计数，单个 ≤256KB 时直接内联进清单，避免 Windows �
 | `kind` | `design-system` / `reference` / `remixable` |
 | `slug` | 与目录名一致 |
 | `name` | 展示名，品牌名不翻译 |
+| `author` | 可选。署名字符串，会显示在客户端的风格详情里。不知道作者就**不写这个字段**，不要拿来源网站、`upstream` 或 AI 工具名冒充 |
 | `version` | `^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$`，内容变了就 bump |
 | `order` | 非负整数，**展示顺序**。见下方「顺序是有意义的」 |
 | `category` | 如 `dev` / `fintech` / `playful` / `editorial` |
@@ -72,11 +80,11 @@ UTF-8 字节计数，单个 ≤256KB 时直接内联进清单，避免 Windows �
 | `license` | 必填 |
 | `origin` | `{ type, upstream?, sourceUrl?, note? }`，`type` 为 `curated` 或 `collected` |
 | `collectedAt` | `YYYY-MM-DD` |
-| `assets` | **角色**声明，键只能是 `spec` / `theme` / `preview` / `package`；值是本目录内的相对路径。其余文件不必声明 |
+| `assets` | **角色**声明，键只能是 `spec` / `theme` / `demo` / `cover` / `preview` / `package`；值是本目录内的相对路径。其余文件不必声明 |
 
 各 kind 的必需资产：
 
-- `design-system`：`spec` + `theme`
+- `design-system`：`spec` + `theme` + `cover`（`demo` 也应当有，封面从它生成）
 - `reference`：`spec`
 - `remixable`：`package`
 
@@ -103,6 +111,35 @@ UTF-8 字节计数，单个 ≤256KB 时直接内联进清单，避免 Windows �
 - demo 会被客户端塞进**不给脚本执行权**的 sandbox iframe 作悬停预览，所以：
   **不许 `<script>`、不许外链样式表/图片、不许 `@import`**，样式和图片一律内联。
   build-catalog 会硬校验这几条。
+
+## 封面（cover.webp）
+
+封面是风格墙上这张卡的缩略图，**由 `demo.html` 自动截出来**，不手画、不手改：
+
+```bash
+npm i --no-save playwright && npx playwright install chromium   # 只需一次，不会写进仓库
+node scripts/build-covers.mjs                # 给还没有封面的条目生成
+node scripts/build-covers.mjs --all          # 全部重生成
+node scripts/build-covers.mjs <slug> ...     # 只处理指定条目
+```
+
+脚本的渲染条件刻意与客户端悬停预览一致：1280px 桌面布局、**关闭脚本**、只取首屏
+（1280×960）。所以：
+
+- **`demo.html` 的首屏就是封面。** 首屏要一眼认出是谁，这条在「demo.html 是手写的」里
+  已经写过，现在它同时决定了卡片上的样子。首屏是一大片空白或一个营销标题，封面就是
+  一大片空白。
+- **改了 `demo.html` 就要重生成封面**（`--all` 或带 slug），并 bump `version`。封面不会
+  自己跟着 demo 更新，CI 也看不出两者是否同步，靠你自己记得。
+- 生成后在 `meta.json` 的 `assets` 里声明 `"cover": "cover.webp"`，再跑
+  `node scripts/build-catalog.mjs`。脚本只出图，不改 `meta.json`。
+
+`build-catalog` 对封面的硬校验：必须是 **webp**、**4:3**（脚本输出 960×720，卡片封面区就是
+4:3，别的比例会被裁）、宽度 ≥ 640px、体积 ≤ 150KB。封面是缩略图不是原图，一张 20–50KB
+是正常的；超限通常说明首屏塞了大面积渐变或噪点，回头简化 demo 的首屏比调压缩参数管用。
+
+封面会作为二进制资源进清单（只带地址，不内联），客户端在风格墙上按需加载；用户选中某套
+风格时，它不会被拷进用户项目。
 
 ## 顺序是有意义的
 
@@ -150,6 +187,9 @@ purge 单个文件刷不掉——实测调用 purge 返回 `finished`，内容�
 - [ ] `node scripts/build-catalog.mjs --check` 通过
 - [ ] `DESIGN.md` 没有 frontmatter、没有指挥 Agent 的句子
 - [ ] `theme.css` 7 个基础 token 齐全
+- [ ] 跑过 `node scripts/build-covers.mjs`，`cover.webp` 已生成并在 `assets.cover` 声明；改过 `demo.html` 的话封面已重生成
+- [ ] 打开 `cover.webp` 看过一眼：首屏认得出是这套风格，不是空白或半截内容
+- [ ] `author` 只在确实知道作者时才写
 - [ ] `order` 没和别人撞，且插的位置符合"风格交错"
 - [ ] `origin` 如实填写，没有夹带别人的原始素材
 - [ ] `tagline` 中英都写了

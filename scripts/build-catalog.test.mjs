@@ -7,6 +7,22 @@ import { test } from "node:test";
 
 const INLINE_LIMIT = 256 * 1024;
 
+/** 只有文件头的 lossy webp：校验只读头部尺寸，不解码像素，所以够用。 */
+function fakeWebp(width, height, payload = 64) {
+	const body = Buffer.alloc(10 + payload);
+	body.writeUIntLE(0, 0, 3);
+	body[3] = 0x9d;
+	body[4] = 0x01;
+	body[5] = 0x2a;
+	body.writeUInt16LE(width, 6);
+	body.writeUInt16LE(height, 8);
+	const chunk = Buffer.concat([Buffer.from("VP8 "), Buffer.alloc(4), body]);
+	chunk.writeUInt32LE(body.length, 4);
+	const riff = Buffer.concat([Buffer.from("RIFF"), Buffer.alloc(4), Buffer.from("WEBP"), chunk]);
+	riff.writeUInt32LE(riff.length - 8, 4);
+	return riff;
+}
+
 function fixture(t) {
 	const root = mkdtempSync(join(tmpdir(), "vetta-catalog-eol-"));
 	t.after(() => {
@@ -25,8 +41,9 @@ function fixture(t) {
 		version: "1.0.0", order: 10, category: "playful", vibe: "light", tags: [],
 		blurb: "A test design system.", tagline: { en: "Example", zh: "示例" },
 		license: "MIT", origin: { type: "curated" }, collectedAt: "2026-08-31",
-		assets: { spec: "DESIGN.md", theme: "theme.css", demo: "demo.html" },
+		assets: { spec: "DESIGN.md", theme: "theme.css", demo: "demo.html", cover: "cover.webp" },
 	}));
+	writeFileSync(join(entry, "cover.webp"), fakeWebp(960, 720));
 	const files = {
 		"DESIGN.md": "# Example\n\nA woodland palette. 森林配色。\n",
 		"theme.css": "@theme {\n" + ["primary", "primary-foreground", "surface", "surface-foreground", "muted", "accent", "danger"].map(name => `  --color-${name}: #123456;\n`).join("") + "}\n",
@@ -56,7 +73,7 @@ test("LF and CRLF checkouts produce identical catalogs and UTF-8 byte counts", t
 	assert.match(f.run("--check"), /catalog 校验通过/);
 	f.run();
 	assert.equal(f.catalogText(), expected, "line endings must not bump catalogVersion or rewrite resources");
-	for (const resource of JSON.parse(expected).templates[0].resources) {
+	for (const resource of JSON.parse(expected).templates[0].resources.filter(r => r.role !== "cover")) {
 		assert.equal(resource.encoding, "text");
 		assert.equal(resource.content, f.files[resource.path]);
 		assert.equal(resource.bytes, Buffer.byteLength(resource.content, "utf8"));
@@ -115,4 +132,55 @@ test("inlined text over the client JS string limit fails before it can be droppe
 		assert.match(error.stderr, /静默丢弃/);
 		return true;
 	});
+});
+
+function setMeta(f, patch) {
+	const path = join(f.entry, "meta.json");
+	const meta = JSON.parse(readFileSync(path, "utf8"));
+	writeFileSync(path, JSON.stringify({ ...meta, ...patch(meta) }));
+}
+
+test("a design-system without a cover is rejected, with the command that fixes it", t => {
+	const f = fixture(t);
+	f.write("\n");
+	setMeta(f, meta => ({ assets: { spec: meta.assets.spec, theme: meta.assets.theme, demo: meta.assets.demo } }));
+	assert.throws(() => f.run(), error => /必须有 assets\.cover/.test(error.stderr) && /build-covers/.test(error.stderr));
+});
+
+test("cover must be a 4:3 webp of reasonable size", t => {
+	const f = fixture(t);
+	f.write("\n");
+	const cover = join(f.entry, "cover.webp");
+	writeFileSync(cover, fakeWebp(960, 960));
+	assert.throws(() => f.run(), error => /4:3/.test(error.stderr));
+	writeFileSync(cover, fakeWebp(320, 240));
+	assert.throws(() => f.run(), error => /太小/.test(error.stderr));
+	writeFileSync(cover, fakeWebp(960, 720, 200 * 1024));
+	assert.throws(() => f.run(), error => /超过上限/.test(error.stderr));
+	writeFileSync(cover, Buffer.from("not a webp, just long enough to pass the length guard......"));
+	assert.throws(() => f.run(), error => /不是有效的 webp/.test(error.stderr));
+	writeFileSync(cover, fakeWebp(960, 720));
+	f.run();
+});
+
+test("the cover ships as a role-tagged binary resource, not inlined", t => {
+	const f = fixture(t);
+	f.write("\n");
+	f.run();
+	const entry = JSON.parse(f.catalogText()).templates[0];
+	const cover = entry.resources.find(resource => resource.role === "cover");
+	assert.equal(cover.encoding, "binary");
+	assert.equal(cover.url, "templates/example/cover.webp");
+});
+
+test("a top-level author reaches the catalog; an absent one stays absent", t => {
+	const f = fixture(t);
+	f.write("\n");
+	f.run();
+	assert.equal(JSON.parse(f.catalogText()).templates[0].author, undefined);
+	setMeta(f, () => ({ author: "  Ada  " }));
+	f.run();
+	assert.equal(JSON.parse(f.catalogText()).templates[0].author, "Ada");
+	setMeta(f, () => ({ author: "" }));
+	assert.throws(() => f.run(), error => /author 必须是非空字符串/.test(error.stderr));
 });

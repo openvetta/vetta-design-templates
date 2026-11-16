@@ -4,7 +4,7 @@
 	"slug": "swiss-grid",
 	"name": "Swiss Grid",
 	"author": "Grok Bot",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"order": 162,
 	"category": "editorial",
 	"vibe": "light",
@@ -31,7 +31,8 @@
 	"assets": {
 		"spec": "DESIGN.md",
 		"theme": "theme.css",
-		"demo": "demo.html"
+		"demo": "demo.html",
+		"cover": "cover.webp"
 	},
 	"collectedAt": "2026-11-13"
 }

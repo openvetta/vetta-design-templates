@@ -4,7 +4,7 @@
 	"slug": "synthwave-grid",
 	"name": "合成波网格 / Synthwave Grid",
 	"author": "Grok Bot",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"order": 165,
 	"category": "outrun",
 	"vibe": "dark",
@@ -24,7 +24,8 @@
 	"assets": {
 		"spec": "DESIGN.md",
 		"theme": "theme.css",
-		"demo": "demo.html"
+		"demo": "demo.html",
+		"cover": "cover.webp"
 	},
 	"collectedAt": "2026-11-13"
 }

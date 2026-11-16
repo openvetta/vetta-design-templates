@@ -3,7 +3,7 @@
 	"kind": "design-system",
 	"slug": "geometric-bold",
 	"name": "Geometric Bold",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"order": 85,
 	"category": "creative",
 	"vibe": "light",
@@ -29,7 +29,8 @@
 	"assets": {
 		"spec": "DESIGN.md",
 		"theme": "theme.css",
-		"demo": "demo.html"
+		"demo": "demo.html",
+		"cover": "cover.webp"
 	},
 	"collectedAt": "2026-08-11"
 }

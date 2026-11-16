@@ -3,7 +3,7 @@
 	"kind": "design-system",
 	"slug": "retro-95",
 	"name": "Retro 95",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"order": 210,
 	"category": "retro",
 	"vibe": "light",
@@ -25,7 +25,8 @@
 	"assets": {
 		"spec": "DESIGN.md",
 		"theme": "theme.css",
-		"demo": "demo.html"
+		"demo": "demo.html",
+		"cover": "cover.webp"
 	},
 	"collectedAt": "2026-08-11"
 }

@@ -13,10 +13,13 @@ templates/<slug>/
   meta.json                      # source of truth for one entry (never a resource)
   DESIGN.md                      # the spec the agent reads
   theme.css                      # design tokens (required for design-system)
+  demo.html                      # hand-written screen the style is previewed with
+  cover.webp                     # card thumbnail, generated from demo.html (required for design-system)
   reference.html                 # optional — any reference material
   screenshots/home.webp          # optional — subdirectories are preserved
   ...                            # every file here ships as a resource
 scripts/build-catalog.mjs        # aggregate + validate
+scripts/build-covers.mjs         # render demo.html -> cover.webp
 ```
 
 Every file in an entry directory except `meta.json` is a resource: it is copied
@@ -31,7 +34,7 @@ fetched on demand when the user picks that entry. `assets` only labels **roles**
 
 | kind | required assets | what the user gets |
 | --- | --- | --- |
-| `design-system` | `spec` + `theme` | applies tokens and restyles the design |
+| `design-system` | `spec` + `theme` + `cover` | applies tokens and restyles the design |
 | `reference` | `spec` | material the agent consults while designing |
 | `remixable` | `package` | a finished design copied into a new project |
 
@@ -47,8 +50,10 @@ The short version:
 
 1. Create `templates/<slug>/` and add the files that kind requires.
 2. Write `meta.json`.
-3. Run `node scripts/build-catalog.mjs` and commit the regenerated catalog.
-4. Open a PR. CI runs `node scripts/build-catalog.mjs --check`.
+3. For a `design-system`, generate its cover with `node scripts/build-covers.mjs`
+   (see "封面" in `AGENTS.md`) and declare it under `assets.cover`.
+4. Run `node scripts/build-catalog.mjs` and commit the regenerated catalog.
+5. Open a PR. CI runs `node scripts/build-catalog.mjs --check`.
 
 Generator regression tests: `node --test scripts/build-catalog.test.mjs`.
 
