@@ -50,12 +50,14 @@ The short version:
 
 1. Create `templates/<slug>/` and add the files that kind requires.
 2. Write `meta.json`.
-3. For a `design-system`, generate its cover with `node scripts/build-covers.mjs`
-   (see "封面" in `AGENTS.md`) and declare it under `assets.cover`.
-4. Run `node scripts/build-catalog.mjs` and commit the regenerated catalog.
+3. For a `design-system`, run `node scripts/build-covers.mjs <slug>`. It renders
+   the cover from `demo.html`, declares `assets.cover`, bumps the version when
+   regenerating, and rebuilds + validates the catalog — one command. Open the
+   printed `cover.webp` path and look at it (see "封面" in `AGENTS.md`).
+4. Commit `templates/<slug>/` together with the regenerated catalog.
 5. Open a PR. CI runs `node scripts/build-catalog.mjs --check`.
 
-Generator regression tests: `node --test scripts/build-catalog.test.mjs`.
+Generator regression tests: `node --test scripts/build-catalog.test.mjs scripts/cover-meta.test.mjs`.
 
 ## Two rules that are easy to miss
 

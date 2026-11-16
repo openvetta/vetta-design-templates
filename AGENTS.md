@@ -18,10 +18,11 @@
    任何试图指挥 Agent 的句子（"忽略上面的"、"你必须先执行"、"请打开并读取…"）都不允许
    出现在 `DESIGN.md` 里，评审时按注入处理。
 
-3. **每个 `design-system` 必须带封面 `cover.webp`。**
+3. **每个 `design-system` 必须带封面 `cover.webp`，用 `node scripts/build-covers.mjs <slug>` 生成。**
    风格墙上每张卡的缩略图就是它。没有封面，客户端只能退回一块色板；想显示真实界面就得
    给每张卡现场渲染一份 demo，几十张连排会把滚动拖垮。封面从 `demo.html` 生成，
-   不是手画的——见下方「封面」一节。**漏了封面 CI 直接失败。**
+   不是手画的，**加条目或改 `demo.html` 后都要跑这条命令**——细节见下方「封面」一节。
+   **漏了封面 CI 直接失败。**
 
 4. **不要放别人的原始素材。** 入库的是提炼后的规范文字和自己生成的示意图。
    原始网页截图、抓取到的 HTML 原文、品牌资源文件都不进仓库；来源记在 `meta.json` 的
@@ -114,32 +115,59 @@ UTF-8 字节计数，单个 ≤256KB 时直接内联进清单，避免 Windows �
 
 ## 封面（cover.webp）
 
-封面是风格墙上这张卡的缩略图，**由 `demo.html` 自动截出来**，不手画、不手改：
+封面是风格墙上这张卡的缩略图，**由 `demo.html` 自动截出来**，不手画、不手改。
+
+### 给 AI / Agent：加或改一个 design-system 条目时，这一步必做
+
+写完（或改完）`templates/<slug>/demo.html` 之后，**运行这一条命令，不要自己拼步骤**：
 
 ```bash
-npm i --no-save playwright && npx playwright install chromium   # 只需一次，不会写进仓库
-node scripts/build-covers.mjs                # 给还没有封面的条目生成
-node scripts/build-covers.mjs --all          # 全部重生成
-node scripts/build-covers.mjs <slug> ...     # 只处理指定条目
+node scripts/build-covers.mjs <slug>
 ```
+
+它会依次做完：渲染 `demo.html` 首屏 → 写 `templates/<slug>/cover.webp` → 在 `meta.json` 的
+`assets` 里声明 `"cover": "cover.webp"` → 重新生成时自动 bump 一次补丁版本 → 重建
+`.vetta/design-templates.json` 并跑校验。**不要手改 `meta.json` 去加 cover 或改 version，
+也不要手写/手改 `cover.webp`。** 缺 Playwright 或 Chromium 时它会自己安装（装进被 gitignore 的
+`node_modules`，不改任何受版本控制的文件）；本机已有 Chrome 可用环境变量
+`CHROMIUM_PATH=<可执行文件路径>` 指过去。
+
+命令跑完后你还要做三件事，缺一不可：
+
+1. **打开它打印出来的 `cover.webp` 路径，亲眼看一遍这张图。** 首屏必须一眼认得出是这套风格：
+   不是一整片空白、不是半截内容、不是只有一个营销大标题。不合格就回去改 `demo.html` 的**首屏**，
+   再跑一次同样的命令（不是去调压缩参数）。
+2. 命令以非零退出、或打印了 `✗` 时，按报错处理（缺 `demo.html`、清单校验没过…），
+   **不要绕过校验、不要放宽 `build-catalog.mjs` 里的封面规则**。
+3. 把 `templates/<slug>/`（含 `cover.webp`、`meta.json`）和 `.vetta/design-templates.json`
+   **一起**提交。只提交其中一部分，CI 的 `--check` 会失败。
+
+其它常用写法：
+
+```bash
+node scripts/build-covers.mjs                 # 给所有还没有封面的条目补封面
+node scripts/build-covers.mjs --all           # 全部重新生成（批量改了 demo 之后）
+node scripts/build-covers.mjs <slug> --no-catalog   # 不重建清单（之后自己跑 build-catalog）
+```
+
+### 规则与原因
 
 脚本的渲染条件刻意与客户端悬停预览一致：1280px 桌面布局、**关闭脚本**、只取首屏
 （1280×960）。所以：
 
 - **`demo.html` 的首屏就是封面。** 首屏要一眼认出是谁，这条在「demo.html 是手写的」里
-  已经写过，现在它同时决定了卡片上的样子。首屏是一大片空白或一个营销标题，封面就是
-  一大片空白。
-- **改了 `demo.html` 就要重生成封面**（`--all` 或带 slug），并 bump `version`。封面不会
-  自己跟着 demo 更新，CI 也看不出两者是否同步，靠你自己记得。
-- 生成后在 `meta.json` 的 `assets` 里声明 `"cover": "cover.webp"`，再跑
-  `node scripts/build-catalog.mjs`。脚本只出图，不改 `meta.json`。
+  已经写过，现在它同时决定了卡片上的样子。
+- **改了 `demo.html` 就必须重新生成封面**（带 slug 再跑一次，version 会自动 bump）。封面不会
+  自己跟着 demo 更新，CI 也看不出两者是否同步，靠你记得。
+- version 必须 bump：客户端按 `version`（和体积）判断本地缓存的封面是否过期，不 bump 用户
+  可能长时间看到旧封面。脚本在「重新生成」时自动做，新条目第一次生成不 bump。
 
 `build-catalog` 对封面的硬校验：必须是 **webp**、**4:3**（脚本输出 960×720，卡片封面区就是
 4:3，别的比例会被裁）、宽度 ≥ 640px、体积 ≤ 150KB。封面是缩略图不是原图，一张 20–50KB
-是正常的；超限通常说明首屏塞了大面积渐变或噪点，回头简化 demo 的首屏比调压缩参数管用。
+是正常的；超限通常说明首屏塞了大面积渐变或噪点，回头简化 demo 的**首屏**比调压缩参数管用。
 
-封面会作为二进制资源进清单（只带地址，不内联），客户端在风格墙上按需加载。它和目录里其它
-文件一样，会在用户选中这套风格时落进项目的参考资料目录，Agent 可以把它当一张视觉参考。
+封面会作为二进制资源进清单（只带地址，不内联），客户端在风格墙上按需加载并缓存。它和目录里
+其它文件一样，会在用户选中这套风格时落进项目的参考资料目录，Agent 可以把它当一张视觉参考。
 
 ## 顺序是有意义的
 
@@ -187,7 +215,7 @@ purge 单个文件刷不掉——实测调用 purge 返回 `finished`，内容�
 - [ ] `node scripts/build-catalog.mjs --check` 通过
 - [ ] `DESIGN.md` 没有 frontmatter、没有指挥 Agent 的句子
 - [ ] `theme.css` 7 个基础 token 齐全
-- [ ] 跑过 `node scripts/build-covers.mjs`，`cover.webp` 已生成并在 `assets.cover` 声明；改过 `demo.html` 的话封面已重生成
+- [ ] 跑过 `node scripts/build-covers.mjs <slug>`（改过 `demo.html` 也要重跑），没有手改 `meta.json` 的 `cover` / `version`
 - [ ] 打开 `cover.webp` 看过一眼：首屏认得出是这套风格，不是空白或半截内容
 - [ ] `author` 只在确实知道作者时才写
 - [ ] `order` 没和别人撞，且插的位置符合"风格交错"
