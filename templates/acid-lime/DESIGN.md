@@ -4,7 +4,7 @@ A worked example ships as `demo.html`: Pith, a local-first agent on a near-black
 
 ## Atmosphere
 
-Night, but a room, not a club. The ground is near-black. One acid lime is reserved for the thing a person presses and for the small live state. Lilac and blush are supporting tiles, softer and smaller. An iridescent glass orb is Pith’s presence: blue, violet, and cyan in a dark glassy body. It is not a letter, and it is not a button. Very fine contour lines sit in a corner, sparse, like a few elevation lines. They are not a grid and not a sound visualizer.
+Night, but a room, not a club. The ground is near-black. One acid lime is reserved for the thing a person presses and for the small live state. Lilac and blush are supporting tiles, softer and smaller. An iridescent glass orb is Pith’s presence: a pinched lump, not a smooth pebble. Blue, cyan, and magenta smear through each other and feather out. The rim dissolves into the desk. It is not a letter, and it is not a button. Very fine contour lines sit in a corner, sparse, like a few elevation lines. They are not a grid and not a sound visualizer.
 
 The product in the reference is Pith. Voice, notes, and the shelf stay on the machine. The cover is the desk itself: the orb and the voice control on one side, a greeting, three action tiles, and the threads already kept on the other. It is not a poster for the desk.
 
@@ -63,7 +63,7 @@ Nothing in the reference depends on a horizontal scroll.
 - **Ground.** `surface`, full bleed. No photograph, no lime wash, no horizon.
 - **Contour lines.** A few stroked curves in `surface-foreground` at about half opacity, tucked into a corner, `pointer-events: none`. Six lines is enough. They do not cross the greeting or the orb.
 - **Stage.** The desk’s frame. `surface` fill, 1px edge mixed down from `border`, `radius-2xl`, padding as above. It clips the contour lines.
-- **Orb.** One organic rounded body, wider than it is tall. The fill is layered: a white-cyan highlight, a violet mass, a blue core, a dark glass edge. A thin iridescent rim uses cyan, violet, and blush, not lime. A soft contact shadow sits under it. The orb is decorative. The sentence under it carries the meaning. It is not a control.
+- **Orb.** One irregular lump, wider than it is tall, with a dent rather than an even corner. Blue, cyan, and magenta overlap and feather. There is no hard color island and no stroke around the body. The highlight is a soft wet pool, not a cut bar. The outer paint fades into `surface`. The orb is decorative. The sentence under it carries the meaning. It is not a control.
 - **Capsule.** Lime fill, `primary-foreground` type, an ink dot, `radius-full`. It reads “On device”. It is status. It is not a button.
 - **Wordmark row.** Lime dot, the name, a mono legend, and the clock at the far side. The clock uses tabular numerals.
 - **Greeting.** Two short lines in `surface-foreground`, with a mono kicker above and one muted sentence below.
@@ -84,7 +84,7 @@ Nothing in the reference depends on a horizontal scroll.
 
 ## Motion
 
-The orb’s highlight eases a few pixels on `duration-sheen` (14s). The shape stays recognizable at the first frame. Hover and press use `duration-ui` (160ms) and `ease-ui`. A fine pointer may lift a tile 2px. The layout does not depend on hover. Press moves the voice circle and send 1px down.
+The smear drifts a few pixels on `duration-sheen` (14s). The first frame is the resting lump. Hover and press use `duration-ui` (160ms) and `ease-ui`. A fine pointer may lift a tile 2px. The layout does not depend on hover. Press moves the voice circle and send 1px down.
 
 Under `prefers-reduced-motion`, the sheen, the lift, and the press shift stop. The orb stays at its resting shape. Color and border changes remain.
 

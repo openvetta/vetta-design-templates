@@ -125,41 +125,25 @@
 
 	.orb {
 		width: 256px; height: 228px; position: relative; flex: none;
-		filter: drop-shadow(0 22px 16px rgb(0 0 0 / 0.55));
+		filter: blur(3.5px);
 	}
 	.orb-body {
-		position: absolute; inset: 0; overflow: hidden;
-		border-radius: 63% 37% 48% 52% / 44% 58% 42% 56%;
-		background:
-			radial-gradient(ellipse 56% 48% at 36% 42%, #f7feff 0%, #8ad8ff 14%, #3a6dff 36%, transparent 64%),
-			radial-gradient(ellipse 42% 50% at 66% 56%, #d7b4ff 0%, #6d32d4 34%, transparent 68%),
-			radial-gradient(ellipse 26% 22% at 58% 34%, #ffc4e4 0%, transparent 72%),
-			radial-gradient(ellipse 34% 28% at 76% 74%, #67f0ff 0%, transparent 70%),
-			radial-gradient(circle at 48% 52%, #16306c 0%, #090d1c 62%, #05060c 100%);
-		box-shadow:
-			inset 0 0 0 1px rgb(255 255 255 / 0.28),
-			inset 12px 10px 22px rgb(255 255 255 / 0.16),
-			inset -26px -22px 36px rgb(0 0 0 / 0.72);
+		position: absolute; inset: 0;
+		background-color: #121a30;
+		background-image:
+			radial-gradient(ellipse 40% 32% at 30% 34%, rgb(255 255 255 / 0.92) 0%, rgb(198 250 255 / 0.3) 16%, transparent 42%),
+			radial-gradient(ellipse 58% 76% at 33% 48%, #d7f8ff 0%, #3d8cff 26%, #1a4a9a 55%, transparent 78%),
+			radial-gradient(ellipse 56% 68% at 66% 46%, #ffd0f6 0%, #c44ee0 32%, #6a2498 58%, transparent 80%),
+			radial-gradient(ellipse 40% 46% at 50% 52%, rgb(120 220 255 / 0.45) 0%, transparent 62%),
+			radial-gradient(ellipse 34% 30% at 58% 66%, rgb(255 150 210 / 0.4) 0%, transparent 64%),
+			radial-gradient(ellipse 28% 34% at 76% 68%, rgb(110 245 255 / 0.5) 0%, transparent 68%),
+			radial-gradient(ellipse 80% 48% at 50% 112%, rgb(0 0 0 / 0.5) 0%, transparent 58%);
+		clip-path: polygon(50.0% 8.8%, 57.4% 9.9%, 64.0% 13.5%, 69.2% 18.8%, 72.9% 24.7%, 75.4% 30.7%, 77.5% 36.1%, 81.7% 40.5%, 88.2% 45.3%, 93.8% 52.0%, 95.6% 60.0%, 93.4% 67.8%, 88.1% 74.0%, 81.2% 78.2%, 74.0% 80.6%, 67.5% 82.3%, 61.7% 84.2%, 56.1% 86.5%, 50.0% 88.9%, 43.2% 90.5%, 36.0% 90.4%, 29.0% 88.3%, 22.8% 84.4%, 17.6% 79.2%, 13.4% 73.1%, 10.4% 66.4%, 8.7% 59.3%, 8.6% 52.0%, 10.2% 45.0%, 13.3% 38.6%, 17.3% 33.1%, 21.7% 28.2%, 26.1% 23.5%, 30.8% 18.7%, 36.2% 14.1%, 42.7% 10.4%);
 		animation: sheen var(--duration-sheen) var(--ease-ui) infinite;
 	}
-	.orb-body::before {
-		content: "";
-		position: absolute; width: 54%; height: 20%; left: 12%; top: 14%;
-		border-radius: var(--radius-full);
-		background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.95) 42%, rgb(214 255 255 / 0.4) 70%, transparent);
-		transform: rotate(-32deg);
-		filter: blur(0.6px);
-	}
-	.orb-body::after {
-		content: "";
-		position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-		background:
-			radial-gradient(ellipse 78% 74% at 46% 44%, transparent 46%, rgb(0 0 0 / 0.28) 72%, rgb(0 0 0 / 0.78) 100%);
-		box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
-	}
 	@keyframes sheen {
-		0%, 100% { border-radius: 63% 37% 48% 52% / 44% 58% 42% 56%; }
-		50% { border-radius: 52% 48% 58% 42% / 56% 44% 50% 50%; }
+		0%, 100% { transform: translate3d(0, 0, 0); }
+		50% { transform: translate3d(1.5%, 1%, 0); }
 	}
 
 	.topo {
@@ -306,7 +290,7 @@
 		background: var(--color-surface); display: grid; place-items: center;
 		position: relative; overflow: hidden;
 	}
-	.well .orb { width: 140px; height: 130px; }
+	.well .orb { width: 140px; height: 130px; filter: blur(2.5px); }
 	.radii { display: flex; align-items: flex-end; gap: 10px; min-height: 180px; padding: 8px; }
 	.radii i { display: block; background: var(--color-primary); color: var(--color-primary-foreground); }
 	.radii i:nth-child(1) { width: 48px; height: 64px; border-radius: var(--radius-sm); }
@@ -421,7 +405,7 @@
 	.cmp-on .note { color: var(--color-muted); }
 	.on-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 	.cmp-on .well { min-height: 120px; }
-	.cmp-on .orb { width: 92px; height: 86px; }
+	.cmp-on .orb { width: 92px; height: 86px; filter: blur(2px); }
 
 	.split { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 28px; align-items: start; }
 	.notes { margin: 14px 0 0; padding-left: 1.2em; display: grid; gap: 10px; }
@@ -437,7 +421,7 @@
 	.handset { padding-bottom: 30px; }
 	.handset .topo { width: 156px; height: 78px; top: 0; right: 0; }
 	.handset .capsule { align-self: center; position: relative; z-index: 1; }
-	.handset .orb { width: 112px; height: 104px; margin: 10px auto 0; }
+	.handset .orb { width: 112px; height: 104px; margin: 10px auto 0; filter: blur(2.5px); }
 	.handset h3 {
 		font-size: 32px; font-weight: 500; letter-spacing: -0.035em; line-height: 1.02;
 	}
@@ -474,7 +458,7 @@
 		.presence { gap: 10px; }
 		.presence-core { gap: 8px; }
 		.presence-line { font-size: 18px; }
-		.orb { width: 142px; height: 128px; }
+		.presence .orb { width: 142px; height: 128px; filter: blur(3px); }
 		.desk { gap: 12px; }
 		.recent { margin-top: 28px; }
 		.greet h1 { font-size: 34px; }
@@ -666,11 +650,11 @@
 			<div class="wrap">
 				<p class="kicker">02 — Shape and depth</p>
 				<h2>A glass body, a round corner</h2>
-				<p class="lede">The orb holds the color. The tiles are flat fills with a generous radius. Contour lines are a few strokes in the corner, not a texture.</p>
+				<p class="lede">The orb is a dented smear of blue, cyan, and magenta. The tiles stay flat fills with a generous radius. Contour lines are a few strokes in the corner, not a texture.</p>
 				<div class="specimens block">
 					<figure>
 						<div class="well"><div class="orb" aria-hidden="true"><span class="orb-body"></span></div></div>
-						<figcaption>One iridescent body. Blue, violet, cyan, a dark rim. It is presence, not a control.</figcaption>
+						<figcaption>One pinched lump. Blue, cyan, and magenta smear together, and the edge fades into the desk. It is presence, not a control.</figcaption>
 					</figure>
 					<figure>
 						<div class="well"><div class="radii" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
