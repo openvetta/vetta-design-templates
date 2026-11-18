@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pith — Acid Lime</title>
+<style>
+	/* Mirrors theme.css. Plain custom properties so this file opens standalone. */
+	:root {
+		--color-primary: #c6ff1a;
+		--color-primary-foreground: #14180c;
+		--color-surface: #07080a;
+		--color-surface-foreground: #f4f6ef;
+		--color-surface-raised: #17191d;
+		--color-muted: #b4bbae;
+		--color-accent: #d7c6ff;
+		--color-danger: #ff5d78;
+		--color-border: #6e7a64;
+		--color-lilac: #d7c6ff;
+		--color-lilac-ink: #1b1428;
+		--color-blush: #ffc8d6;
+		--color-blush-ink: #2a1218;
+		--color-danger-foreground: #2a0c14;
+		--color-rule: #2a2e28;
+		--radius-sm: 10px;
+		--radius-md: 16px;
+		--radius-lg: 22px;
+		--radius-xl: 28px;
+		--radius-2xl: 36px;
+		--radius-full: 999px;
+		--shadow-sm: inset 0 1px 0 rgb(255 255 255 / 0.06);
+		--shadow-md: 0 16px 32px rgb(0 0 0 / 0.38);
+		--shadow-lg: 0 28px 48px rgb(0 0 0 / 0.5);
+		--shadow-focus: 0 0 0 2px #07080a, 0 0 0 4px #c6ff1a;
+		--ease-ui: cubic-bezier(0.2, 0, 0, 1);
+		--duration-ui: 160ms;
+		--duration-sheen: 14s;
+		--font-sans: Inter, "Segoe UI", "Helvetica Neue", "Noto Sans", "Liberation Sans", sans-serif;
+		--font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", monospace;
+	}
+
+	*, *::before, *::after { box-sizing: border-box; }
+	html { overflow-x: clip; color-scheme: dark; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--font-sans);
+		font-size: 16px;
+		line-height: 1.5;
+		-webkit-font-smoothing: antialiased;
+		overflow-wrap: break-word;
+	}
+	h1, h2, h3, p, ul, ol, figure { margin: 0; }
+	button, input { font: inherit; color: inherit; }
+	button { cursor: pointer; }
+	:focus { outline: none; }
+	:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+	::selection { background: var(--color-primary); color: var(--color-primary-foreground); }
+	::placeholder { color: var(--color-muted); opacity: 1; }
+	.sr {
+		position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+		overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+	}
+	.wrap { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+	.ico { width: 22px; height: 22px; display: block; }
+	.legend, .clock, .kicker, .badge, .who, .err {
+		font-family: var(--font-mono);
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+	.legend, .kicker {
+		font-size: 12px;
+		font-weight: 500;
+		color: var(--color-muted);
+	}
+	.kicker { margin: 0 0 8px; }
+
+	/* ── cover ── */
+	.cover { padding: 22px 0 28px; }
+	.topbar {
+		display: flex; align-items: center; justify-content: space-between;
+		gap: 16px; margin-bottom: 16px; min-height: 32px;
+	}
+	.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+	.mark {
+		width: 8px; height: 8px; border-radius: var(--radius-full); flex: none;
+		background: var(--color-primary);
+	}
+	.word { font-weight: 600; font-size: 15px; letter-spacing: 0.04em; }
+	.clock { font-size: 12px; color: var(--color-muted); font-variant-numeric: tabular-nums; }
+	.stage {
+		display: grid;
+		grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+		gap: 16px;
+		padding: 22px;
+		border-radius: var(--radius-2xl);
+		border: 1px solid color-mix(in srgb, var(--color-border) 48%, transparent);
+		position: relative;
+		overflow: hidden;
+		min-width: 0;
+	}
+	.presence, .desk { min-width: 0; position: relative; }
+	.presence {
+		display: flex; flex-direction: column; justify-content: space-between;
+		align-items: center; gap: 18px; padding: 6px 8px 2px; min-height: 100%;
+	}
+	.capsule {
+		display: inline-flex; align-items: center; gap: 8px;
+		background: var(--color-primary); color: var(--color-primary-foreground);
+		font-weight: 600; font-size: 13px; letter-spacing: 0.01em;
+		padding: 7px 14px 7px 10px; border-radius: var(--radius-full);
+		position: relative; z-index: 1;
+	}
+	.capsule i {
+		width: 7px; height: 7px; border-radius: var(--radius-full);
+		background: var(--color-primary-foreground);
+	}
+	.presence-core {
+		display: flex; flex-direction: column; align-items: center; gap: 14px;
+		text-align: center; position: relative; z-index: 1;
+	}
+	.presence-line { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; }
+	.presence-sub { color: var(--color-muted); font-size: 14px; }
+
+	.orb {
+		width: 256px; height: 228px; position: relative; flex: none;
+		filter: drop-shadow(0 22px 16px rgb(0 0 0 / 0.55));
+	}
+	.orb-body {
+		position: absolute; inset: 0; overflow: hidden;
+		border-radius: 63% 37% 48% 52% / 44% 58% 42% 56%;
+		background:
+			radial-gradient(ellipse 56% 48% at 36% 42%, #f7feff 0%, #8ad8ff 14%, #3a6dff 36%, transparent 64%),
+			radial-gradient(ellipse 42% 50% at 66% 56%, #d7b4ff 0%, #6d32d4 34%, transparent 68%),
+			radial-gradient(ellipse 26% 22% at 58% 34%, #ffc4e4 0%, transparent 72%),
+			radial-gradient(ellipse 34% 28% at 76% 74%, #67f0ff 0%, transparent 70%),
+			radial-gradient(circle at 48% 52%, #16306c 0%, #090d1c 62%, #05060c 100%);
+		box-shadow:
+			inset 0 0 0 1px rgb(255 255 255 / 0.28),
+			inset 12px 10px 22px rgb(255 255 255 / 0.16),
+			inset -26px -22px 36px rgb(0 0 0 / 0.72);
+		animation: sheen var(--duration-sheen) var(--ease-ui) infinite;
+	}
+	.orb-body::before {
+		content: "";
+		position: absolute; width: 54%; height: 20%; left: 12%; top: 14%;
+		border-radius: var(--radius-full);
+		background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.95) 42%, rgb(214 255 255 / 0.4) 70%, transparent);
+		transform: rotate(-32deg);
+		filter: blur(0.6px);
+	}
+	.orb-body::after {
+		content: "";
+		position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+		background:
+			radial-gradient(ellipse 78% 74% at 46% 44%, transparent 46%, rgb(0 0 0 / 0.28) 72%, rgb(0 0 0 / 0.78) 100%);
+		box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
+	}
+	@keyframes sheen {
+		0%, 100% { border-radius: 63% 37% 48% 52% / 44% 58% 42% 56%; }
+		50% { border-radius: 52% 48% 58% 42% / 56% 44% 50% 50%; }
+	}
+
+	.topo {
+		position: absolute; pointer-events: none; color: rgb(244 246 239 / 0.72);
+	}
+	.topo-presence { width: 168px; height: 96px; top: 0; left: -8px; transform: scaleX(-1); }
+	.topo-desk { width: 240px; height: 140px; top: -6px; right: -8px; }
+
+	.controls { display: flex; align-items: center; justify-content: center; gap: 18px; position: relative; z-index: 1; }
+	.voice, .side, .send, .ghost, .fill, .tile, .hist, .linkish, .more {
+		transition: transform var(--duration-ui) var(--ease-ui), background var(--duration-ui) var(--ease-ui), border-color var(--duration-ui) var(--ease-ui);
+	}
+	.voice {
+		width: 76px; height: 76px; border: 0; border-radius: var(--radius-full);
+		background: var(--color-primary); color: var(--color-primary-foreground);
+		display: grid; place-items: center; flex: none;
+		box-shadow:
+			0 0 0 10px rgb(198 255 26 / 0.14),
+			0 0 0 20px rgb(198 255 26 / 0.06);
+	}
+	.voice .ico { width: 28px; height: 28px; }
+	.voice:active, .send:active { transform: translateY(1px); }
+	.side {
+		width: 48px; height: 48px; border-radius: var(--radius-full);
+		display: grid; place-items: center; flex: none; padding: 0;
+	}
+	.side .ico { width: 20px; height: 20px; }
+	.side-write { background: var(--color-lilac); color: var(--color-lilac-ink); border: 0; }
+	.side-stop {
+		background: var(--color-surface-raised); color: var(--color-surface-foreground);
+		border: 1px solid var(--color-border);
+	}
+
+	.desk { display: flex; flex-direction: column; gap: 16px; min-height: 100%; }
+	.greet { position: relative; min-height: 132px; padding-right: 8px; }
+	.greet h1 {
+		position: relative; z-index: 1;
+		font-size: 52px; font-weight: 500; letter-spacing: -0.035em; line-height: 1.02;
+		max-width: 8ch;
+	}
+	.greet .sub { position: relative; z-index: 1; margin-top: 10px; color: var(--color-muted); max-width: 34ch; }
+
+	.bento {
+		display: grid;
+		grid-template-columns: 1.22fr 0.78fr;
+		grid-template-rows: 1fr 1fr;
+		gap: 12px;
+		min-height: 300px;
+		flex: 1;
+	}
+	.tile {
+		display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;
+		text-align: left; border: 0; border-radius: var(--radius-xl);
+		padding: 16px 16px 18px; min-height: 132px; width: 100%;
+	}
+	.tile-voice { grid-row: 1 / span 2; background: var(--color-primary); color: var(--color-primary-foreground); }
+	.tile-write { background: var(--color-lilac); color: var(--color-lilac-ink); }
+	.tile-shelf { background: var(--color-blush); color: var(--color-blush-ink); }
+	.tile-top { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+	.bubble {
+		width: 36px; height: 36px; border-radius: var(--radius-full);
+		display: grid; place-items: center; background: rgb(16 12 20 / 0.1);
+	}
+	.tile strong { display: block; font-size: 30px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.02; }
+	.tile em { display: block; margin-top: 6px; font-style: normal; font-size: 13px; font-weight: 500; }
+	.arrow { width: 18px; height: 18px; opacity: 0.72; }
+
+	.recent-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 36px; }
+	.list-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+	.linkish {
+		background: none; border: 0; color: var(--color-muted);
+		text-decoration: underline; text-underline-offset: 3px;
+		min-height: 44px; padding: 8px 0; font-size: 14px;
+	}
+	.rows { display: grid; gap: 8px; list-style: none; padding: 0; }
+	.hist {
+		display: flex; align-items: center; gap: 12px; width: 100%;
+		background: var(--color-surface-raised); color: var(--color-surface-foreground);
+		border: 1px solid color-mix(in srgb, var(--color-border) 42%, transparent);
+		border-radius: var(--radius-lg); min-height: 58px; padding: 8px 12px 8px 10px;
+		text-align: left; box-shadow: var(--shadow-sm);
+	}
+	.hist.is-current { border-color: var(--color-primary); }
+	.hist > .label { flex: 1; min-width: 0; font-size: 15px; }
+	.hist > .pip, .hist > .more { flex: 0 0 auto; }
+	.pip {
+		width: 28px; height: 28px; border-radius: var(--radius-full); flex: none;
+		display: grid; place-items: center;
+	}
+	.pip .ico { width: 14px; height: 14px; }
+	.pip-voice { background: var(--color-primary); color: var(--color-primary-foreground); }
+	.pip-write { background: var(--color-lilac); color: var(--color-lilac-ink); }
+	.pip-shelf { background: var(--color-blush); color: var(--color-blush-ink); }
+	.more {
+		width: 32px; height: 32px; border: 0; background: transparent; color: var(--color-muted);
+		display: grid; place-items: center; flex: none; border-radius: var(--radius-full);
+	}
+	.more .ico { width: 16px; height: 16px; }
+
+	@media (hover: hover) and (pointer: fine) {
+		.tile:hover { transform: translateY(-2px); }
+		.hist:hover { border-color: var(--color-border); }
+		.send:hover, .voice:hover { filter: brightness(1.05); }
+	}
+
+	/* ── sections ── */
+	.band { padding: 56px 0; border-top: 1px solid var(--color-rule); }
+	.band h2 {
+		font-size: clamp(28px, 3vw, 36px); font-weight: 600;
+		letter-spacing: -0.03em; line-height: 1.15;
+	}
+	.lede { margin-top: 10px; max-width: 62ch; color: var(--color-muted); }
+	.block { margin-top: 22px; }
+
+	.swatches {
+		display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 12px; list-style: none; padding: 0;
+	}
+	.swatches li { display: grid; gap: 8px; min-width: 0; }
+	.chip {
+		min-height: 92px; border-radius: var(--radius-lg); padding: 12px;
+		display: flex; align-items: flex-end; font-weight: 600; letter-spacing: -0.02em;
+		border: 1px solid transparent;
+	}
+	.chip small { font-weight: 500; font-size: 14px; }
+	.sw-surface { background: var(--color-surface); color: var(--color-surface-foreground); border-color: var(--color-border); }
+	.sw-raised { background: var(--color-surface-raised); color: var(--color-surface-foreground); border-color: color-mix(in srgb, var(--color-border) 50%, transparent); }
+	.sw-muted { background: var(--color-surface-raised); color: var(--color-muted); }
+	.sw-lime { background: var(--color-primary); color: var(--color-primary-foreground); }
+	.sw-lilac { background: var(--color-lilac); color: var(--color-lilac-ink); }
+	.sw-blush { background: var(--color-blush); color: var(--color-blush-ink); }
+	.sw-danger { background: var(--color-danger); color: var(--color-danger-foreground); }
+	.sw-line { background: var(--color-surface); border-color: var(--color-border); color: var(--color-muted); }
+
+	.specimens { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+	.specimens figure {
+		background: var(--color-surface-raised); border-radius: var(--radius-xl);
+		padding: 16px; border: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+		display: flex; flex-direction: column; gap: 12px; min-width: 0;
+	}
+	.specimens figcaption { color: var(--color-muted); font-size: 14px; }
+	.well {
+		min-height: 180px; border-radius: var(--radius-lg);
+		background: var(--color-surface); display: grid; place-items: center;
+		position: relative; overflow: hidden;
+	}
+	.well .orb { width: 140px; height: 130px; }
+	.radii { display: flex; align-items: flex-end; gap: 10px; min-height: 180px; padding: 8px; }
+	.radii i { display: block; background: var(--color-primary); color: var(--color-primary-foreground); }
+	.radii i:nth-child(1) { width: 48px; height: 64px; border-radius: var(--radius-sm); }
+	.radii i:nth-child(2) { width: 48px; height: 88px; border-radius: var(--radius-md); }
+	.radii i:nth-child(3) { width: 48px; height: 120px; border-radius: var(--radius-xl); }
+	.radii i:nth-child(4) { width: 48px; height: 148px; border-radius: var(--radius-full); }
+	.lines { min-height: 180px; position: relative; overflow: hidden; border-radius: var(--radius-lg); background: var(--color-surface); }
+	.lines .topo { width: 280px; height: 180px; top: 8px; right: -20px; }
+
+	.parts {
+		display: flex; flex-wrap: wrap; gap: 16px 18px; align-items: flex-end;
+		background: var(--color-surface-raised); border-radius: var(--radius-xl);
+		padding: 18px; border: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+	}
+	.part { display: grid; gap: 8px; justify-items: start; }
+	.send, .ghost, .fill {
+		min-height: 48px; padding: 0 18px; border-radius: var(--radius-full); font-weight: 600;
+	}
+	.send { background: var(--color-primary); color: var(--color-primary-foreground); border: 0; }
+	.ghost { background: transparent; color: var(--color-surface-foreground); border: 1px solid var(--color-border); }
+	.fill-lilac { background: var(--color-lilac); color: var(--color-lilac-ink); border: 0; }
+	.fill-blush { background: var(--color-blush); color: var(--color-blush-ink); border: 0; }
+	.fill-danger { background: var(--color-danger); color: var(--color-danger-foreground); border: 0; }
+	button:disabled, .ghost:disabled {
+		background: transparent; color: var(--color-muted);
+		border: 1px solid var(--color-border); cursor: not-allowed;
+	}
+	.field { display: grid; gap: 6px; min-width: min(100%, 280px); flex: 1; }
+	.field input {
+		min-height: 48px; padding: 12px 14px; border-radius: var(--radius-md);
+		background: var(--color-surface); color: var(--color-surface-foreground);
+		border: 1px solid var(--color-border); width: 100%;
+	}
+	.field.is-error input { border-color: var(--color-danger); }
+	.err { font-size: 12px; color: var(--color-danger); letter-spacing: 0.04em; text-transform: none; }
+	.badges { display: flex; flex-wrap: wrap; gap: 8px; }
+	.badge {
+		font-size: 12px; font-weight: 500; padding: 6px 10px; border-radius: var(--radius-full);
+		border: 1px solid var(--color-border); color: var(--color-muted);
+	}
+	.badge.live { background: var(--color-primary); color: var(--color-primary-foreground); border-color: transparent; }
+	.badge.fault { color: var(--color-danger); border-color: var(--color-danger); }
+
+	.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+	.card {
+		background: var(--color-surface-raised); border-radius: var(--radius-xl);
+		padding: 18px; min-height: 190px;
+		border: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+		display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
+	}
+	.card h3 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+	.card p:last-child { color: var(--color-surface-foreground); }
+
+	.console {
+		background: var(--color-surface-raised); border-radius: var(--radius-xl);
+		padding: 8px 18px 18px;
+		border: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
+	}
+	.console-bar { display: flex; align-items: center; gap: 8px; min-height: 48px; }
+	.console-bar .legend { margin-right: auto; }
+	.thread { list-style: none; padding: 0; }
+	.msg {
+		display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px;
+		padding: 12px 0; border-top: 1px solid var(--color-rule);
+	}
+	.msg:first-child { border-top: 0; }
+	.who { font-size: 12px; color: var(--color-muted); padding-top: 3px; }
+	.msg.from-pith .who { color: var(--color-primary); }
+	.prompt-row { display: flex; gap: 10px; align-items: flex-end; margin-top: 8px; }
+	.hint { margin-top: 8px; color: var(--color-muted); font-size: 13px; }
+
+	.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+	.cmp-off, .cmp-on {
+		border-radius: var(--radius-xl); padding: 16px; min-height: 300px;
+		display: flex; flex-direction: column; gap: 12px;
+	}
+	.cmp-off {
+		background: linear-gradient(165deg, #ffb020 0%, #ff4d8d 42%, #6d28d9 78%, #1a1033 100%);
+		color: #fff;
+	}
+	.cmp-on {
+		background: var(--color-surface-raised);
+		border: 1px solid color-mix(in srgb, var(--color-border) 45%, transparent);
+	}
+	.bad-art { display: grid; gap: 10px; }
+	.metal {
+		font-weight: 800; font-size: 64px; letter-spacing: -0.06em; line-height: 0.9;
+		background: linear-gradient(180deg, #fff 0%, #9aa6b8 46%, #fff 58%, #c5d0e0 100%);
+		-webkit-background-clip: text; background-clip: text; color: transparent;
+	}
+	.bad-row { display: flex; gap: 10px; align-items: center; }
+	.burst {
+		width: 54px; height: 54px; border-radius: var(--radius-full); flex: none;
+		background: repeating-conic-gradient(from 0deg, #c6ff1a 0 8deg, transparent 8deg 22deg);
+	}
+	.sun {
+		height: 28px; border-radius: 4px;
+		background: repeating-linear-gradient(#ff7ad9 0 4px, #241038 4px 8px);
+	}
+	.hud {
+		display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px;
+		font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em;
+		color: #e4ff4a; background: #10140a;
+		clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+		box-shadow: inset 0 0 0 1px #4eefd2;
+	}
+	.cmp-off .legend { color: #fff; }
+	.cmp-off .note, .cmp-on .note {
+		margin-top: auto; font-size: 14px; line-height: 1.45;
+	}
+	.cmp-off .note { background: rgb(0 0 0 / 0.55); padding: 10px 12px; border-radius: var(--radius-md); }
+	.cmp-on .note { color: var(--color-muted); }
+	.on-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+	.cmp-on .well { min-height: 120px; }
+	.cmp-on .orb { width: 92px; height: 86px; }
+
+	.split { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 28px; align-items: start; }
+	.notes { margin: 14px 0 0; padding-left: 1.2em; display: grid; gap: 10px; }
+	.notes li::marker { color: var(--color-primary); font-family: var(--font-mono); font-size: 12px; }
+	.handset {
+		width: min(340px, 100%); justify-self: end;
+		background: var(--color-surface);
+		border: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
+		border-radius: 40px; padding: 18px 14px 16px;
+		display: flex; flex-direction: column; gap: 14px; align-items: stretch;
+		position: relative; overflow: hidden;
+	}
+	.handset { padding-bottom: 30px; }
+	.handset .topo { width: 156px; height: 78px; top: 0; right: 0; }
+	.handset .capsule { align-self: center; position: relative; z-index: 1; }
+	.handset .orb { width: 112px; height: 104px; margin: 10px auto 0; }
+	.handset h3 {
+		font-size: 32px; font-weight: 500; letter-spacing: -0.035em; line-height: 1.02;
+	}
+	.handset .sub { color: var(--color-muted); font-size: 14px; }
+	.handset .bento { min-height: 0; flex: none; grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+	.handset .tile-voice { grid-column: 1 / -1; grid-row: auto; min-height: 118px; }
+	.handset .tile { min-height: 104px; padding: 12px; }
+	.handset .tile strong { font-size: 22px; }
+	.handset .controls { padding-top: 2px; }
+	.handset .voice { width: 64px; height: 64px; }
+	.foot {
+		display: flex; justify-content: space-between; gap: 12px;
+		padding: 22px 0 28px; border-top: 1px solid var(--color-rule);
+	}
+
+	@media (max-width: 920px) {
+		.stage { grid-template-columns: 1fr; }
+		.presence { padding-bottom: 8px; }
+		.orb { width: 176px; height: 164px; }
+		.greet { min-height: 0; }
+	}
+	@media (max-width: 800px) {
+		.swatches, .specimens, .cards, .compare { grid-template-columns: 1fr 1fr; }
+		.cards, .specimens { grid-template-columns: 1fr; }
+		.split { grid-template-columns: 1fr; }
+		.handset { justify-self: center; order: -1; }
+	}
+	@media (max-width: 720px) {
+		.wrap { width: min(1120px, calc(100% - 32px)); }
+		.cover { padding-top: 12px; }
+		.topbar { margin-bottom: 10px; }
+		.top-mid { display: none; }
+		.stage { padding: 14px; border-radius: 28px; gap: 12px; }
+		.presence { gap: 10px; }
+		.presence-core { gap: 8px; }
+		.presence-line { font-size: 18px; }
+		.orb { width: 142px; height: 128px; }
+		.desk { gap: 12px; }
+		.recent { margin-top: 28px; }
+		.greet h1 { font-size: 34px; }
+		.greet .sub { margin-top: 6px; }
+		.bento { gap: 8px; }
+		.tile { padding: 12px 12px 14px; }
+		.tile strong { font-size: 24px; }
+		.voice { width: 64px; height: 64px; }
+		.voice .ico { width: 24px; height: 24px; }
+		.band { padding: 40px 0; }
+		.prompt-row { flex-direction: column; align-items: stretch; }
+		.prompt-row .send { width: 100%; }
+	}
+	@media (max-width: 560px) {
+		.swatches, .compare { grid-template-columns: 1fr; }
+	}
+	@media (max-width: 480px) {
+		.bento { grid-template-columns: 1fr 1fr; grid-template-rows: auto; min-height: 0; }
+		.tile-voice { grid-column: 1 / -1; grid-row: auto; min-height: 124px; }
+		.topo-desk { width: 140px; height: 84px; }
+	}
+
+	@media (min-width: 1000px) {
+		.cover {
+			min-height: 1000px;
+			box-sizing: border-box;
+			padding-top: 26px;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		*, *::before, *::after {
+			animation: none !important;
+			transition: none !important;
+		}
+		.tile:hover, .voice:active, .send:active { transform: none; }
+	}
+	@media (prefers-contrast: more) {
+		.stage, .hist, .field input, .side-stop, .ghost, .card, .console, .handset {
+			border-color: var(--color-surface-foreground);
+		}
+	}
+</style>
+</head>
+<body>
+	<header class="cover">
+		<div class="wrap">
+			<div class="topbar">
+				<div class="brand">
+					<span class="mark" aria-hidden="true"></span>
+					<span class="word">Pith</span>
+					<span class="legend top-mid">Local agent</span>
+				</div>
+				<span class="legend top-mid">Desk index</span>
+				<span class="clock">18:42 · No link</span>
+			</div>
+			<article class="stage" aria-label="Pith, on this desk">
+				<section class="presence">
+					<svg class="topo topo-presence" viewBox="0 0 360 200" aria-hidden="true">
+						<g fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round">
+							<path d="M-10 190C70 150 140 70 360 36"/>
+							<path d="M-10 170C80 132 150 58 360 26"/>
+							<path d="M0 150C90 116 160 50 360 16"/>
+							<path d="M20 132C100 102 176 44 360 8"/>
+							<path d="M48 116C118 90 190 40 360 0"/>
+							<path d="M84 102C140 80 210 36 360 -8"/>
+						</g>
+					</svg>
+					<span class="capsule"><i aria-hidden="true"></i>On device</span>
+					<div class="presence-core">
+						<div class="orb" aria-hidden="true"><span class="orb-body"></span></div>
+						<p class="presence-line">Nothing leaves the room.</p>
+						<p class="presence-sub">Voice, notes, and the shelf.</p>
+					</div>
+					<div class="controls">
+						<button type="button" class="side side-write" aria-label="Write a thread">
+							<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5.2 18.8 10 8 20.8H3.2V16Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12.2 7 17 11.8" stroke="currentColor" stroke-width="1.7"/></svg>
+						</button>
+						<button type="button" class="voice" aria-label="Speak, on this device">
+							<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3.2" width="6" height="10.2" rx="3" fill="currentColor"/><path d="M6.8 11.2a5.2 5.2 0 0 0 10.4 0M12 16.6v3.1M8.8 19.7h6.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+						</button>
+						<button type="button" class="side side-stop" aria-label="Stop listening">
+							<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+						</button>
+					</div>
+				</section>
+				<section class="desk">
+					<div class="greet">
+						<svg class="topo topo-desk" viewBox="0 0 360 200" aria-hidden="true">
+							<g fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round">
+								<path d="M-10 190C70 150 140 70 360 36"/>
+								<path d="M-10 170C80 132 150 58 360 26"/>
+								<path d="M0 150C90 116 160 50 360 16"/>
+								<path d="M20 132C100 102 176 44 360 8"/>
+								<path d="M48 116C118 90 190 40 360 0"/>
+								<path d="M84 102C140 80 210 36 360 -8"/>
+							</g>
+						</svg>
+						<p class="legend">This evening</p>
+						<h1>Back at<br>the desk.</h1>
+						<p class="sub">Three threads never left this machine.</p>
+					</div>
+					<div class="bento">
+						<button type="button" class="tile tile-voice">
+							<span class="tile-top">
+								<span class="bubble" aria-hidden="true">
+									<svg class="ico" viewBox="0 0 24 24"><rect x="9" y="3.2" width="6" height="10.2" rx="3" fill="currentColor"/><path d="M6.8 11.2a5.2 5.2 0 0 0 10.4 0M12 16.6v3.1M8.8 19.7h6.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+								</span>
+								<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8M10 8h6v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+							</span>
+							<span>
+								<strong>Voice<br>on device</strong>
+								<em>Hold a thought out loud.</em>
+							</span>
+						</button>
+						<button type="button" class="tile tile-write">
+							<span class="tile-top">
+								<span class="bubble" aria-hidden="true">
+									<svg class="ico" viewBox="0 0 24 24"><path d="M14 5.2 18.8 10 8 20.8H3.2V16Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+								</span>
+								<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8M10 8h6v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+							</span>
+							<span><strong>Write</strong><em>Start a thread</em></span>
+						</button>
+						<button type="button" class="tile tile-shelf">
+							<span class="tile-top">
+								<span class="bubble" aria-hidden="true">
+									<svg class="ico" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M4 15.2 8.2 12l3 2.3 2.5-2L20 16.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+								</span>
+								<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8M10 8h6v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+							</span>
+							<span><strong>Shelf</strong><em>Search the files</em></span>
+						</button>
+					</div>
+					<div class="recent">
+						<div class="recent-head">
+							<h2 class="list-title">On the desk</h2>
+							<button type="button" class="linkish">Open shelf</button>
+						</div>
+						<ul class="rows">
+							<li>
+								<button type="button" class="hist is-current" aria-current="true">
+									<span class="pip pip-voice" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><rect x="9" y="3.2" width="6" height="10.2" rx="3" fill="currentColor"/><path d="M6.8 11.2a5.2 5.2 0 0 0 10.4 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+									<span class="label">Where the lease is filed</span>
+									<span class="more" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="18" r="1.5" fill="currentColor"/></svg></span>
+								</button>
+							</li>
+							<li>
+								<button type="button" class="hist">
+									<span class="pip pip-write" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><path d="M14 5.2 18.8 10 8 20.8H3.2V16Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
+									<span class="label">Evening note, still a draft</span>
+									<span class="more" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="18" r="1.5" fill="currentColor"/></svg></span>
+								</button>
+							</li>
+							<li>
+								<button type="button" class="hist">
+									<span class="pip pip-shelf" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></span>
+									<span class="label">Frame from 12 March</span>
+									<span class="more" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="18" r="1.5" fill="currentColor"/></svg></span>
+								</button>
+							</li>
+						</ul>
+					</div>
+				</section>
+			</article>
+		</div>
+	</header>
+
+	<main>
+		<section class="band" id="color">
+			<div class="wrap">
+				<p class="kicker">01 — Color</p>
+				<h2>Lime is the press. Pastels assist.</h2>
+				<p class="lede">Acid lime fills the voice path and the live capsule. Lilac writes. Blush searches the shelf. The ground stays near-black, and the type on it stays light.</p>
+				<ul class="swatches block">
+					<li><div class="chip sw-surface"><small>Desk</small></div><span class="legend">Surface</span></li>
+					<li><div class="chip sw-raised"><small>Row</small></div><span class="legend">Raised</span></li>
+					<li><div class="chip sw-muted"><small>18:42</small></div><span class="legend">Muted</span></li>
+					<li><div class="chip sw-lime"><small>Voice</small></div><span class="legend">Primary</span></li>
+					<li><div class="chip sw-lilac"><small>Write</small></div><span class="legend">Lilac</span></li>
+					<li><div class="chip sw-blush"><small>Shelf</small></div><span class="legend">Blush</span></li>
+					<li><div class="chip sw-danger"><small>Forget</small></div><span class="legend">Danger</span></li>
+					<li><div class="chip sw-line"><small>Edge</small></div><span class="legend">Border</span></li>
+				</ul>
+			</div>
+		</section>
+
+		<section class="band" id="shape">
+			<div class="wrap">
+				<p class="kicker">02 — Shape and depth</p>
+				<h2>A glass body, a round corner</h2>
+				<p class="lede">The orb holds the color. The tiles are flat fills with a generous radius. Contour lines are a few strokes in the corner, not a texture.</p>
+				<div class="specimens block">
+					<figure>
+						<div class="well"><div class="orb" aria-hidden="true"><span class="orb-body"></span></div></div>
+						<figcaption>One iridescent body. Blue, violet, cyan, a dark rim. It is presence, not a control.</figcaption>
+					</figure>
+					<figure>
+						<div class="well"><div class="radii" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+						<figcaption>10, 16, 28, and the full pill. The voice circle and the capsule use the pill. Tiles use 28.</figcaption>
+					</figure>
+					<figure>
+						<div class="lines"><svg class="topo" viewBox="0 0 360 200" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round"><path d="M-10 190C70 150 140 70 360 36"/><path d="M-10 170C80 132 150 58 360 26"/><path d="M0 150C90 116 160 50 360 16"/><path d="M20 132C100 102 176 44 360 8"/><path d="M48 116C118 90 190 40 360 0"/><path d="M84 102C140 80 210 36 360 -8"/></g></svg></div>
+						<figcaption>Six lines, light on black, clipped by the card. They never cross a headline.</figcaption>
+					</figure>
+				</div>
+			</div>
+		</section>
+
+		<section class="band" id="controls">
+			<div class="wrap">
+				<p class="kicker">03 — Controls</p>
+				<h2>What you can press</h2>
+				<p class="lede">Send is the commit on a thread. Voice is the same lime, in the hand. Write and shelf keep their pastels. A fault is rose, and a disabled control is not a faded lime.</p>
+				<div class="parts block">
+					<div class="part"><span class="legend">Commit</span><button type="button" class="send">Send</button></div>
+					<div class="part"><span class="legend">Voice</span><button type="button" class="voice" aria-label="Speak"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3.2" width="6" height="10.2" rx="3" fill="currentColor"/><path d="M6.8 11.2a5.2 5.2 0 0 0 10.4 0M12 16.6v3.1" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button></div>
+					<div class="part"><span class="legend">Quiet</span><button type="button" class="ghost">Hold</button></div>
+					<div class="part"><span class="legend">Write</span><button type="button" class="fill fill-lilac">Write</button></div>
+					<div class="part"><span class="legend">Shelf</span><button type="button" class="fill fill-blush">Shelf</button></div>
+					<div class="part"><span class="legend">Fault</span><button type="button" class="fill fill-danger">Forget</button></div>
+					<div class="part"><span class="legend">Disabled</span><button type="button" class="ghost" disabled>Sync</button></div>
+					<label class="field">
+						<span class="legend">Note</span>
+						<input type="text" value="Keep the lease in the evening note" autocomplete="off">
+					</label>
+					<label class="field is-error">
+						<span class="legend">Path</span>
+						<input type="text" value="cloud://lease" aria-invalid="true" autocomplete="off">
+						<span class="err">No cloud path. The shelf is on this machine.</span>
+					</label>
+					<div class="part">
+						<span class="legend">States</span>
+						<div class="badges">
+							<span class="badge live">On device</span>
+							<span class="badge">Draft</span>
+							<span class="badge fault">Fault</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="band" id="features">
+			<div class="wrap">
+				<p class="kicker">04 — Features</p>
+				<h2>Three jobs, three faces</h2>
+				<p class="lede">Each card is one channel. The pip matches the tile. The sentence stays on the dark face, in the paper white.</p>
+				<div class="cards block">
+					<article class="card">
+						<span class="pip pip-voice" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><rect x="9" y="3.2" width="6" height="10.2" rx="3" fill="currentColor"/></svg></span>
+						<p class="legend">Voice</p>
+						<h3>Said, and kept</h3>
+						<p>Speak once. Pith files the line on this machine, beside the note it belongs to.</p>
+					</article>
+					<article class="card">
+						<span class="pip pip-write" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><path d="M14 5.2 18.8 10 8 20.8H3.2V16Z" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></span>
+						<p class="legend">Write</p>
+						<h3>A thread in text</h3>
+						<p>The draft stays a draft until you send. Sending does not open a network path.</p>
+					</article>
+					<article class="card">
+						<span class="pip pip-shelf" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></span>
+						<p class="legend">Shelf</p>
+						<h3>Files you already have</h3>
+						<p>Search the desk. A frame, a lease, a note. The index does not leave the room.</p>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section class="band" id="console">
+			<div class="wrap">
+				<p class="kicker">05 — Console</p>
+				<h2>The thread stays local</h2>
+				<p class="lede">Names are labels. Pith’s name is lime. The sentence is ordinary type. There is no bubble and no portrait.</p>
+				<div class="console block">
+					<div class="console-bar">
+						<span class="legend">Thread</span>
+						<span class="badge live">On device</span>
+						<span class="badge">Draft</span>
+					</div>
+					<ol class="thread">
+						<li class="msg"><span class="who">You</span><p>Where is the lease filed?</p></li>
+						<li class="msg from-pith"><span class="who">Pith</span><p>desk/lease.pdf, page two. It is still on this machine.</p></li>
+						<li class="msg"><span class="who">You</span><p>Keep that in the evening note.</p></li>
+						<li class="msg from-pith"><span class="who">Pith</span><p>The draft is on the shelf. Still local. Nothing was sent out.</p></li>
+					</ol>
+					<div class="prompt-row">
+						<label class="field">
+							<span class="legend">Add</span>
+							<input type="text" value="Keep the lease in the evening note" autocomplete="off">
+						</label>
+						<button type="button" class="send">Send</button>
+					</div>
+					<p class="hint">Stays on this machine.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="band" id="boundary">
+			<div class="wrap">
+				<p class="kicker">06 — Off-style</p>
+				<h2>Where the style stops</h2>
+				<p class="lede">The left panel is the neighboring mistake: metal type, a sunset, a starburst, a clipped plate. The right panel is the same job, built as a desk.</p>
+				<div class="compare block">
+					<div class="cmp-off">
+						<p class="legend">Off-style</p>
+						<div class="bad-art">
+							<div class="metal">ACID</div>
+							<div class="bad-row">
+								<span class="burst" aria-hidden="true"></span>
+								<span class="hud">LIVE // LINK</span>
+							</div>
+							<div class="sun" aria-hidden="true"></div>
+						</div>
+						<p class="note">Warped metal type, a striped sun, a spike, a chamfered plate. Lime is a costume, and the word is the hero.</p>
+					</div>
+					<div class="cmp-on">
+						<p class="legend">On-style</p>
+						<div class="well">
+							<svg class="topo" viewBox="0 0 360 200" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round"><path d="M20 160C120 120 200 60 360 24"/><path d="M40 140C130 104 210 52 360 16"/><path d="M70 122C150 92 230 46 360 8"/></g></svg>
+							<div class="orb" aria-hidden="true"><span class="orb-body"></span></div>
+						</div>
+						<div class="on-row">
+							<button type="button" class="send">Speak</button>
+							<button type="button" class="fill fill-lilac">Write</button>
+							<button type="button" class="fill fill-blush">Shelf</button>
+						</div>
+						<p class="note">Lime is the control. Lilac and blush support it. The orb sits behind the job, and the type stays a plain grotesque.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="band" id="narrow">
+			<div class="wrap split">
+				<div>
+					<p class="kicker">07 — Narrow</p>
+					<h2>The same desk, upright</h2>
+					<p class="lede">The handset is Pith in one column. The wide page uses that order once the stage is no longer two columns.</p>
+					<ol class="notes">
+						<li>Below 920px the stage stacks. The presence, with the orb and the voice circle, sits above the greeting.</li>
+						<li>The orb steps from 248px to 176px, then to 142px below 720px. The voice circle steps from 76px to 64px. Both stay above the 48px touch floor. Side circles stay 48px.</li>
+						<li>The greeting steps from 52px to 34px. Tile titles step from 30px to 24px. Body stays 16px. Mono labels stay 12px.</li>
+						<li>Below 480px the lime tile spans the width. Lilac and blush stay side by side. They do not become a horizontal scroller.</li>
+						<li>Page inset steps from 24px to 16px below 720px. The stage radius steps from 36px to 28px. Stage padding steps to 14px.</li>
+						<li>Below 640px the composer stacks and Send spans the row. Swatches, the off-style pair, and the feature cards collapse. The handset centers.</li>
+						<li>A fine pointer may lift a tile 2px. A coarse pointer does not. Press still moves Send and the voice circle 1px down.</li>
+						<li>Under reduced motion the orb holds its resting shape and the lift stops. Contour lines stay. They do not move.</li>
+						<li>Nothing on this page scrolls sideways at 390px.</li>
+					</ol>
+				</div>
+				<div class="handset" aria-label="Pith at a narrow width">
+					<svg class="topo" viewBox="0 0 200 100" aria-hidden="true">
+						<g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+							<path d="M8 96C52 70 108 36 208 16"/>
+							<path d="M28 86C64 64 116 32 208 8"/>
+							<path d="M52 76C84 58 124 30 208 2"/>
+							<path d="M78 66C104 52 136 28 208 -4"/>
+							<path d="M108 56C128 46 150 26 208 -10"/>
+						</g>
+					</svg>
+					<span class="capsule"><i aria-hidden="true"></i>On device</span>
+					<div class="orb" aria-hidden="true"><span class="orb-body"></span></div>
+					<div>
+						<p class="legend">This evening</p>
+						<h3>Back at<br>the desk.</h3>
+						<p class="sub">Three threads, still here.</p>
+					</div>
+					<div class="bento">
+						<button type="button" class="tile tile-voice">
+							<span class="tile-top">
+								<span class="bubble" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><rect x="9" y="3.2" width="6" height="10.2" rx="3" fill="currentColor"/></svg></span>
+								<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16 16 8M10 8h6v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+							</span>
+							<span><strong>Voice</strong><em>On device</em></span>
+						</button>
+						<button type="button" class="tile tile-write"><span><strong>Write</strong><em>A thread</em></span></button>
+						<button type="button" class="tile tile-shelf"><span><strong>Shelf</strong><em>Files</em></span></button>
+					</div>
+					<ul class="rows">
+						<li>
+							<button type="button" class="hist is-current" aria-current="true">
+								<span class="pip pip-voice" aria-hidden="true"></span>
+								<span class="label">Where the lease is filed</span>
+							</button>
+						</li>
+						<li>
+							<button type="button" class="hist">
+								<span class="pip pip-write" aria-hidden="true"></span>
+								<span class="label">Evening note, still a draft</span>
+							</button>
+						</li>
+					</ul>
+					<div class="controls">
+						<button type="button" class="side side-write" aria-label="Write a thread">
+							<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5.2 18.8 10 8 20.8H3.2V16Z" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+						</button>
+						<button type="button" class="voice" aria-label="Speak, on this device">
+							<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3.2" width="6" height="10.2" rx="3" fill="currentColor"/><path d="M6.8 11.2a5.2 5.2 0 0 0 10.4 0M12 16.6v3.1M8.8 19.7h6.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+						</button>
+						<button type="button" class="side side-stop" aria-label="Stop listening">
+							<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8l8 8M16 8l-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+						</button>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+	<footer class="foot wrap">
+		<p class="legend">Acid Lime</p>
+		<p class="legend">Pith · on device</p>
+	</footer>
+</body>
+</html>

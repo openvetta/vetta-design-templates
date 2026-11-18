@@ -1,0 +1,42 @@
+/* Acid Lime — a nocturnal desk for a local agent.
+   Near-black canvas, one acid lime for what you press, lilac and blush
+   as supporting tiles, an iridescent glass orb as presence, sparse contour lines.
+   Not a rave poster, not chrome display type, not a chamfered HUD.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #c6ff1a;
+	--color-primary-foreground: #14180c;
+	--color-surface: #07080a;
+	--color-surface-foreground: #f4f6ef;
+	--color-surface-raised: #17191d;
+	--color-muted: #b4bbae;
+	--color-accent: #d7c6ff;
+	--color-danger: #ff5d78;
+	--color-border: #6e7a64;
+
+	--color-lilac: #d7c6ff;
+	--color-lilac-ink: #1b1428;
+	--color-blush: #ffc8d6;
+	--color-blush-ink: #2a1218;
+	--color-danger-foreground: #2a0c14;
+	--color-rule: #2a2e28;
+
+	--radius-sm: 10px;
+	--radius-md: 16px;
+	--radius-lg: 22px;
+	--radius-xl: 28px;
+	--radius-2xl: 36px;
+	--radius-full: 999px;
+
+	--shadow-sm: inset 0 1px 0 rgb(255 255 255 / 0.06);
+	--shadow-md: 0 16px 32px rgb(0 0 0 / 0.38);
+	--shadow-lg: 0 28px 48px rgb(0 0 0 / 0.5);
+	--shadow-focus: 0 0 0 2px #07080a, 0 0 0 4px #c6ff1a;
+
+	--ease-ui: cubic-bezier(0.2, 0, 0, 1);
+	--duration-ui: 160ms;
+	--duration-sheen: 14s;
+
+	--font-sans: Inter, "Segoe UI", "Helvetica Neue", "Noto Sans", "Liberation Sans", sans-serif;
+	--font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", monospace;
+}
