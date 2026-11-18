@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "acid-lime",
+	"name": "Acid Lime",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 169,
+	"category": "product",
+	"vibe": "dark",
+	"tags": ["product", "dark", "acid", "lime", "agent", "bento", "orb"],
+	"blurb": "Nocturnal product UI for a local agent: a near-black canvas, one acid-lime action color, lilac and blush as supporting tiles, an iridescent glass orb as presence, and sparse contour lines. Rounded dark bento, light type, high readability. Not a rave poster, not chrome display type, not a chamfered HUD, not a sunset grid.",
+	"tagline": {
+		"en": "Near-black desk, one acid lime, a glass orb",
+		"zh": "近黑桌面，一枚酸性柠绿，一颗玻璃光球"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://uilingo.dev/styles/acid-graphics/",
+		"note": "Authored by Grok Bot. Original Acid Lime system for a local-first agent named Pith. Mood only, and not in the repo: a user-supplied mobile mock of two black phones on a lime-to-peach field, with an acid-lime action, lilac and blush tiles, an iridescent orb, and fine contour lines. Also mood only: UI Lingo Acid Graphics (https://uilingo.dev/styles/acid-graphics/) for black ground, one neon acid green, and liquid blobs; BENIBIX Acid (https://design.benibix.com/styles/acid/) for poison-bright green on black and liquid shapes; Acid Chrome system notes (https://freedesignmd.com/system/acid-chrome) for a near-black field and acid green reserved for actions; StyleMD Acid Black (https://getstylemd.com/library/acid-black) for chemical green on things you press, with wide type and mono readouts. This system keeps the lime-on-black, the liquid orb, and the reserved action color. It does not take the fisheye grid, spiky starbursts, or chrome-filled warped display type. No upstream assets, screenshots, logos, or copied code."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html",
+		"cover": "cover.webp"
+	},
+	"collectedAt": "2026-11-18"
+}
