@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "ios-liquid-glass",
+	"name": "Liquid Glass",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 122,
+	"category": "consumer",
+	"vibe": "light",
+	"tags": [
+		"consumer",
+		"light",
+		"mobile",
+		"ios",
+		"glass",
+		"glisse"
+	],
+	"blurb": "iOS-styled mobile web UI whose controls are the React package glisse 0.6.0 (Kelvin Zhang, MIT): capsule glass, a floating tab bar, segmented control, switch, slider, menu, and search over a daylight scene. Not SwiftUI, and not the colourless night glassmorphism entry. The catalog demo is a static frost preview; the integration example runs the real components.",
+	"tagline": {
+		"en": "iOS liquid glass, using the Glisse controls",
+		"zh": "iOS 液态玻璃，控件来自 Glisse"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "collected",
+		"author": "Grok Bot",
+		"upstream": "https://github.com/0kzh/glisse",
+		"sourceUrl": "https://github.com/0kzh/glisse/tree/v0.6.0",
+		"note": "Spec, static preview, and Cove example authored by Grok Bot for Vetta. Component behavior, metrics, and effects follow Glisse 0.6.0 (commit 4922c852a6866ee9991d2f8c715bb1cfbe7aa2b9) by Kelvin Zhang, MIT. No Glisse source, shader, or brand asset is copied into this folder. demo.html is an original CSS preview and does not run the library. Application UI installs the npm package."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html",
+		"cover": "cover.webp"
+	},
+	"collectedAt": "2026-11-20"
+}
