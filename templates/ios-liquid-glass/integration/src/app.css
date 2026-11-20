@@ -1,0 +1,250 @@
+.app {
+	--color-primary: #005fcc;
+	--color-primary-foreground: #ffffff;
+	--color-surface: #f2f2f7;
+	--color-surface-foreground: #000000;
+	--color-surface-raised: #ffffff;
+	--color-muted: #636366;
+	--color-accent: #248a3d;
+	--color-danger: #b42318;
+	--color-border: rgb(60 60 67 / 0.29);
+	--lg-fill: var(--color-primary);
+	--lg-on: var(--color-accent);
+	--lg-destructive: var(--color-danger);
+	min-height: 100vh;
+	min-height: 100dvh;
+	background: var(--color-surface);
+	color: var(--color-surface-foreground);
+	font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	font-size: 17px;
+	line-height: 1.29;
+	-webkit-font-smoothing: antialiased;
+}
+
+.app[data-theme="dark"] {
+	--color-primary: #a9c7ff;
+	--color-primary-foreground: #061018;
+	--color-surface: #000000;
+	--color-surface-foreground: #ffffff;
+	--color-surface-raised: #1c1c1e;
+	--color-muted: #aeaeb2;
+	--color-accent: #30d158;
+	--color-danger: #ffb4ab;
+	--color-border: rgb(84 84 88 / 0.65);
+}
+
+.app .lg-button[data-variant="filled"]:not([data-tint]) {
+	color: var(--color-primary-foreground);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #f2f2f7; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+h1, h2, p { margin: 0; }
+
+.column {
+	position: relative;
+	width: min(402px, 100%);
+	height: 100dvh;
+	margin: 0 auto;
+	background: linear-gradient(180deg, #f7f7fa 0, var(--color-surface) 240px);
+}
+.app[data-theme="dark"] .column {
+	background: linear-gradient(180deg, #141416 0, var(--color-surface) 240px);
+}
+.scroll {
+	position: absolute;
+	inset: 0;
+	overflow: auto;
+	padding-bottom: 128px;
+	background: transparent;
+}
+.dock::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 100%;
+	height: 28px;
+	background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-surface) 88%, transparent));
+	pointer-events: none;
+}
+.dock {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 8px 16px 0;
+	pointer-events: none;
+}
+.dock .lg-tab-bar { pointer-events: auto; }
+.home {
+	width: 128px;
+	height: 5px;
+	margin: 8px auto max(8px, env(safe-area-inset-bottom));
+	border-radius: 3px;
+	background: rgb(0 0 0 / 0.22);
+	pointer-events: none;
+}
+.app[data-theme="dark"] .home { background: rgb(255 255 255 / 0.32); }
+
+.screen {
+	--gutter: 16px;
+	--text: 32px;
+	padding-bottom: 8px;
+}
+.status {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	min-height: 22px;
+	padding: max(14px, env(safe-area-inset-top)) var(--gutter) 0;
+	font-size: 15px;
+	font-weight: 600;
+	letter-spacing: -0.24px;
+}
+.battery {
+	width: 22px;
+	height: 11px;
+	border: 1.5px solid currentColor;
+	border-radius: 3px;
+	position: relative;
+}
+.battery::before {
+	content: "";
+	position: absolute;
+	inset: 1.5px 6px 1.5px 1.5px;
+	background: currentColor;
+	border-radius: 1px;
+}
+.bar {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	min-height: 44px;
+	padding: 8px var(--gutter) 0;
+}
+.bar.trail { justify-content: flex-end; }
+h1 {
+	padding: 8px var(--gutter) 0;
+	font-size: 34px;
+	font-weight: 400;
+	line-height: 41px;
+	letter-spacing: 0.37px;
+}
+.title-1 {
+	font-size: 28px;
+	font-weight: 400;
+	line-height: 34px;
+	letter-spacing: 0.36px;
+	overflow-wrap: break-word;
+}
+.sub {
+	padding: 1px var(--gutter) 0;
+	color: var(--color-muted);
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 20px;
+	letter-spacing: -0.24px;
+}
+.sent { padding-top: 12px; }
+.section {
+	margin: 28px var(--text) 8px;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 18px;
+	letter-spacing: -0.08px;
+	color: var(--color-muted);
+}
+.hint { margin: 0 32px 8px; font-size: 13px; color: var(--color-muted); }
+.empty { padding: 28px 16px; color: var(--color-muted); font-size: 17px; }
+
+.group {
+	margin: 0 var(--gutter);
+	background: var(--color-surface-raised);
+	border-radius: 22px;
+	overflow: hidden;
+	box-shadow:
+		0 0 0 0.5px rgb(0 0 0 / 0.05),
+		0 1px 2px rgb(0 0 0 / 0.04);
+}
+.app[data-theme="dark"] .group {
+	box-shadow:
+		0 0 0 0.5px rgb(255 255 255 / 0.08),
+		0 1px 2px rgb(0 0 0 / 0.45);
+}
+.group.pad, .group.prose { padding: 14px 16px; }
+.group.pad { overflow: visible; }
+.group.prose p { font-size: 17px; line-height: 1.29; }
+.row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	width: 100%;
+	min-height: 60px;
+	padding: 10px 16px;
+	border: 0;
+	background: transparent;
+	text-align: left;
+	cursor: pointer;
+}
+.row.static { cursor: default; }
+.row:not(.static):active { background: rgb(120 120 128 / 0.16); }
+.row + .row { box-shadow: inset 0 0.5px 0 var(--color-border); }
+.row.wrap {
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: center;
+	min-height: 0;
+	padding: 4px 0;
+	cursor: default;
+}
+.row-copy { display: grid; gap: 2px; min-width: 0; }
+.row-copy b { font-size: 17px; font-weight: 400; }
+.row-copy span { color: var(--color-muted); font-size: 15px; }
+.row.static > span { font-size: 17px; }
+.chevron { width: 12px; height: 12px; flex: none; color: #c7c7cc; }
+.app[data-theme="dark"] .chevron { color: #636366; }
+.row strong { font-size: 17px; font-weight: 400; }
+
+.field {
+	max-width: none !important;
+	width: auto;
+	margin: 16px var(--gutter) 0;
+}
+.segment {
+	margin: 16px var(--gutter) 12px;
+	container-type: inline-size;
+}
+.segment .lg-segmented {
+	display: flex;
+	width: 100%;
+	--lg-tab-width: calc(100cqw / 3);
+}
+.slider-pad { padding: 0 16px 8px; }
+.actions { display: flex; gap: 8px; margin: 16px var(--gutter) 0; }
+.actions .lg-button { flex: 1; }
+.glass-sample { padding: 4px 16px 12px; }
+.float { display: inline-flex; align-items: center; height: 40px; padding: 0 16px; border-radius: 20px; font-size: 15px; }
+
+@media (prefers-reduced-transparency: reduce) {
+	.app {
+		--lg-glass: rgb(255 255 255 / 0.98);
+		--lg-surface: rgb(255 255 255 / 0.98);
+		--lg-blur: 0px;
+	}
+	.app[data-theme="dark"] {
+		--lg-glass: rgb(28 28 30 / 0.98);
+		--lg-surface: rgb(28 28 30 / 0.98);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.row { transition: none; }
+}

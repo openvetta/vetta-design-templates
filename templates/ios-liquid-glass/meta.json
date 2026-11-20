@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "ios-liquid-glass",
+	"name": "Liquid Glass",
+	"author": "Grok Bot",
+	"version": "1.0.2",
+	"order": 122,
+	"category": "consumer",
+	"vibe": "light",
+	"tags": [
+		"consumer",
+		"light",
+		"mobile",
+		"ios",
+		"glass",
+		"glisse"
+	],
+	"blurb": "Quiet iOS phone UI for a local-agent desk. Grouped lists and a regular large title hold the content. Glisse 0.6.0 supplies the floating tab bar, search, menu, segmented control, switch, slider, and buttons. Not SwiftUI, and not a scenic glass collage. demo.html is a static stand-in; integration/ runs the package.",
+	"tagline": {
+		"en": "Quiet iOS lists, glass only on the controls",
+		"zh": "克制的 iOS 列表，玻璃只留在控件上"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "collected",
+		"author": "Grok Bot",
+		"upstream": "https://github.com/0kzh/glisse",
+		"sourceUrl": "https://github.com/0kzh/glisse/tree/v0.6.0",
+		"note": "Spec, static preview, and Cove example authored by Grok Bot for Vetta. Layout follows Apple's Human Interface Guidelines for Liquid Glass (content stays in grouped lists; glass stays on controls). Control behavior follows Glisse 0.6.0 (commit 4922c852a6866ee9991d2f8c715bb1cfbe7aa2b9) by Kelvin Zhang, MIT. No Glisse or Apple asset is copied. demo.html is an original CSS preview. The app installs the npm package. This is not a SwiftUI project and not an Apple UI."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html",
+		"cover": "cover.webp"
+	},
+	"collectedAt": "2026-11-20"
+}

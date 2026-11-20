@@ -1,0 +1,47 @@
+/*
+ * Cove shell tokens. Content uses iOS grouped-list colors.
+ * Liquid Glass stays on Glisse controls (--lg-*), not on these surfaces.
+ * Library defaults, recorded here and not used for body text:
+ *   light --lg-fill #0088ff, --lg-on #34c759, --lg-destructive #ff383c
+ *   dark  --lg-fill #0091ff, --lg-on #30d158, --lg-destructive #ff4245
+ * --color-primary is darker than systemBlue so a 14px white label clears 4.5:1.
+ * Dark primary is light, and filled-button text uses --color-primary-foreground
+ * because Glisse hardcodes #fff on that variant.
+ */
+@theme {
+	--color-primary: #005fcc;
+	--color-primary-foreground: #ffffff;
+	--color-surface: #f2f2f7;
+	--color-surface-foreground: #000000;
+	--color-surface-raised: #ffffff;
+	--color-muted: #636366;
+	--color-accent: #248a3d;
+	--color-danger: #b42318;
+	--color-border: rgb(60 60 67 / 0.29);
+
+	--radius-sm: 10px;
+	--radius-md: 16px;
+	--radius-lg: 22px;
+	--radius-xl: 26px;
+	--radius-2xl: 34px;
+
+	--shadow-sm: 0 1px 2px rgb(0 0 0 / 0.04);
+	--shadow-md: 0 8px 24px rgb(0 0 0 / 0.08);
+	--shadow-lg: 0 12px 32px rgb(0 0 0 / 0.12);
+}
+
+[data-theme="dark"] {
+	--color-primary: #a9c7ff;
+	--color-primary-foreground: #061018;
+	--color-surface: #000000;
+	--color-surface-foreground: #ffffff;
+	--color-surface-raised: #1c1c1e;
+	--color-muted: #aeaeb2;
+	--color-accent: #30d158;
+	--color-danger: #ffb4ab;
+	--color-border: rgb(84 84 88 / 0.65);
+
+	--shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+	--shadow-md: 0 8px 24px rgb(0 0 0 / 0.45);
+	--shadow-lg: 0 12px 32px rgb(0 0 0 / 0.55);
+}
