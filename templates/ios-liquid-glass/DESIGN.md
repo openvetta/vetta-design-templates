@@ -47,8 +47,8 @@ The shell uses the platform sans:
 
 Glisse controls set their own sizes and inherit the family (`font: inherit` plus an explicit size). Do not restyle those sizes.
 
-- Large title, 34px, weight 400, the page name. A pushed screen uses Title 1 at 28px, also weight 400.
-- Row title, 17px regular. The line under it, 15px in `muted`. Section name, 13px, title case, in `muted`.
+- Large title, 34px, weight 400, line-height 41px, tracking 0.37px. A pushed screen uses Title 1 at 28px, weight 400, line-height 34px, tracking 0.36px. Long titles wrap; do not shrink them.
+- Row title, 17px regular, tracking about -0.4px. The line under it, 15px in `muted`, line-height 20px. Section name, 13px, title case, line-height 18px, in `muted`.
 - Button label, 14px, from `.lg-button`. Segment labels, 13px. Icon-tab labels, 10px weight 500.
 - One filled button per view. Other buttons stay glass.
 
@@ -58,13 +58,18 @@ There is no display serif, no tight negative tracking, and no all-caps section l
 
 The product is one phone column, max 402px, centered on a wider viewport. The column does not grow into a dashboard, and the component gallery is a tab, not a side panel.
 
-- Groups inset 16px. Section names align with the row text, 32px from the screen edge. Rows are at least 60px, with a hairline inset from the leading edge of the next row.
-- Top safe area `max(14px, env(safe-area-inset-top))` above the time. The dock overlays the scroller. Content padding-bottom is 128px so the last row clears the bar and the home indicator.
-- The dock is centered. `TabBar` stays `inline-flex`. Content scrolls underneath it. The scroller carries `data-glisse-backdrop` and does not contain the bar.
-- Radius: library controls stay 20px pills. Groups are 22px.
+One gutter, `--gutter: 16px`, sets the outer edge of the time, the back button, the title, every group, the search field, the note field, the action row, and the job segmented control. Section names and the text inside a row start at 32px: the gutter plus the row's own 16px padding. That extra inset is the grouped-list header, and it stays.
+
+- The job `SegmentedControl` is the one control that spans the gutter. Its wrapper is a container, and that instance sets `--lg-tab-width: calc(100cqw / 3)`. A plain `100%` does not work: the tab's percentage resolves against the label row, not the control, and the segments collapse to the label width while the glass track stays wide. Leave the dock `TabBar` at the library width and centered. A 12px gap sits between the segments and the paragraph card. The previous 84px segments were centered in the column and had no margin under them, so they looked narrow and stuck to the card.
+- The note field and the two actions share the same 16px inset and a 16px gap above the actions. The slider track uses the row's 16px inset, the same line as the word beside it.
+- Top safe area `max(14px, env(safe-area-inset-top))` above the time. The dock overlays the scroller and stays centered, with `max(8px, env(safe-area-inset-bottom))` under the home indicator. Content padding-bottom is 128px.
+- `TabBar` stays `inline-flex`. Content scrolls underneath it. The scroller carries `data-glisse-backdrop` and does not contain the bar.
+- Radius: library controls stay 20px pills. Groups are 22px, the same family as the pills, not a second shape language.
+
+Groups are opaque `surface-raised`. A 0.5px edge and a 1px shadow are the only depth on a card. The page behind the title lightens by a few percent over the first 240px, and a 28px veil sits just above the dock so a row can pass under the glass without a hard cut. Pressing a disclosure row fills it with a 16% system gray. Do not add a second glass plate, a colored wash, or a scenic background to get that depth. Glisse already draws the rim and the frost on the real controls.
 - Touch: list rows are 60px. Glisse's button and input are 40px, the icon button is 40×40, the segmented control is 32px, and the switch graphic is about 60×25 with a 44px hit slop (`.lg-switch::before`). Do not shrink those. A disclosure row is a native button, not a `Glass` card.
 
-`Input` and `SearchField` default to `max-width: 360px`. On the phone, pass a class that sets `max-width: none; width: 100%`.
+`Input` and `SearchField` default to `max-width: 360px` and `width: 100%`. On the phone, the `field` class sets `max-width: none` and `width: auto` with the 16px gutter as margin, so the field's edges match the group. A `width: 100%` plus that margin would overflow.
 
 ## Components
 
