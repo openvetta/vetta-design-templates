@@ -1,0 +1,51 @@
+/* Bauhaus Polka Dot — a measured field of circles on warm paper.
+   Four dot sizes, one 8px gap, primary inks used only as dots.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #1a1a1a;
+	--color-primary-foreground: #f3f0e8;
+	--color-surface: #f3f0e8;
+	--color-surface-foreground: #1a1a1a;
+	--color-surface-raised: #f3f0e8;
+	--color-muted: #5c564c;
+	--color-accent: #0033cc;
+	--color-danger: #9e1220;
+	--color-border: #1a1a1a;
+
+	/* Printer's red and primary yellow. Yellow is a dot fill, never type.
+	   The attention dot uses dot-red. Error sentences use danger. */
+	--color-dot-red: #d4001a;
+	--color-dot-yellow: #ffd100;
+
+	/* Fields are square. The circle is the only radius, and only for a dot. */
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 9999px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 3px #f3f0e8, 0 0 0 5px #1a1a1a;
+
+	--rule-width: 1px;
+	--module: 8px;
+	--keyline: 2px;
+
+	/* 1, 2, and 3 modules, then the attention dot at 12 modules. */
+	--dot-1: 8px;
+	--dot-2: 16px;
+	--dot-3: 24px;
+	--dot-4: 96px;
+	--dot-gap: 8px;
+
+	--font-sans: Futura, "Avenir Next", "Century Gothic", "Noto Sans Display", "Noto Sans", sans-serif;
+
+	--tracking-display: -0.045em;
+	--tracking-label: 0.14em;
+
+	--ease-ui: linear;
+	--duration-ui: 120ms;
+}
