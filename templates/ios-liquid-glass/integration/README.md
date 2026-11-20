@@ -16,7 +16,7 @@ npm run dev
 
 `npm run dev` serves `http://127.0.0.1:5173`. `npm run build` writes `dist/` for a production check. Peers are React 18 or newer; this example installs React 19. The library pin is `glisse@0.6.0`.
 
-Open the phone for the queue and the job. From 1100px wide, the column beside the phone is the full component gallery. Narrower viewports keep that gallery on the Library tab.
+The window shows one phone column. Today is the list, Job is that job, and Library is every public component. A wide window does not add a second column.
 
 ## What is mounted
 

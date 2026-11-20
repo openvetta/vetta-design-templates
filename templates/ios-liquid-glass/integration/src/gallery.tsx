@@ -3,38 +3,31 @@ import { Button, Glass, Input, Menu, SearchField, SegmentedControl, Slider, Swit
 import { NoteIcon, PlusIcon } from "./icons";
 import type { ThemeName } from "./App";
 
-export function Gallery({
-  theme,
-  onTheme,
-}: {
-  theme: ThemeName;
-  onTheme: (theme: ThemeName) => void;
-}) {
+export function Gallery({ theme, onTheme }: { theme: ThemeName; onTheme: (theme: ThemeName) => void }) {
   const [textTab, setTextTab] = useState("queue");
   const [linkTab, setLinkTab] = useState("queue");
   const [sample, setSample] = useState("plan");
   const [live, setLive] = useState(40);
 
   return (
-    <div className="gallery">
-      <p className="kicker">Running glisse 0.6.0</p>
-      <h2>Library</h2>
-      <p className="sub">Every public component. The phone uses the same imports in a job desk, not a copy of this grid.</p>
+    <div className="screen">
+      <div className="status">
+        <span>9:41</span>
+        <span className="battery" aria-hidden />
+      </div>
+      <h1>Components</h1>
 
-      <Glass className="sheet block">
-        <div className="grow">
-          <span>Dark glass</span>
-          <Switch
-            aria-label="Dark glass"
-            checked={theme === "dark"}
-            onCheckedChange={(on) => onTheme(on ? "dark" : "light")}
-          />
+      <h2 className="section">Appearance</h2>
+      <div className="group">
+        <div className="row static">
+          <span>Dark</span>
+          <Switch aria-label="Dark glass" checked={theme === "dark"} onCheckedChange={(on) => onTheme(on ? "dark" : "light")} />
         </div>
-      </Glass>
+      </div>
 
-      <section className="spec">
-        <h3>Button</h3>
-        <div className="row">
+      <h2 className="section">Buttons</h2>
+      <div className="group pad">
+        <div className="row wrap">
           <Button>Hold</Button>
           <Button variant="filled">Continue</Button>
           <Button icon={<PlusIcon />}>Add job</Button>
@@ -51,41 +44,51 @@ export function Gallery({
             Done
           </Button>
         </div>
-      </section>
+      </div>
 
-      <section className="spec">
-        <h3>SearchField</h3>
-        <SearchField aria-label="Search the library" placeholder="Search jobs" className="field" />
-      </section>
+      <h2 className="section">Search</h2>
+      <SearchField aria-label="Search the library" placeholder="Search" className="field" />
 
-      <section className="spec">
-        <h3>Input</h3>
-        <Input aria-label="Agent name" className="field" icon={<NoteIcon />} placeholder="Agent name" defaultValue="Cove" />
-        <Input aria-label="Disabled note" className="field" placeholder="Disabled" disabled defaultValue="Locked" />
-      </section>
+      <h2 className="section">Text field</h2>
+      <Input aria-label="Agent name" className="field" icon={<NoteIcon />} placeholder="Agent name" defaultValue="Cove" />
+      <Input aria-label="Disabled note" className="field" placeholder="Disabled" disabled defaultValue="Locked" />
 
-      <section className="spec">
-        <h3>Switch</h3>
-        <div className="row">
+      <h2 className="section">Switches</h2>
+      <div className="group">
+        <div className="row static">
+          <span>On</span>
           <Switch aria-label="Uncontrolled on" defaultChecked />
+        </div>
+        <div className="row static">
+          <span>Off</span>
           <Switch aria-label="Uncontrolled off" />
+        </div>
+        <div className="row static">
+          <span>Disabled</span>
           <Switch aria-label="Disabled off" disabled />
+        </div>
+        <div className="row static">
+          <span>Disabled on</span>
           <Switch aria-label="Disabled on" disabled defaultChecked />
         </div>
-      </section>
+      </div>
 
-      <section className="spec">
-        <h3>Slider</h3>
-        <div className="depth">
+      <h2 className="section">Slider</h2>
+      <div className="group">
+        <div className="row static">
           <span>Lens sample</span>
           <strong>{live}</strong>
         </div>
-        <Slider aria-label="Lens sample" value={live} onValueChange={setLive} />
-        <Slider aria-label="Disabled slider" defaultValue={20} disabled />
-      </section>
+        <div className="slider-pad">
+          <Slider aria-label="Lens sample" value={live} onValueChange={setLive} />
+        </div>
+        <div className="slider-pad">
+          <Slider aria-label="Disabled slider" defaultValue={20} disabled />
+        </div>
+      </div>
 
-      <section className="spec">
-        <h3>SegmentedControl</h3>
+      <h2 className="section">Segments</h2>
+      <div className="group pad">
         <SegmentedControl
           aria-label="Sample section"
           value={sample}
@@ -96,10 +99,10 @@ export function Gallery({
             { value: "notes", label: "Notes" },
           ]}
         />
-      </section>
+      </div>
 
-      <section className="spec">
-        <h3>TabBar</h3>
+      <h2 className="section">Text tabs</h2>
+      <div className="group pad">
         <TabBar
           aria-label="Text sections"
           value={textTab}
@@ -110,6 +113,10 @@ export function Gallery({
             { value: "library", label: "Library" },
           ]}
         />
+      </div>
+
+      <h2 className="section">Link tabs</h2>
+      <div className="group pad">
         <TabBar
           aria-label="Linked sections"
           value={linkTab}
@@ -120,10 +127,10 @@ export function Gallery({
             { value: "library", label: "Library", href: "#cove-library" },
           ]}
         />
-      </section>
+      </div>
 
-      <section className="spec">
-        <h3>Menu</h3>
+      <h2 className="section">Menu</h2>
+      <div className="group pad">
         <Menu
           aria-label="Library actions"
           align="start"
@@ -134,14 +141,13 @@ export function Gallery({
             { label: "Drop this job", destructive: true },
           ]}
         />
-      </section>
+      </div>
 
-      <section className="spec">
-        <h3>Glass</h3>
-        <Glass className="card sample-card">
-          <p>A sheet island. Radius comes from the app. The frost and the rim come from Glass.</p>
-        </Glass>
-      </section>
+      <h2 className="section">Glass</h2>
+      <p className="hint">A custom floating control. Not a list row.</p>
+      <div className="glass-sample">
+        <Glass className="float">Custom</Glass>
+      </div>
     </div>
   );
 }

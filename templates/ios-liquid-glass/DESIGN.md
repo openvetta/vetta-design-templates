@@ -6,9 +6,22 @@ Cove is a phone desk for a local coding agent. The screen is an iOS-styled mobil
 
 ## Atmosphere
 
-Daylight first. A soft outdoor scene carries the color: sky, a warm sun, green hills. Glass stays neutral and thin, close to white in light and close to charcoal in dark, and borrows the scene instead of introducing a second palette. Controls are capsules. One blue action per view. Green is only the on-state of a switch. Red is only a destructive label or fill. Sheets that hold sentences use the higher-opacity surface; the 3px frost is for controls and short islands.
+A quiet phone list. The content layer is the iOS grouped background: a flat gray field, white rounded groups, hairline separators, and a regular-weight large title. Liquid Glass is only the functional layer — the tab bar, the toolbar menu, search, the segmented control, and buttons. It is not a wallpaper, not a stack of translucent cards, and not a desktop dashboard.
 
-Dark is a first-class Glisse theme (`data-theme="dark"`), not a separate template. The catalog's `vibe` is light because that is the default page.
+This follows Apple's Human Interface Guidelines, read for this revision:
+
+- [Materials](https://developer.apple.com/design/human-interface-guidelines/materials): Liquid Glass is the layer for controls and navigation, such as tab bars, floating above content. "Don't use Liquid Glass in the content layer." Standard materials, not glass, structure the content. Sliders and toggles may take the material while someone is using them; Glisse does that on the control itself.
+- [Adopting Liquid Glass](https://developer.apple.com/documentation/TechnologyOverviews/adopting-liquid-glass): keep navigation distinct from content, avoid custom backgrounds on bars, don't crowd glass on glass, and give lists more padding and a larger corner radius. Section headers use title case, not all capitals.
+- [Designing for iOS](https://developer.apple.com/design/human-interface-guidelines/designing-for-ios): few controls on screen, secondary actions one step away, and primary controls in easy reach.
+- [Layout](https://developer.apple.com/design/human-interface-guidelines/layout): group related rows, align them, and separate controls from content. Respect the safe area.
+- [Typography](https://developer.apple.com/design/human-interface-guidelines/typography): SF Pro. At the default Large size, Large Title is 34pt regular, Title 1 is 28pt regular, Body is 17pt regular, Footnote is 13pt. The minimum size on iOS is 11pt.
+- [Lists and tables](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables): short row text, a disclosure when a row pushes a detail, grouped style for related settings.
+- [Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility): 17pt default body, 4.5:1 for text under 18pt, 44×44pt default controls (28pt minimum), and support for Reduce Motion and Reduce Transparency.
+- [Color](https://developer.apple.com/design/human-interface-guidelines/color): Liquid Glass has no color of its own. Color a control's fill only for the one primary action.
+
+Cove is an original product, not an Apple app and not a copy of a system screen. There is no system alert, share sheet, or Apple status-glyph set.
+
+Dark is Glisse's `data-theme="dark"`. The catalog `vibe` is light.
 
 ## Color roles
 
@@ -18,7 +31,7 @@ Shell colors live in `theme.css`. Glisse paints controls from its own `--lg-*` p
 - `--lg-on` → `accent`. Switch track when checked. Not body copy.
 - `--lg-destructive` → `danger`. Destructive glass labels, and the fill when a filled button is also destructive.
 
-`surface` is the daylight field behind the scene art. `surface-foreground` is ink. `surface-raised` is the readable sheet (Glisse's `--lg-surface` is the same job inside menus). `muted` is secondary ink on that sheet. `border` is the 0.5px edge.
+`surface` is the grouped page background. `surface-raised` is the list group. `surface-foreground` is the label. `muted` is the secondary label and the section header. `border` is the hairline between rows. `primary` is the one filled action and the selected tab. `accent` is the on-state of a switch, never a sentence. `danger` is a destructive label or fill.
 
 Glisse's own muted ink (`--lg-muted`) is a 60% black or white used for placeholders and unselected text tabs. It is too light for 13px sentences on a sheet. Secondary sentences in the shell use `muted`.
 
@@ -34,24 +47,22 @@ The shell uses the platform sans:
 
 Glisse controls set their own sizes and inherit the family (`font: inherit` plus an explicit size). Do not restyle those sizes.
 
-- Large title, 34px, weight 700, tracking `-0.022em`, one line, `surface-foreground`.
-- Screen title under a bar, 17px semibold.
-- Body on a sheet, 17px, line-height 1.35. Secondary lines 13px in `muted`.
+- Large title, 34px, weight 400, the page name. A pushed screen uses Title 1 at 28px, also weight 400.
+- Row title, 17px regular. The line under it, 15px in `muted`. Section name, 13px, title case, in `muted`.
 - Button label, 14px, from `.lg-button`. Segment labels, 13px. Icon-tab labels, 10px weight 500.
-- One primary action may use a filled button. Other actions stay glass.
+- One filled button per view. Other buttons stay glass.
 
-There is no display serif and no marketing scale. The large title is the iOS page title, not a hero headline.
+There is no display serif, no tight negative tracking, and no all-caps section labels.
 
 ## Spacing & layout
 
-The product is a phone column, max 430px, centered on wider viewports. A desktop gallery can sit beside it; it does not stretch the phone into a tablet layout.
+The product is one phone column, max 402px, centered on a wider viewport. The column does not grow into a dashboard, and the component gallery is a tab, not a side panel.
 
-- Page gutter 16px. Card gap 10px. Section gap inside a scroll view 16px.
-- Top safe area `max(54px, env(safe-area-inset-top))` when the status area is drawn by the shell. Bottom safe area `max(12px, env(safe-area-inset-bottom))` under the dock.
-- The dock is centered, 8px above the home indicator. `TabBar` is `inline-flex`; it does not stretch to the screen width.
-- Scroll the page content. Keep the dock fixed. Give the scroller at least 96px of padding-bottom so the last card clears the bar.
-- Radius: buttons and inputs are 20px pills (library). Cards and grouped sheets are 22px (`radius-lg`). The device screen, when framed, is 36px.
-- Touch: shell rows are at least 48px tall. Glisse's button and input are 40px tall, the icon button is 40×40, the segmented control is 32px tall, and the switch graphic is about 60×25 with a hit slop the library expands to 44px (`.lg-switch::before`). Do not shrink any of those. Separate adjacent 32px segments from other controls by at least 8px. Full-card targets are native buttons inside `Glass`, min-height 72px.
+- Groups inset 16px. Section names align with the row text, 32px from the screen edge. Rows are at least 60px, with a hairline inset from the leading edge of the next row.
+- Top safe area `max(14px, env(safe-area-inset-top))` above the time. The dock overlays the scroller. Content padding-bottom is 128px so the last row clears the bar and the home indicator.
+- The dock is centered. `TabBar` stays `inline-flex`. Content scrolls underneath it. The scroller carries `data-glisse-backdrop` and does not contain the bar.
+- Radius: library controls stay 20px pills. Groups are 22px.
+- Touch: list rows are 60px. Glisse's button and input are 40px, the icon button is 40×40, the segmented control is 32px, and the switch graphic is about 60×25 with a 44px hit slop (`.lg-switch::before`). Do not shrink those. A disclosure row is a native button, not a `Glass` card.
 
 `Input` and `SearchField` default to `max-width: 360px`. On the phone, pass a class that sets `max-width: none; width: 100%`.
 
@@ -87,7 +98,7 @@ import "glisse/styles.css";
 
 Package exports are `.` (import and require), `./styles.css`, and `./package.json`. There is no `glisse/button` path and no icon font. The ESM and CJS bundles start with `"use client"`. In the Next.js App Router, import them from a client component. Do not render them in a server component. There is no React Native build.
 
-Mark the scenery the glass should bend with `data-glisse-backdrop`. The marker is an attribute, not a component. The marked node must overlap the glass and must not contain it (a sibling behind the shell is the working structure in `App.tsx`). Chromium can also bend the live backdrop without the marker. WebKit, including every browser on iOS, bends marked content by drawing it; see Platform.
+Mark what should bend behind a control with `data-glisse-backdrop`. The marker is an attribute, not a component. The marked node must overlap the glass and must not contain it. In `App.tsx` the scroller is the marker and the tab bar overlays it. Chromium can also bend the live backdrop without the marker. WebKit, including every browser on iOS, bends marked content by drawing it; see Platform. On this screen the marked content is text and flat fills, which is what WebKit can paint.
 
 Set the theme on an ancestor:
 
@@ -106,7 +117,7 @@ Verified from `src/index.ts` at the tagged commit. Nine components, plus their p
 | Export | Kind | Where the example uses it |
 | --- | --- | --- |
 | `Button`, `ButtonProps` | Component | Job actions; `gallery.tsx` variants |
-| `Glass`, `GlassProps` | Component | Queue cards, job sheet; gallery sample |
+| `Glass`, `GlassProps` | Component | Components tab, one floating control |
 | `Input`, `InputProps` | Component | Job note field; gallery |
 | `Menu`, `MenuProps`, `MenuItem`, `MenuEntry` | Component and item types | Queue header; gallery `align="start"` |
 | `SearchField`, `SearchFieldProps` | Component | Queue filter |
@@ -123,7 +134,7 @@ Not exported, and not widgets to reimplement: `src/internal/` (`useControllable`
 
 `Button` renders `<button type="button">` and forwards a ref plus button attributes (`disabled`, `onClick`, `aria-*`). `variant` is `"glass"` (default) or `"filled"`. `icon` is a `ReactNode` drawn before the label; with no children the button is a 40px circle and needs `aria-label`. `destructive` tints with `danger`. `tint` is any CSS color and sets `--lg-tint` (it replaces the destructive default when both are set). States the library draws: hover on fine pointers, instant pressed (`:active` / `data-pressed`), disabled at 35% opacity. One filled button per view. A destructive filled button is the rare confirm, not the default.
 
-`Glass` renders a `div` with `class="lg-glass"` and accepts div attributes. It has no radius of its own. Set `border-radius` (22px for a card) in `className` or `style`. Grouped switch rows live in one `Glass`, separated by a 0.5px `border` rule, each row at least 48px. A whole-card target is a native `<button>` inside the `Glass`, not a second `Button`, so the island stays one hit target.
+`Glass` renders a `div` with `class="lg-glass"` and accepts div attributes. It has no radius of its own. Set a radius in `className` or `style` when the control should be a pill. Do not wrap a list, a paragraph, or a group of switches in it. Those groups are plain `surface-raised` containers. A disclosure row is a native button. The Components tab shows one `Glass` pill as the custom-control case.
 
 `Input` is controlled with `value` / `defaultValue` / `onValueChange`. The native `value`, `defaultValue`, and `onChange` props are omitted on purpose. `className` and `style` land on the glass wrapper; `id`, `placeholder`, `disabled`, `aria-label`, and `autoComplete` land on the inner `<input>`, which is also the ref. `icon` is a node in the wrapper. `type="search"` adds a clear button labeled "Clear" when there is text and the field is enabled. Placeholder and icon use Glisse muted.
 
@@ -143,11 +154,11 @@ Forwarding summary: `Button`, `Switch`, and `Glass` put class, style, and other 
 
 ### Recipes
 
-Queue (`screens.tsx`): `SearchField` filters three `Glass` cards. Each card is a native button. The header `Menu` holds a plain item, a disabled item, a separator, and a destructive item. The dock is an icon `TabBar`.
+Today (`screens.tsx`): a grouped list. `SearchField` filters the rows. Each row is a native button with a disclosure. The toolbar `Menu` holds a plain item, a disabled item, a separator, and a destructive item. The dock is an icon `TabBar`.
 
-Job: `SegmentedControl` switches Plan, Diff, and Notes. One `Glass` groups two `Switch` rows. Another holds a `Slider` with a live number. `Input` is the note. `Button variant="filled"` is the single primary; a glass `Button` is the quiet action.
+Job: a glass `Button` returns to Today. `SegmentedControl` switches Plan, Diff, and Notes. Switches and the `Slider` sit in plain groups. `Input` is the note. `Button variant="filled"` is the single primary; Hold stays glass.
 
-Gallery (`gallery.tsx`): glass, filled, icon, icon-only, tint, destructive, and disabled buttons; input with icon; both switch states plus disabled; slider including disabled; text `TabBar`; href `TabBar`; `Menu` with `align="start"`; a `Glass` sample; the appearance `Switch` that sets `data-theme`.
+Components (`gallery.tsx`): the same column, reached from the Library tab. It mounts every public component, including states the job does not need, and one `Glass` used as a floating control rather than a list.
 
 ```tsx
 <SearchField
@@ -185,13 +196,13 @@ The SVG glyphs in `integration/src/icons.tsx` are original. Pass any `ReactNode`
 
 ### What the app owns
 
-Glisse owns the control chrome, refraction, springs, and focus ring on its own elements (2px `--lg-ring`, offset 2px). The app owns the scene, safe areas, large title, card layout, the native full-card button, copy, and the filled-button text color override. `data-glisse-backdrop` is app markup. Theme choice is app state written into `data-theme`.
+Glisse owns the control chrome, refraction, springs, and focus ring on its own elements (2px `--lg-ring`, offset 2px). The app owns the grouped list, safe areas, type styles, copy, and the filled-button text color override. `data-glisse-backdrop` marks the scroller behind the tab bar. `data-theme` is app state. None of this is a SwiftUI `glassEffect`, `List`, or `TabView`.
 
 ### Accessibility
 
 - Name every icon-only `Button`, every `Switch`, the `Slider`, the `SearchField`, the `SegmentedControl`, the `TabBar`, and the `Menu`.
 - `Menu`'s `aria-label` names both the trigger and the menu.
-- Do not put a `Button` inside the card's native button.
+- A disclosure row is one native button. Do not nest a `Button` inside it.
 - Focus rings are visible. Do not remove `:focus-visible` outlines.
 - Hover styles in the library are wrapped in `@media (hover: hover) and (pointer: fine)`. Press is the touch feedback. Do not add a hover-only action.
 
@@ -207,9 +218,10 @@ Glisse animates with its own spring (`createSpring`). Under `prefers-reduced-mot
 - Don't treat `demo.html` as implementation source. It is a still preview.
 - Don't copy `src/internal` from the Glisse repo into the app, and don't import it. It is not part of the package exports.
 - Don't call SwiftUI, UIKit, or React Native APIs. This is a website.
-- Don't put a sentence on the 3px control frost over a photograph. Put it on `surface-raised` or a `Glass` sheet whose `--lg-glass` is lifted toward `--lg-surface`.
-- Don't stack more than two translucent layers in the same spot.
-- Don't tint the glass with a gradient, a glow, or a second accent. Color stays in the scene, in `primary`, and in `danger`.
+- Don't put Liquid Glass on a list row, a paragraph, or a stack of cards. `Glass` is for a custom floating control. Sentences sit on `surface-raised`.
+- Don't paint a scenic background, a glow, or a second accent to make the frost visible. A flat grouped background is the content.
+- Don't open a second column of specimens beside the phone. The Library tab is that page.
+- Don't set section labels in all capitals, and don't set the large title in a heavy weight.
 - Don't reuse the Apple template's marketing page or the Glassmorphism template's night plate. Those are different systems.
 - Don't imitate an Apple system alert, share sheet, or status-glyph set.
 - Don't shrink a library control to make a row fit. Move it to the next line.
@@ -220,10 +232,10 @@ Glisse animates with its own spring (`createSpring`). Under `prefers-reduced-mot
 
 Backdrop bending is engine-specific, from `refractsBackdrop` and `drawn.ts` in 0.6.0:
 
-- Chromium applies the lens to the live backdrop, so unmarked scenery still bends behind `Glass` and `Button`.
+- Chromium applies the lens to the live backdrop, so an unmarked page still bends behind `Glass` and `Button`.
 - WebKit (Safari, and every iOS browser) does not filter a backdrop. With `data-glisse-backdrop` it draws the marked content into a canvas and shades the rim. Paintable content is images, video, canvases, text, background colors, linear gradients, and background images. Borders, shadows, SVG, other gradients, and cross-origin images that don't allow a read stay unbent.
 - Firefox and other non-Chromium browsers without a usable drawn lens keep the frost, the edge, and the lit rim, without displacement.
-- Several lenses over one marked region share a filter. A lens that moves across a large region is expensive in Safari; keep marked scenery to the phone scene, not the whole document.
+- Several lenses over one marked region share a filter. A moving lens over a large region is expensive in Safari. Mark the phone scroller, not the whole document.
 - The CSS file includes `-webkit-backdrop-filter`. Where `backdrop-filter` is missing, the solid `background-color` remains, which is the readable fallback.
 - Reduced motion snaps springs. Reduced transparency is the shell override described in Motion.
 
@@ -238,7 +250,7 @@ All 9 public components are mounted in `integration/`, with the states in the ta
 | Component | Product screen | Gallery states |
 | --- | --- | --- |
 | `Button` | Job: glass + filled | glass, filled, icon, icon-only, tint, destructive, disabled |
-| `Glass` | Queue cards, job sheets | standalone card |
+| `Glass` | — | one floating control on the Components tab |
 | `Input` | Note to the agent | icon, disabled |
 | `SearchField` | Queue filter | default magnifier and clear button via the queue field |
 | `Menu` | Queue actions, `align="end"` | `align="start"`, separator, disabled, destructive |
