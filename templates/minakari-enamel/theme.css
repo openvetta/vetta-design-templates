@@ -1,0 +1,40 @@
+/* Minakari Enamel — an opaque cobalt field, warm gold line, and one fired flower.
+   Painted-enamel color for a local desk. Not cloisonné wire, not glass, not chrome.
+   Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #e0c155;
+	--color-primary-foreground: #1a1408;
+	--color-surface: #0e2a68;
+	--color-surface-foreground: #f3e9c9;
+	--color-surface-raised: #143472;
+	--color-muted: #d4c09a;
+	--color-accent: #2ec4b6;
+	--color-danger: #ff9b88;
+	--color-border: #c9a227;
+
+	--color-surface-deep: #0a204f;
+	--color-primary-hot: #f0d56e;
+	--color-turquoise: #1e9e96;
+	--color-vermilion: #b54229;
+	--color-vermilion-deep: #9e321f;
+	--color-highlight: rgb(243 233 201 / 0.08);
+	--color-fault-wash: rgb(181 66 41 / 0.22);
+
+	--radius-sm: 8px;
+	--radius-md: 12px;
+	--radius-lg: 16px;
+	--radius-xl: 20px;
+	--radius-2xl: 28px;
+	--radius-full: 999px;
+
+	--shadow-sm: inset 0 1px 0 rgb(243 233 201 / 0.14);
+	--shadow-md: 0 16px 32px rgb(6 14 40 / 0.32);
+	--shadow-lg: 0 24px 44px rgb(6 14 40 / 0.4);
+	--shadow-focus: 0 0 0 2px #0e2a68, 0 0 0 4px #e0c155;
+
+	--ease-ui: cubic-bezier(0.2, 0, 0, 1);
+	--duration-ui: 160ms;
+
+	--font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Noto Serif", "Liberation Serif", "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", "Noto Serif SC", "WenQuanYi Micro Hei", PMingLiU, serif;
+	--font-sans: "Segoe UI", "Noto Sans", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
+}

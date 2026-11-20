@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glost — Minakari Enamel</title>
+<style>
+	/* Mirrors theme.css. Plain custom properties so this file opens standalone. */
+	:root {
+		--color-primary: #e0c155;
+		--color-primary-foreground: #1a1408;
+		--color-surface: #0e2a68;
+		--color-surface-foreground: #f3e9c9;
+		--color-surface-raised: #143472;
+		--color-muted: #d4c09a;
+		--color-accent: #2ec4b6;
+		--color-danger: #ff9b88;
+		--color-border: #c9a227;
+		--color-surface-deep: #0a204f;
+		--color-primary-hot: #f0d56e;
+		--color-turquoise: #1e9e96;
+		--color-vermilion: #b54229;
+		--color-vermilion-deep: #9e321f;
+		--color-highlight: rgb(243 233 201 / 0.08);
+		--color-fault-wash: rgb(181 66 41 / 0.22);
+		--radius-sm: 8px;
+		--radius-md: 12px;
+		--radius-lg: 16px;
+		--radius-xl: 20px;
+		--radius-2xl: 28px;
+		--radius-full: 999px;
+		--shadow-sm: inset 0 1px 0 rgb(243 233 201 / 0.14);
+		--shadow-md: 0 16px 32px rgb(6 14 40 / 0.32);
+		--shadow-lg: 0 24px 44px rgb(6 14 40 / 0.4);
+		--shadow-focus: 0 0 0 2px #0e2a68, 0 0 0 4px #e0c155;
+		--ease-ui: cubic-bezier(0.2, 0, 0, 1);
+		--duration-ui: 160ms;
+		--font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Noto Serif", "Liberation Serif", "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", "Noto Serif SC", "WenQuanYi Micro Hei", PMingLiU, serif;
+		--font-sans: "Segoe UI", "Noto Sans", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", "WenQuanYi Micro Hei", "Droid Sans Fallback", sans-serif;
+	}
+
+	*, *::before, *::after { box-sizing: border-box; }
+	html { overflow-x: hidden; }
+	body {
+		margin: 0;
+		background: var(--color-surface);
+		color: var(--color-surface-foreground);
+		font-family: var(--font-sans);
+		font-size: 16px;
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+	}
+	h1, h2, h3, p, ul, ol, figure { margin: 0; }
+	button, input { font: inherit; color: inherit; }
+	button { cursor: pointer; }
+	button:disabled { cursor: not-allowed; }
+	::selection { background: var(--color-primary); color: var(--color-primary-foreground); }
+
+	.hero { box-sizing: border-box; padding: 22px 28px 28px; display: flex; }
+	.hero-inner { width: min(1180px, 100%); margin: auto; display: flex; flex-direction: column; gap: 14px; }
+	.mast {
+		display: grid;
+		grid-template-columns: auto 1fr auto;
+		grid-template-areas: "brand status cta" "nav nav nav";
+		align-items: center;
+		gap: 8px 16px;
+	}
+	.brand { grid-area: brand; display: flex; align-items: center; gap: 10px; min-width: 0; }
+	.mark { width: 36px; height: 36px; flex: none; }
+	.word { font-family: var(--font-serif); font-size: 28px; font-weight: 500; line-height: 1; color: var(--color-primary); letter-spacing: -0.02em; }
+	.brand small { display: block; margin-top: 3px; color: var(--color-muted); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+	.status { grid-area: status; justify-self: center; display: flex; align-items: center; gap: 8px; color: var(--color-muted); font-size: 13px; }
+	.cta { grid-area: cta; }
+	.nav { grid-area: nav; display: flex; flex-wrap: wrap; gap: 2px; }
+	.nav button {
+		min-height: 44px;
+		padding: 0 12px;
+		background: none;
+		border: 0;
+		color: var(--color-muted);
+		font-family: var(--font-serif);
+		font-size: 13px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+	.nav button[aria-current="page"] { color: var(--color-primary); box-shadow: inset 0 -1px 0 var(--color-primary); }
+
+	.workspace {
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-xl);
+		padding: 7px;
+		background: var(--color-surface-raised);
+		box-shadow: var(--shadow-md);
+	}
+	.frame {
+		border: 1px solid var(--color-primary);
+		border-radius: 14px;
+		display: grid;
+		grid-template-columns: 236px minmax(0, 1fr) 292px;
+		background:
+			linear-gradient(180deg, var(--color-highlight), transparent 22%),
+			var(--color-surface-raised);
+		min-width: 0;
+	}
+	.rail, .thread, .markcol { min-width: 0; padding: 16px; }
+	.rail, .thread { border-right: 1px solid var(--color-border); }
+	.rail, .markcol, .thread { display: flex; flex-direction: column; gap: 10px; }
+	.kicker {
+		font-family: var(--font-serif);
+		font-size: 12px;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--color-primary);
+	}
+	.kicker.quiet { color: var(--color-muted); }
+
+	.plate-btn {
+		width: 100%;
+		text-align: left;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		min-height: 64px;
+		padding: 10px 12px;
+		background: transparent;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		transition: border-color var(--duration-ui) var(--ease-ui);
+	}
+	.plate-btn strong { font-size: 15px; font-weight: 600; letter-spacing: 0; }
+	.plate-btn span { color: var(--color-muted); font-size: 13px; }
+	.plate-btn[aria-current="true"] {
+		border-color: var(--color-primary);
+		box-shadow: inset 3px 0 0 var(--color-primary);
+	}
+	.rail-note { margin-top: auto; color: var(--color-muted); font-size: 13px; line-height: 1.45; }
+
+	.thread h1 {
+		font-family: var(--font-serif);
+		font-size: 40px;
+		font-weight: 500;
+		line-height: 1.1;
+		letter-spacing: -0.02em;
+		color: var(--color-primary);
+	}
+	.rule { width: 48px; height: 1px; background: var(--color-primary); }
+	.head-meta { color: var(--color-muted); font-size: 13px; }
+	.msg { padding: 2px 0 2px 12px; border-left: 1px solid var(--color-border); }
+	.msg.is-agent { border-left-color: var(--color-primary); }
+	.who {
+		font-family: var(--font-serif);
+		font-size: 13px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--color-primary);
+		margin-bottom: 2px;
+	}
+	.msg p { font-size: 16px; line-height: 1.55; max-width: 62ch; overflow-wrap: break-word; }
+	.msg p + p { margin-top: 6px; }
+	.trace { list-style: none; padding: 0; display: grid; gap: 6px; }
+	.trace li { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 8px; font-size: 14px; }
+	.trace time { color: var(--color-muted); font-size: 13px; }
+	.files { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+	.files li {
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		padding: 6px 10px;
+		font-size: 13px;
+		color: var(--color-surface-foreground);
+	}
+	.composer { margin-top: auto; display: flex; gap: 10px; align-items: flex-end; }
+	.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1; }
+	.field > span:not(.err), .legend { color: var(--color-muted); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-serif); }
+	.field input, .bench input {
+		width: 100%;
+		min-height: 44px;
+		padding: 10px 12px;
+		background: var(--color-surface-deep);
+		color: var(--color-surface-foreground);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		font-family: var(--font-sans);
+		font-size: 16px;
+		letter-spacing: 0;
+		text-transform: none;
+	}
+	.field input::placeholder { color: var(--color-muted); }
+
+	.btn {
+		min-height: 44px;
+		padding: 0 16px;
+		border-radius: var(--radius-md);
+		border: 1px solid var(--color-border);
+		background: transparent;
+		color: var(--color-surface-foreground);
+		font-family: var(--font-sans);
+		font-size: 15px;
+		font-weight: 600;
+		letter-spacing: 0;
+		text-transform: none;
+		transition: background var(--duration-ui) var(--ease-ui), border-color var(--duration-ui) var(--ease-ui), color var(--duration-ui) var(--ease-ui);
+	}
+	.btn-fill {
+		min-height: 48px;
+		padding: 0 18px;
+		border: 0;
+		border-radius: var(--radius-full);
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+	}
+	.btn-danger { background: var(--color-vermilion-deep); border: 0; color: var(--color-surface-foreground); border-radius: var(--radius-md); }
+	.btn:disabled { opacity: 0.42; }
+	.badge {
+		display: inline-flex;
+		align-items: center;
+		min-height: 22px;
+		padding: 0 8px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-full);
+		color: var(--color-primary);
+		font-size: 12px;
+		letter-spacing: 0.04em;
+		white-space: nowrap;
+	}
+	.badge.live { color: var(--color-accent); border-color: var(--color-accent); }
+	.badge.fault { color: var(--color-danger); border-color: var(--color-danger); }
+	.pip { width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--color-primary); flex: none; }
+	.pip.live { background: var(--color-accent); }
+	.pip.fault { background: var(--color-vermilion); }
+
+	.markcol { align-items: stretch; }
+	.flower-wrap { width: min(100%, 252px); margin: 4px auto 0; }
+	.flower { width: 100%; height: auto; display: block; }
+	.flower-cap { text-align: center; color: var(--color-muted); font-size: 13px; line-height: 1.45; }
+	.tasks { margin-top: auto; list-style: none; padding: 0; display: grid; gap: 8px; }
+	.tasks li {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		min-height: 44px;
+		padding: 8px 10px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		font-size: 14px;
+	}
+	.tasks li span:nth-child(2) { flex: 1; min-width: 0; }
+
+	.block { padding: 64px 28px; border-top: 1px solid var(--color-border); }
+	.wrap { width: min(1080px, 100%); margin: 0 auto; }
+	.block h2 {
+		font-family: var(--font-serif);
+		font-size: 36px;
+		font-weight: 500;
+		line-height: 1.15;
+		letter-spacing: -0.02em;
+		margin: 8px 0 12px;
+	}
+	.lede { max-width: 66ch; font-size: 17px; line-height: 1.55; }
+	.swatches, .trio, .bench, .split, .narrow, .compare { margin-top: 22px; }
+	.swatches { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+	.swatches li { min-width: 0; }
+	.swatches i { display: block; height: 64px; border-radius: var(--radius-md); border: 1px solid var(--color-border); margin-bottom: 8px; }
+	.swatches b { display: block; font-size: 13px; font-weight: 600; }
+	.swatches span { color: var(--color-muted); font-size: 12px; }
+	.sw-surface { background: var(--color-surface); }
+	.sw-raised { background: var(--color-surface-raised); }
+	.sw-deep { background: var(--color-surface-deep); }
+	.sw-cream { background: var(--color-surface-foreground); }
+	.sw-gold { background: var(--color-primary); }
+	.sw-frame { background: var(--color-border); }
+	.sw-muted { background: var(--color-muted); }
+	.sw-accent { background: var(--color-accent); }
+	.sw-turquoise { background: var(--color-turquoise); }
+	.sw-vermilion { background: var(--color-vermilion); }
+
+	.trio { display: grid; grid-template-columns: 1.1fr 0.9fr 0.9fr; gap: 16px; }
+	.trio figure, .compare figure { min-width: 0; }
+	.well {
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface-raised);
+		padding: 16px;
+		min-height: 180px;
+		display: grid;
+		place-items: center;
+	}
+	.well .flower { width: min(100%, 220px); }
+	figcaption { margin-top: 8px; color: var(--color-muted); font-size: 14px; line-height: 1.45; }
+	.radii { display: flex; gap: 10px; align-items: end; }
+	.radii i { display: block; width: 48px; height: 48px; border: 1px solid var(--color-primary); background: var(--color-surface-deep); }
+	.radii i:nth-child(1) { border-radius: var(--radius-sm); height: 36px; }
+	.radii i:nth-child(2) { border-radius: var(--radius-md); height: 44px; }
+	.radii i:nth-child(3) { border-radius: var(--radius-xl); height: 56px; width: 56px; }
+	.radii i:nth-child(4) { border-radius: var(--radius-full); height: 36px; width: 64px; background: var(--color-primary); border: 0; }
+	.mini-frame { width: min(100%, 220px); border: 1px solid var(--color-border); border-radius: 16px; padding: 7px; }
+	.mini-frame div {
+		border: 1px solid var(--color-primary);
+		border-radius: 10px;
+		min-height: 120px;
+		padding: 16px;
+		background: linear-gradient(180deg, var(--color-highlight), transparent 55%), var(--color-surface-raised);
+	}
+	.mini-frame strong { font-family: var(--font-serif); font-size: 20px; font-weight: 500; color: var(--color-primary); }
+	.mini-frame p { margin-top: 6px; font-size: 14px; }
+
+	.bench {
+		display: grid;
+		gap: 18px;
+		padding: 18px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		background: var(--color-surface-raised);
+	}
+	.btn-row, .badge-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+	.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+	.is-error input, .field.is-error input { border-color: var(--color-danger); }
+	.err {
+		display: block;
+		margin-top: 6px;
+		padding: 8px 10px;
+		background: var(--color-fault-wash);
+		color: var(--color-danger);
+		border-radius: var(--radius-sm);
+		font-family: var(--font-sans);
+		font-size: 14px;
+		letter-spacing: 0;
+		text-transform: none;
+		line-height: 1.45;
+	}
+	.is-focus, input.is-focus { outline: 2px solid var(--color-primary); outline-offset: 2px; border-color: var(--color-primary); }
+	.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+	.card {
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		padding: 14px;
+		background: var(--color-surface-deep);
+	}
+	.card h3 { font-family: var(--font-serif); font-size: 20px; font-weight: 500; margin: 6px 0; color: var(--color-primary); }
+	.card p { font-size: 15px; }
+
+	.split { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 18px; align-items: start; }
+	.sample {
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-lg);
+		padding: 18px;
+		background: var(--color-surface-raised);
+	}
+	.sample h3 { font-family: var(--font-serif); font-size: 32px; font-weight: 500; color: var(--color-primary); line-height: 1.15; }
+	.sample .eyebrow { margin-bottom: 8px; }
+	.read p + p { margin-top: 10px; }
+	.read p { max-width: 62ch; }
+
+	.narrow { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 22px; align-items: start; }
+	.handset {
+		width: min(100%, 300px);
+		border: 1px solid var(--color-border);
+		border-radius: 28px;
+		padding: 14px 12px 16px;
+		background: var(--color-surface-deep);
+	}
+	.handset .ear { width: 48px; height: 4px; border-radius: var(--radius-full); background: var(--color-border); margin: 0 auto 12px; }
+	.phone {
+		border: 1px solid var(--color-primary);
+		border-radius: 16px;
+		padding: 12px;
+		background: linear-gradient(180deg, var(--color-highlight), transparent 30%), var(--color-surface-raised);
+	}
+	.phone-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+	.phone h3 { font-family: var(--font-serif); font-size: 26px; font-weight: 500; color: var(--color-primary); margin: 8px 0 4px; }
+	.phone .flower { width: 120px; margin: 8px auto; }
+	.phone .msg p { font-size: 15px; }
+	.phone .btn { width: 100%; margin-top: 10px; }
+	.rules { list-style: none; padding: 0; display: grid; gap: 12px; }
+	.rules li { color: var(--color-muted); font-size: 15px; }
+	.rules b { display: block; color: var(--color-surface-foreground); font-weight: 600; margin-bottom: 2px; }
+
+	.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+	.cmp-off {
+		min-height: 280px;
+		padding: 16px;
+		border-radius: 28px;
+		background: linear-gradient(160deg, #d7e9ff, #7eace8 46%, #f5f9ff);
+		color: #1d3d66;
+		font-family: "Segoe UI", sans-serif;
+	}
+	.saas {
+		background: #fff;
+		border-radius: 22px;
+		box-shadow: 0 18px 36px rgb(30 80 160 / 0.18);
+		padding: 16px;
+	}
+	.glass {
+		background: rgb(255 255 255 / 0.55);
+		border: 1px solid #fff;
+		border-radius: 16px;
+		padding: 12px;
+		margin-bottom: 12px;
+	}
+	.cmp-off h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; }
+	.cmp-off p { font-size: 14px; margin-top: 4px; }
+	.pill {
+		margin-top: 12px;
+		min-height: 40px;
+		padding: 0 16px;
+		border: 0;
+		border-radius: 999px;
+		background: #3b82f6;
+		color: #fff;
+		font-weight: 700;
+	}
+	.cmp-on {
+		min-height: 280px;
+		border: 1px solid var(--color-border);
+		border-radius: 16px;
+		padding: 7px;
+		background: var(--color-surface-raised);
+	}
+	.cmp-on-in {
+		height: 100%;
+		min-height: 266px;
+		border: 1px solid var(--color-primary);
+		border-radius: 10px;
+		padding: 16px;
+		background: linear-gradient(180deg, var(--color-highlight), transparent 40%), var(--color-surface-raised);
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.cmp-on h3 { font-family: var(--font-serif); font-weight: 500; font-size: 28px; color: var(--color-primary); }
+	.cmp-on .flower { width: 96px; }
+	.cmp-on .btn { align-self: flex-start; margin-top: auto; }
+	footer { padding: 28px; border-top: 1px solid var(--color-border); color: var(--color-muted); font-size: 14px; }
+	footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+	button:focus-visible, .nav button:focus-visible, input:focus-visible {
+		outline: 2px solid var(--color-primary);
+		outline-offset: 3px;
+	}
+	.btn-fill:focus-visible { outline-color: var(--color-surface-foreground); }
+
+	@media (hover: hover) and (pointer: fine) {
+		.btn-fill:hover { background: var(--color-primary-hot); }
+		.btn:hover { border-color: var(--color-primary); }
+		.plate-btn:hover { border-color: var(--color-primary); }
+	}
+	@media (max-width: 1040px) {
+		.frame { grid-template-columns: 1fr; }
+		.markcol { order: 1; border-bottom: 1px solid var(--color-border); }
+		.thread { order: 2; border-right: 0; border-bottom: 1px solid var(--color-border); }
+		.rail { order: 3; border-right: 0; border-bottom: 0; }
+		.flower-wrap { width: min(100%, 168px); }
+		.tasks { margin-top: 0; }
+		.trio, .split, .narrow, .compare, .fields, .cards { grid-template-columns: 1fr; }
+		.swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	}
+	@media (max-width: 760px) {
+		.hero, .block { padding-left: 16px; padding-right: 16px; }
+		.workspace { padding: 0; }
+		.frame { border: 0; border-radius: 12px; }
+		.mast { grid-template-columns: 1fr auto; grid-template-areas: "brand cta" "status status" "nav nav"; }
+		.status { justify-self: start; }
+		.word { font-size: 24px; }
+		.thread h1, .block h2 { font-size: 30px; }
+		.flower-wrap { width: min(100%, 148px); }
+		.composer { flex-direction: column; align-items: stretch; }
+		.composer .btn { width: 100%; }
+		.nav button { letter-spacing: 0.08em; padding: 0 8px; }
+		.narrow { grid-template-columns: 1fr; }
+	}
+	@media (min-width: 1041px) {
+		.hero { min-height: 960px; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		*, *::before, *::after {
+			animation: none !important;
+			transition: none !important;
+		}
+	}
+	@media (prefers-contrast: more) {
+		.workspace, .frame, .plate-btn, .card, .field input, .bench input, .btn, .badge, .handset, .files li, .tasks li {
+			border-color: var(--color-surface-foreground);
+		}
+	}
+</style>
+</head>
+<body>
+	<header class="hero">
+		<div class="hero-inner">
+			<div class="mast">
+				<div class="brand">
+					<svg class="mark" viewBox="0 0 64 64" aria-hidden="true">
+						<circle cx="32" cy="32" r="30" fill="var(--color-surface-deep)" stroke="var(--color-primary)" stroke-width="1.5"/>
+						<g fill="var(--color-turquoise)" stroke="var(--color-primary)" stroke-width="0.7">
+							<ellipse cx="32" cy="15" rx="3.6" ry="8" transform="rotate(0 32 32)"/>
+							<ellipse cx="32" cy="15" rx="3.6" ry="8" transform="rotate(45 32 32)"/>
+							<ellipse cx="32" cy="15" rx="3.6" ry="8" transform="rotate(90 32 32)"/>
+							<ellipse cx="32" cy="15" rx="3.6" ry="8" transform="rotate(135 32 32)"/>
+							<ellipse cx="32" cy="15" rx="3.6" ry="8" transform="rotate(180 32 32)"/>
+							<ellipse cx="32" cy="15" rx="3.6" ry="8" transform="rotate(225 32 32)"/>
+							<ellipse cx="32" cy="15" rx="3.6" ry="8" transform="rotate(270 32 32)"/>
+							<ellipse cx="32" cy="15" rx="3.6" ry="8" transform="rotate(315 32 32)"/>
+						</g>
+						<circle cx="32" cy="32" r="7.5" fill="var(--color-vermilion)" stroke="var(--color-primary)" stroke-width="0.8"/>
+						<circle cx="32" cy="32" r="2.4" fill="var(--color-primary)"/>
+					</svg>
+					<div>
+						<p class="word">Glost</p>
+						<small>Local agent</small>
+					</div>
+				</div>
+				<p class="status"><span class="badge">Demo</span> On this machine</p>
+				<button class="btn btn-fill cta" type="button">New plate</button>
+				<nav class="nav" aria-label="Workspace">
+					<button type="button" aria-current="page">Threads</button>
+					<button type="button">Tasks</button>
+					<button type="button">Library</button>
+				</nav>
+			</div>
+
+			<div class="workspace">
+				<div class="frame">
+					<aside class="rail" aria-label="Plates">
+						<p class="kicker">Plates</p>
+						<button class="plate-btn" type="button" aria-current="true">
+							<strong>Lease notes</strong>
+							<span>Current · four lines on disk</span>
+						</button>
+						<button class="plate-btn" type="button">
+							<strong lang="zh-Hans">晚饭后的笔记</strong>
+							<span>Draft · same folder</span>
+						</button>
+						<button class="plate-btn" type="button">
+							<strong>Kiln log</strong>
+							<span>Filed · three firings</span>
+						</button>
+						<p class="rail-note">The index stays on this disk. Nothing is uploaded.</p>
+					</aside>
+
+					<section class="thread" aria-label="Lease notes">
+						<p class="kicker">Thread</p>
+						<h1>Lease notes</h1>
+						<span class="rule" aria-hidden="true"></span>
+						<p class="head-meta">On this machine · 18:42</p>
+						<div class="msg">
+							<p class="who">You</p>
+							<p>Keep the lease summary on this machine. Four lines are enough, and there is no cloud path.</p>
+						</div>
+						<div class="msg is-agent">
+							<p class="who">Glost</p>
+							<p>Saved beside the evening note. The file stayed on this disk.</p>
+							<p lang="zh-Hans">晚饭后的笔记也在同一目录。这份备忘只留在这台机器上。</p>
+						</div>
+						<div>
+							<p class="kicker quiet">Trace</p>
+							<ul class="trace">
+								<li><time>18:41</time><span>Asked to keep the summary local.</span></li>
+								<li><time>18:41</time><span>Wrote lease-summary.txt.</span></li>
+								<li><time>18:42</time><span>Refused the cloud path.</span></li>
+							</ul>
+						</div>
+						<ul class="files">
+							<li>lease-summary.txt</li>
+							<li lang="zh-Hans">晚饭后的笔记.md</li>
+						</ul>
+						<div class="composer">
+							<label class="field">
+								<span>Ask</span>
+								<input type="text" value="Where is the lease summary?" autocomplete="off">
+							</label>
+							<button class="btn btn-fill" type="button">Send</button>
+						</div>
+					</section>
+
+					<aside class="markcol" aria-label="Mark and tasks">
+						<p class="kicker">Mark</p>
+						<div class="flower-wrap">
+							<svg class="flower" viewBox="0 0 400 400" role="img" aria-label="Eight-petal fired flower">
+								<circle cx="200" cy="200" r="190" fill="var(--color-surface-deep)"/>
+								<circle cx="200" cy="200" r="186" fill="none" stroke="var(--color-border)" stroke-width="3"/>
+								<circle cx="200" cy="200" r="172" fill="none" stroke="var(--color-primary)" stroke-width="1.3"/>
+								<g fill="var(--color-turquoise)" stroke="var(--color-primary)" stroke-width="2.6">
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(0 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(45 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(90 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(135 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(180 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(225 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(270 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(315 200 200)"/>
+								</g>
+								<g fill="var(--color-vermilion)" stroke="var(--color-primary)" stroke-width="1.25">
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(0 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(45 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(90 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(135 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(180 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(225 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(270 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(315 200 200)"/>
+								</g>
+								<circle cx="200" cy="200" r="62" fill="var(--color-vermilion)" stroke="var(--color-primary)" stroke-width="2"/>
+								<circle cx="200" cy="200" r="46" fill="none" stroke="var(--color-primary)" stroke-width="1.15"/>
+								<g fill="var(--color-surface-foreground)">
+									<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(0 200 200)"/>
+									<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(45 200 200)"/>
+									<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(90 200 200)"/>
+									<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(135 200 200)"/>
+									<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(180 200 200)"/>
+									<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(225 200 200)"/>
+									<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(270 200 200)"/>
+									<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(315 200 200)"/>
+									<circle cx="200" cy="22" r="3.3" transform="rotate(22.5 200 200)"/>
+									<circle cx="200" cy="22" r="3.3" transform="rotate(67.5 200 200)"/>
+									<circle cx="200" cy="22" r="3.3" transform="rotate(112.5 200 200)"/>
+									<circle cx="200" cy="22" r="3.3" transform="rotate(157.5 200 200)"/>
+									<circle cx="200" cy="22" r="3.3" transform="rotate(202.5 200 200)"/>
+									<circle cx="200" cy="22" r="3.3" transform="rotate(247.5 200 200)"/>
+									<circle cx="200" cy="22" r="3.3" transform="rotate(292.5 200 200)"/>
+									<circle cx="200" cy="22" r="3.3" transform="rotate(337.5 200 200)"/>
+								</g>
+								<circle cx="200" cy="200" r="11" fill="var(--color-primary)"/>
+								<circle cx="200" cy="200" r="4.5" fill="var(--color-turquoise)"/>
+								<ellipse cx="146" cy="76" rx="42" ry="13" fill="var(--color-surface-foreground)" opacity="0.16" transform="rotate(-28 146 76)"/>
+							</svg>
+						</div>
+						<p class="flower-cap">A fired flower. It marks the desk. It is not a control.</p>
+						<ul class="tasks">
+							<li><span class="pip" aria-hidden="true"></span><span>Index the lease</span><span class="badge">Ready</span></li>
+							<li><span class="pip live" aria-hidden="true"></span><span>Hold the evening note</span><span class="badge live">Firing</span></li>
+							<li><span class="pip fault" aria-hidden="true"></span><span>Block the cloud path</span><span class="badge fault">Fault</span></li>
+						</ul>
+					</aside>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<main>
+		<section class="block" id="color">
+			<div class="wrap">
+				<p class="kicker">01 — Color</p>
+				<h2>Cobalt holds. Gold lines. Jewels stay small.</h2>
+				<p class="lede">The field is an opaque cobalt glaze. Cream is for sentences. Bright gold is the title, the inner line, and the one commit. Deeper gold frames. Turquoise and vermilion are petals, not backgrounds.</p>
+				<ul class="swatches">
+					<li><i class="sw-surface"></i><b>surface</b><span>Field</span></li>
+					<li><i class="sw-raised"></i><b>raised</b><span>Plate</span></li>
+					<li><i class="sw-deep"></i><b>deep</b><span>Well</span></li>
+					<li><i class="sw-cream"></i><b>foreground</b><span>Sentences</span></li>
+					<li><i class="sw-gold"></i><b>primary</b><span>Title and commit</span></li>
+					<li><i class="sw-frame"></i><b>border</b><span>Outer frame</span></li>
+					<li><i class="sw-muted"></i><b>muted</b><span>Captions</span></li>
+					<li><i class="sw-accent"></i><b>accent</b><span>Live word</span></li>
+					<li><i class="sw-turquoise"></i><b>turquoise</b><span>Petal</span></li>
+					<li><i class="sw-vermilion"></i><b>vermilion</b><span>Petal core</span></li>
+				</ul>
+			</div>
+		</section>
+
+		<section class="block" id="shape">
+			<div class="wrap">
+				<p class="kicker">02 — Line and flower</p>
+				<h2>One frame, one radial flower.</h2>
+				<p class="lede">The main plate carries two gold lines. Everything inside carries one. The flower is eight turquoise petals with vermilion cores. The center has no letters.</p>
+				<div class="trio">
+					<figure>
+						<div class="well"><svg class="flower" viewBox="0 0 400 400" aria-hidden="true">
+							<circle cx="200" cy="200" r="190" fill="var(--color-surface-deep)"/>
+							<circle cx="200" cy="200" r="186" fill="none" stroke="var(--color-border)" stroke-width="3"/>
+							<circle cx="200" cy="200" r="172" fill="none" stroke="var(--color-primary)" stroke-width="1.3"/>
+							<g fill="var(--color-turquoise)" stroke="var(--color-primary)" stroke-width="2.6">
+								<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(0 200 200)"/>
+								<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(45 200 200)"/>
+								<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(90 200 200)"/>
+								<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(135 200 200)"/>
+								<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(180 200 200)"/>
+								<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(225 200 200)"/>
+								<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(270 200 200)"/>
+								<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(315 200 200)"/>
+							</g>
+							<g fill="var(--color-vermilion)" stroke="var(--color-primary)" stroke-width="1.25">
+								<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(0 200 200)"/>
+								<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(45 200 200)"/>
+								<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(90 200 200)"/>
+								<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(135 200 200)"/>
+								<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(180 200 200)"/>
+								<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(225 200 200)"/>
+								<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(270 200 200)"/>
+								<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(315 200 200)"/>
+							</g>
+							<circle cx="200" cy="200" r="62" fill="var(--color-vermilion)" stroke="var(--color-primary)" stroke-width="2"/>
+							<circle cx="200" cy="200" r="46" fill="none" stroke="var(--color-primary)" stroke-width="1.15"/>
+							<g fill="var(--color-surface-foreground)">
+								<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(0 200 200)"/>
+								<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(45 200 200)"/>
+								<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(90 200 200)"/>
+								<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(135 200 200)"/>
+								<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(180 200 200)"/>
+								<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(225 200 200)"/>
+								<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(270 200 200)"/>
+								<ellipse cx="200" cy="170" rx="4.2" ry="11" transform="rotate(315 200 200)"/>
+								<circle cx="200" cy="22" r="3.3" transform="rotate(22.5 200 200)"/>
+								<circle cx="200" cy="22" r="3.3" transform="rotate(67.5 200 200)"/>
+								<circle cx="200" cy="22" r="3.3" transform="rotate(112.5 200 200)"/>
+								<circle cx="200" cy="22" r="3.3" transform="rotate(157.5 200 200)"/>
+								<circle cx="200" cy="22" r="3.3" transform="rotate(202.5 200 200)"/>
+								<circle cx="200" cy="22" r="3.3" transform="rotate(247.5 200 200)"/>
+								<circle cx="200" cy="22" r="3.3" transform="rotate(292.5 200 200)"/>
+								<circle cx="200" cy="22" r="3.3" transform="rotate(337.5 200 200)"/>
+							</g>
+							<circle cx="200" cy="200" r="11" fill="var(--color-primary)"/>
+							<circle cx="200" cy="200" r="4.5" fill="var(--color-turquoise)"/>
+							<ellipse cx="146" cy="76" rx="42" ry="13" fill="var(--color-surface-foreground)" opacity="0.16" transform="rotate(-28 146 76)"/>
+						</svg></div>
+						<figcaption>Eight petals, gold rings, cream dots. The center is a rosette, not an inscription.</figcaption>
+					</figure>
+					<figure>
+						<div class="well"><div class="mini-frame"><div><strong>Plate</strong><p>Outer line deeper gold. Inner line bright gold. One highlight, still.</p></div></div></div>
+						<figcaption>The double line is reserved for the main plate. Cards inside use a single line.</figcaption>
+					</figure>
+					<figure>
+						<div class="well"><div class="radii" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+						<figcaption>8, 12, and 20 for plates and fields. The full pill is the commit and the badge, not the card.</figcaption>
+					</figure>
+				</div>
+			</div>
+		</section>
+
+		<section class="block" id="controls">
+			<div class="wrap">
+				<p class="kicker">03 — Controls</p>
+				<h2>What you can press</h2>
+				<p class="lede">Send is the one gold commit. Quiet actions keep a gold line. Discard is vermilion, and only for a fault. Disabled stays the same shape, dimmed.</p>
+				<div class="bench">
+					<div>
+						<p class="kicker quiet">Actions</p>
+						<div class="btn-row">
+							<button class="btn btn-fill" type="button">Send</button>
+							<button class="btn" type="button">Hold</button>
+							<button class="btn btn-danger" type="button">Discard</button>
+							<button class="btn" type="button" disabled>Sync</button>
+						</div>
+					</div>
+					<div class="fields">
+						<label class="field">
+							<span>Ask</span>
+							<input class="is-focus" type="text" value="Where is the lease summary?" autocomplete="off" aria-label="Focused field">
+						</label>
+						<label class="field is-error">
+							<span>Path</span>
+							<input type="text" value="cloud://lease" aria-invalid="true" autocomplete="off">
+							<span class="err">No cloud path. The plate is on this machine.</span>
+						</label>
+					</div>
+					<div>
+						<p class="kicker quiet">Badges</p>
+						<div class="badge-row">
+							<span class="badge">Ready</span>
+							<span class="badge">Draft</span>
+							<span class="badge live">Firing</span>
+							<span class="badge fault">Fault</span>
+						</div>
+					</div>
+					<div class="cards">
+						<article class="card">
+							<p class="kicker">01</p>
+							<h3>On device</h3>
+							<p>The thread, the file, and the hold never leave this machine.</p>
+						</article>
+						<article class="card">
+							<p class="kicker">02</p>
+							<h3>Gold frames</h3>
+							<p>The line is the edge. A shadow does not replace it.</p>
+						</article>
+						<article class="card">
+							<p class="kicker">03</p>
+							<h3>Readable thread</h3>
+							<p>Sentences stay in the sans, at 16px, including Chinese.</p>
+						</article>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="block" id="type">
+			<div class="wrap">
+				<p class="kicker">04 — Reading</p>
+				<h2>Serif for the name. Sans for the thread.</h2>
+				<p class="lede">A title can be gold and serif. A transcript cannot. Chinese uses the same sans, the same size, and no tracking.</p>
+				<div class="split">
+					<div class="sample">
+						<p class="kicker eyebrow">Display</p>
+						<h3>Lease notes</h3>
+						<p class="head-meta" style="margin-top:8px">Serif, 32px, one line</p>
+					</div>
+					<div class="sample read">
+						<p class="kicker eyebrow">Thread</p>
+						<p>Saved beside the evening note. The file stayed on this disk, and the summary is four lines.</p>
+						<p lang="zh-Hans">晚饭后的笔记也在同一目录。这份备忘只留在这台机器上。</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="block" id="narrow">
+			<div class="wrap">
+				<p class="kicker">05 — Narrow</p>
+				<h2>The same desk, held in one hand</h2>
+				<p class="lede">The flower moves above the thread and shrinks. The plate list follows the composer. The commit stays full width.</p>
+				<div class="narrow">
+					<div class="handset">
+						<div class="ear" aria-hidden="true"></div>
+						<div class="phone">
+							<div class="phone-top">
+								<p class="word" style="font-size:22px">Glost</p>
+								<span class="badge">Demo</span>
+							</div>
+							<svg class="flower" viewBox="0 0 400 400" aria-hidden="true">
+								<circle cx="200" cy="200" r="190" fill="var(--color-surface-deep)"/>
+								<circle cx="200" cy="200" r="186" fill="none" stroke="var(--color-border)" stroke-width="3"/>
+								<g fill="var(--color-turquoise)" stroke="var(--color-primary)" stroke-width="2.6">
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(0 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(45 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(90 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(135 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(180 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(225 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(270 200 200)"/>
+									<ellipse cx="200" cy="104" rx="23" ry="50" transform="rotate(315 200 200)"/>
+								</g>
+								<g fill="var(--color-vermilion)">
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(0 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(45 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(90 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(135 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(180 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(225 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(270 200 200)"/>
+									<ellipse cx="200" cy="112" rx="10" ry="24" transform="rotate(315 200 200)"/>
+								</g>
+								<circle cx="200" cy="200" r="62" fill="var(--color-vermilion)" stroke="var(--color-primary)" stroke-width="2"/>
+								<circle cx="200" cy="200" r="10" fill="var(--color-primary)"/>
+							</svg>
+							<h3>Lease notes</h3>
+							<p class="head-meta">On this machine</p>
+							<div class="msg is-agent">
+								<p class="who">Glost</p>
+								<p lang="zh-Hans">这份备忘只留在这台机器上。</p>
+							</div>
+							<button class="btn btn-fill" type="button">Send</button>
+						</div>
+					</div>
+					<ul class="rules">
+						<li><b>Columns stack under 1040px</b>Flower, then the thread, then the plate list. The flower centers and drops to about 168px.</li>
+						<li><b>One line under 760px</b>The inner gold line drops so the inset is not eaten. The outer frame remains.</li>
+						<li><b>Title 40 to 30</b>Body stays 16px sans. Chinese stays in that sans, with tracking at 0.</li>
+						<li><b>Flower to about 148px</b>It stays above the title. It does not become a background pattern.</li>
+						<li><b>Send goes full width</b>The field stacks above it. Both stay at least 44px, and Send stays 48px.</li>
+						<li><b>Nav may wrap</b>Tracking tightens. Each item stays a 44px target. The current item keeps its gold underline.</li>
+						<li><b>Hover leaves</b>A fine pointer may brighten gold. Touch keeps the resting color. Focus rings stay.</li>
+						<li><b>Inset 28 to 16</b>Nothing scrolls sideways.</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
+		<section class="block" id="off">
+			<div class="wrap">
+				<p class="kicker">06 — Off-style</p>
+				<h2>A pale card is another material</h2>
+				<p class="lede">The left card borrows a light blue field, a white slab, a glassy chip, a cloud, and a blue pill. The right plate is this system.</p>
+				<div class="compare">
+					<figure>
+						<div class="cmp-off">
+							<div class="saas">
+								<div class="glass">
+									<svg width="48" height="32" viewBox="0 0 48 32" aria-hidden="true">
+										<path d="M14 26h22a8 8 0 0 0 1.2-15.9A11 11 0 0 0 16 12a8 8 0 0 0-2 14z" fill="#7eb6ff"/>
+									</svg>
+									<h3>Welcome back</h3>
+									<p>Your workspace is ready in the cloud.</p>
+								</div>
+								<button class="pill" type="button">Get started</button>
+							</div>
+						</div>
+						<figcaption class="note">Off. Pale blue, a white card, a glass chip, a cloud, a pill.</figcaption>
+					</figure>
+					<figure>
+						<div class="cmp-on">
+							<div class="cmp-on-in">
+								<p class="kicker">Glost</p>
+								<svg class="flower" viewBox="0 0 400 400" aria-hidden="true">
+									<circle cx="200" cy="200" r="190" fill="var(--color-surface-deep)"/>
+									<circle cx="200" cy="200" r="184" fill="none" stroke="var(--color-primary)" stroke-width="4"/>
+									<g fill="var(--color-turquoise)" stroke="var(--color-primary)" stroke-width="3">
+										<ellipse cx="200" cy="108" rx="26" ry="52" transform="rotate(0 200 200)"/>
+										<ellipse cx="200" cy="108" rx="26" ry="52" transform="rotate(45 200 200)"/>
+										<ellipse cx="200" cy="108" rx="26" ry="52" transform="rotate(90 200 200)"/>
+										<ellipse cx="200" cy="108" rx="26" ry="52" transform="rotate(135 200 200)"/>
+										<ellipse cx="200" cy="108" rx="26" ry="52" transform="rotate(180 200 200)"/>
+										<ellipse cx="200" cy="108" rx="26" ry="52" transform="rotate(225 200 200)"/>
+										<ellipse cx="200" cy="108" rx="26" ry="52" transform="rotate(270 200 200)"/>
+										<ellipse cx="200" cy="108" rx="26" ry="52" transform="rotate(315 200 200)"/>
+									</g>
+									<circle cx="200" cy="200" r="58" fill="var(--color-vermilion)" stroke="var(--color-primary)" stroke-width="3"/>
+									<circle cx="200" cy="200" r="12" fill="var(--color-primary)"/>
+								</svg>
+								<h3>Lease notes</h3>
+								<p>Four lines, on this disk. The frame is gold.</p>
+								<button class="btn btn-fill" type="button">Send</button>
+							</div>
+						</div>
+						<figcaption>On. Opaque cobalt, a gold line, one flower, a readable sentence.</figcaption>
+					</figure>
+				</div>
+			</div>
+		</section>
+	</main>
+	<footer>
+		<div class="wrap">
+			<p>Glost is the worked example. Cobalt ground, gold line, and one fired flower are the system.</p>
+			<p>Minakari Enamel</p>
+		</div>
+	</footer>
+</body>
+</html>

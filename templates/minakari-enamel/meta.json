@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "minakari-enamel",
+	"name": "Minakari Enamel",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 171,
+	"category": "enamel",
+	"vibe": "dark",
+	"tags": ["enamel", "cobalt", "gold", "floral", "dark", "craft", "agent"],
+	"blurb": "Ceremonial local-agent desk on an opaque cobalt enamel field: warm gold frames, a radial turquoise-and-vermilion flower, cream serif titles, and a plain sans for dense chat. Glazed and jewel-like. Not cloisonné wire, not chrome, not glass, not a pale blue card.",
+	"tagline": {
+		"en": "Cobalt glaze, a gold line, one flower",
+		"zh": "米纳卡里釉彩：钴蓝、金线、一朵花"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://designbycurio.com/persian-minakari-enamel-isfahan",
+		"note": "Authored by Grok Bot. Original Minakari Enamel system for a local-first agent named Glost. An interface interpretation of the craft's color and line, not a traditional artifact and not a copy of a workshop plate. Mood only, kept out of the repo: Design by Curio, Persian Minakari enamel (https://designbycurio.com/persian-minakari-enamel-isfahan and https://designbycurio.com/learn/persian-minakari-enamel-isfahan), for a saturated cobalt field, warm gold frames, turquoise and vermilion floral cells, and a radial flower. Craft, for what the material is: Encyclopaedia Iranica, Enamel (https://www.iranicaonline.org/articles/enamel/) describes heat-fused glass colored with metal oxides; from the mid-17th century, champlevé and enamel painting on gold, copper, and silver, later with royal blue, turquoise, and floral designs on gold or opaque grounds. Encyclopaedia Isfahanica, Enameling (https://en.isfahanica.org/entry/enameling-minakari-minasazi/) says painted enamel is the predominant Iranian technique and Isfahan is a principal center; khane-bandi (cloisonné) is a separate technique made in Isfahan in recent years, not the historical default; cobalt blue and turquoise are characteristic oxide colors; copper is the common base today, with gold and silver for finer pieces. Iranica, Isfahan xiii. Crafts (https://www.iranicaonline.org/articles/isfahan-xiii-crafts/) and Visit Iran (https://www.visitiran.ir/handicraft/enamel-brilliant-art-fire-earth-and-furnaces) place the living painted-enamel workshops in Isfahan. The gold line here is a painted frame, not a claim that minakari is cloisonné or gold-wire work. No third-party assets, screenshots, logos, markup, or copied text."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html",
+		"cover": "cover.webp"
+	},
+	"collectedAt": "2026-11-20"
+}
