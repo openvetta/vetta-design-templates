@@ -1,137 +1,128 @@
 # Bauhaus Polka Dot
 
-A worked example ships as `demo.html`: Punkt, a local-first agent, with the census on the first screen, the same census narrowed, the controls, and a deliberately off-style counter-example. It is a static reference for this visual system.
+A worked example ships as `demo.html`: Punkt, a local-first social app, with a desktop feed and inbox, the same app at phone width, the controls, and a deliberately off-style counter-example. It is a static reference for this visual system.
 
 ## Atmosphere
 
-Warm paper, ink rules, and circles on a module. The page is a poster that counts. A geometric sans stays in lowercase. Red, yellow, and blue appear only as flat dots. Black dots are the finished work. One larger red dot is the single thing that needs a person. The field around the dots stays quiet: no texture, no second pattern, no glow.
+Flat primary fields butted edge to edge, and a fine polka scale on top of them. Black, white, red, blue, and yellow are the surfaces of the app: the bar, the stories, the posts, the inbox, the tab bar, the buttons. They touch. They do not sit as small accents on a paper page.
 
-The product in the reference is Punkt. The model runs on this machine. A finished step adds one black dot and sends nothing out. The first screen is the instrument: a wordmark, a clipped row of small dots, the census plate, a short ledger, and a composer on the baseline.
+Dots are small, solid, and regular. Four diameters do the counting, the status, the badges, and the rhythm. One circle, larger than that scale, is allowed once in a view, as a focal shape sitting on a field of fine dots. Nothing fades. A dot is either fully there or it is not in the layout.
 
-This fits a local tool, a count, a queue, a catalog of steps, and any screen that can say its status as a number of identical marks. It is a poor fit for a long article, a night cockpit, a marketplace of many hues, and any view that needs squares, triangles, or a picture inside a circle.
+The product in the reference is Punkt. Posts, likes, and messages stay on this device. The first screen is the app: a black bar, a red stories row, a white post, a black post, a yellow field of fine dots with one red circle, and a blue inbox. At phone width the inbox drops under the feed and a black tab bar sits on the bottom.
 
-The empty cells of a row are part of the module. Filling them so the row looks "finished," or scattering extra dots into the margin, removes the style.
+This fits a social app, a feed, a chat list, a profile, and any tool whose regions can be named with a single primary color. It is a poor fit for a long article, a magazine cover, a centered essay, and any screen that needs photographs, soft depth, or many quiet grays.
 
 ## Color roles
 
-Frames take color from the tokens in `theme.css`.
+Frames take color from the tokens in `theme.css`. Regions use the token as a solid fill. Neighboring regions meet with no gap and no frame. A 1px `border` appears only where two light fills would otherwise melt together (white against yellow). Black against white, red, blue, or yellow does not need that rule. Red against blue, blue against yellow, and yellow against black do not either.
 
-- `surface` is the warm paper, and `surface-raised` is the same paper. A panel does not lift by changing fill. The 1px rule is the edge. Ink on this paper is about 15:1. Long text uses that pair.
-- `primary` is the same ink. `primary-foreground` is the paper, for the commit control and for type sitting on an ink field. A product view keeps one ink commit control.
-- `muted` is the only secondary text color, for labels and times. It is about 6.4:1 on `surface`. It is not a fill, and it is not a dot.
-- `accent` is the blue of a running step, about 7.9:1 on `surface` as text and as a dot. In a product view it is the running dots and the word "running" when that word is the status. It is not a link color and not a focus ring.
-- `dot-yellow` is the queue. Yellow against this paper is about 1.3:1, so the fill never carries the edge. Every yellow dot has a 2px ink keyline. Ink on `dot-yellow` is about 12:1, which is why a numeral may sit beside the dot and never inside a small one. Yellow is never type, never a button, and never a field.
-- `dot-red` is the printer's red of the one attention dot, about 4.8:1 against `surface` (the shape clears the non-text need) and about 5.5:1 for paper type on the solid, which is enough for a large numeral and still not how this system sets the label. The label stays on the paper, in ink, next to the dot. `dot-red` is not a button and not a paragraph.
-- `danger` is the darker red for an error sentence and an error rule, about 7.2:1 on `surface`. It is type and a 1px rule. It is not a second attention dot. A view that is not in an error state does not show it.
-- `border` is the ink, at `rule-width` (1px). It is the plate edge, the split between census bands, and the ledger rules. Contrast against `surface` matches the body pair.
+- `primary` is black. `primary-foreground` is white. White on this black is about 19:1. The top bar, a black post, and the phone tab bar use this pair.
+- `surface` is white. `surface-foreground` is the same black, about 19:1. A white post is a color block, not a page background. Body copy on a white or yellow block uses this black.
+- `surface-raised` is primary yellow. Black on this yellow is about 15:1. It is the loud field, the active tab, the post button, and the fine-dot plate. White type on yellow fails and does not appear.
+- `accent` is primary blue. White on this blue is about 8:1. The inbox, a comment button, and a blue avatar use it. Black type on this blue is not a text pair.
+- `danger` is primary red. White on this red is about 5.5:1. The stories bar, the compose cell in the tab bar, and the one focal circle use it. Black type on this red stays under about 4:1 and is not used for text.
+- `muted` is a dark gray for secondary words on white and on yellow only (about 11:1 on white, about 9:1 on yellow). On black, blue, or red, secondary words are `primary-foreground`, at a smaller size. A gray word on red or blue fails.
+- `border` is black, 1px, and only for the light-on-light seam and for a field that sits on a same-value ground.
 
-One product view holds paper, ink, the running blue, the queued yellow, and a single `dot-red` dot. The error red appears only with an error sentence. A tint, a gradient, a pastel chip, or a primary-colored rectangle is a different system.
+Buttons, cards, headers, tabs, and badges are fills of these tokens. An outlined ghost on a quiet ground is off this system. A screen that is mostly white with a few colored dots is off this system.
 
 ## Typography
 
-A geometric sans, set in lowercase. The intended faces are Futura, Avenir Next, and Century Gothic, in the spirit of a Bauhaus universal alphabet: circles and straight lines, no uppercase. The reference does not load a remote font. `--font-sans` names those faces, then Noto Sans Display, so a machine without Futura still resolves to a geometric-leaning sans rather than a neutral grotesk.
+A geometric sans. The intended faces are Futura, Avenir Next, and Century Gothic. The reference does not load a remote font. `--font-sans` names those faces, then Noto Sans Display.
 
-- The headline is weight 700, lowercase, flush left, about 104px from 1200px up, 72px from 960px, 60px from 720px, and 46px below that. Tracking is `tracking-display` (−0.045em). Line-height is near 0.9. It is ink. It is not uppercase, not italic, and not centered.
-- Section titles are the same weight and case, about 40px (32px below 720px), tracking −0.03em, line-height near 1.
-- The census numeral and the hold numeral are weight 700, about 28px, tracking −0.03em, tabular figures, in ink. They sit on the paper, baseline-aligned with a lowercase word.
-- Body is 16px, line-height 1.5, weight 400. The measure stays under about 38em. There is no justified text.
-- Labels and kickers are 13px, weight 400, lowercase, tracking `tracking-label` (0.14em, tightening to 0.08em below 720px). They are `muted` when they name a category, and ink when they are the status word next to a dot.
-- The commit label is 15px, weight 700, lowercase, tracking 0.04em. It is not a tracked uppercase word.
-- One family only. A monospace for paths, a serif for headlines, or a script for emphasis adds a second voice. Numerals use tabular figures in the same sans.
+This is an app, so type stays at interface size. There is no poster headline and no magazine display.
+
+- The product name is weight 700, 20px, lowercase, tracking −0.04em.
+- Section titles inside the app (stories, messages, profile) are weight 700, 16px.
+- Names are weight 700, 15px. Body is weight 400, 15px, line-height 1.4. A post is one or two sentences, not a column of prose.
+- Meta (time, counts, tab labels) is 12px. Tab labels can be weight 700. On a light field, meta may use `muted`. On black, blue, or red, meta is white.
+- Buttons are weight 700, 14px, lowercase.
+- One family. Numerals are tabular. No italic, no uppercase lockup, no second face for headlines.
 
 ## Spacing & layout
 
-The module is 8px. Margins, the gap between dots, and the space inside a band come from that module. Nothing is nudged off the module to look lively, and nothing is centered in the viewport.
+The product runs to the viewport edge. Margin on the app is 0. Color regions abut. Padding lives inside a region: 12px below 960px, 16px from 960px up.
 
-- Margin is 56px from 1200px up, 48px from 960px, 28px from 720px, and 16px below 720px.
-- From 960px up the hero is two columns: the statement on the left, the census plate on the right, aligned to the top, with a 48px column gap (64px from 1200px). The plate's right edge lines up with the ledger and the commit control. Below 960px the hero stacks: statement, plate, then the short index. The plate becomes full width.
-- The census plate is a 1px ink frame. Inside, three bands stack with 1px rules. Each band is a numeral, a lowercase word, and one grid of `dot-3`. The attention rail is the right-hand cell, full height, with its own 1px rule. Below 960px that rail moves under the bands, the left rule becomes a top rule, and the rail is a row: the dot, then the words.
-- A census grid is 8 columns. The gap is `dot-gap` (8px). Center to center for `dot-3` is 32px. The row length does not change on a narrow screen; the dots are small enough to keep eight across inside a 16px margin.
-- Bands pad 16px 18px. The ledger starts 22px under the hero. Rows are at least 52px. The composer is a top rule, then a 44px field and 44px controls.
-- The rhythm under the mast is a single line of `dot-1` at an 8px gap, clipped by the content box. It runs off the right edge. It is a rule, not a tally, so it never receives a numeral.
-- Touch targets (the commit control, the quiet control, the field, the nav items) are at least 44px tall. Dots are not targets.
-
-Text is flush left, ragged right. A centered stack, even with the right dots, is off this sheet.
+- From 960px up the workspace is two columns with no gutter: the feed, then a 320px inbox. The inbox is as tall as the feed. The yellow post grows to fill the feed column so the screen ends on a color, not on empty paper.
+- Below 960px the inbox moves under the feed, in document order. A tab bar is fixed to the bottom of the viewport, full width, 56px tall. The page keeps 56px of padding under the content so the last row is not covered. The bar is five equal cells: feed, chat, post, alerts, you.
+- Stories are a horizontal row of avatars that fits the column. At 390px, five stories at 36px still fit inside 12px of padding. The row does not widen the page. A fine dot patch on the stories bar is desktop-only; it drops below 960px.
+- Touch targets (tabs, buttons, the field, the switch) are at least 44px tall. Dots and avatars are not the target; the row or the button is.
+- The one focal circle is 64px (`focal`). It sits inside the yellow dot field, overlapping a blue square. It does not cover a control.
 
 ## Components
 
 ### Dots
 
-There are four diameters and no others. The gap, when dots sit in a row or a grid, is always 8px.
+Four diameters. Every dot is a solid fill of `primary`, `primary-foreground`, `surface-raised`, `accent`, or `danger`. No fifth size. No hollow dot. No tint.
 
 | Token | Diameter | Use |
 | --- | --- | --- |
-| `dot-1` | 8px | The rhythm rule. Ink only. May be clipped. Never a count, never a status, never beside a numeral. |
-| `dot-2` | 16px | A status mark beside a word, and the single dot in the wordmark. Not a census cell. |
-| `dot-3` | 24px | The census unit. One filled dot is one step. A row is eight cells. |
-| `dot-4` | 96px | The attention dot. One per product view. Its quantity is the numeral `01`, not its diameter. |
+| `dot-1` | 4px | The rhythm. A regular grid or a single row: dividers, like-counts, the patch on a color bar. Pitch is 8px (dot plus a 4px gap) when it is a texture, and the same 4px gap when a row is a count. |
+| `dot-2` | 8px | One status mark, or a member of a stacked unread mark. |
+| `dot-3` | 12px | A badge dot, or the middle shape in a stack. |
+| `dot-4` | 16px | The top of the polka scale: the switch knob, the largest shape in a stack. |
 
-Roles of fill:
+The focal circle is 64px and is not a fifth polka size. A view gets one. It overlaps other opaque shapes. It is not a button and not an avatar.
 
-- Ink (`primary`) is done, the rhythm, and the wordmark dot.
-- `accent` is running.
-- `dot-yellow` is queued, and it always carries the 2px ink keyline (`keyline`).
-- `dot-red` is the hold. It appears once, at `dot-4`, in the attention rail. A specimen of the token, in a color chart, is labeled as a specimen and is not a second hold.
-- An empty cell is a ring: transparent fill, the same 2px ink keyline, the same outer diameter as the filled dots in that grid. Rings complete the row of eight. They are not a second number. They do not appear outside a census grid, and they are never a background.
+Density is a second axis. The same `dot-1` packed on a 4px gap reads as a count or a texture. The same dot on an 8px gap reads as a looser rhythm. A greater count is more dots of the same diameter, plus a numeral. Enlarging one dot to mean "more" is off this scale.
 
-A greater count is more dots of the same diameter. Enlarging one census dot to mean "more" is off this sheet. The attention dot is larger because it is a different sign, and the view still prints the numeral.
+Overlap is the third axis. Two or three dots of different diameters and different inks may stack, each fully opaque, the later one covering the earlier one. The offset is 4px or 6px, on the module. Use a stack for an unread thread or an unseen story. Do not stack more than three, and do not scatter stacks across the screen. One stack in a list row is enough.
 
-Dots do not overlap, rotate, blur, or take a gradient. They do not sit behind paragraphs. They do not form a wallpaper across the page. A cluster lives in a named region: the rhythm, a census grid, a status mark, or the one attention dot.
+Where a dot attaches:
 
-Color is not the only signal. Every census band has a numeral and a word. Every ledger row has a word beside its `dot-2`. The hold has the word "hold" and the numeral.
+- **Avatar.** A 36px circle (`avatar`), filled with a block token, with a one-letter name in the contrasting text pair. It is a person, not a polka dot. An unseen story adds a stack of `dot-2` on the avatar's corner, inside the avatar box. A seen story has no stack.
+- **Unread and badges.** A stack, or a solid yellow square with a black numeral. The numeral is present. The dots are not the only signal.
+- **Status.** One `dot-2` beside the word or the time.
+- **Divider.** A row of `dot-1` in an ink that contrasts with the field, or a 1px solid token rule. Not a faded line.
+- **Count.** A tight row of `dot-1`, then the numeral and the word ("12 likes").
+- **Background rhythm.** `dot-1` on a regular pitch, painted in a solid ink on a solid field, and only in a region that is not carrying a paragraph. The yellow plate under the focal circle is that region. The header may hold a small patch of the same rhythm. The pattern does not run under sentences.
+- **Switch.** The track is a 44×24 solid rectangle. The knob is a `dot-4` circle. On is a yellow knob on a black track. Off is a black knob on a white track with a 2px black rule. The knob moves; it does not fade.
 
-### Plate, ledger, composer
+### App parts
 
-- **Mast.** The word "punkt" in the headline weight at 22px, then one ink `dot-2`, then lowercase nav. The current item carries an ink `dot-1` before the word. Other items do not. Hover draws a 1px ink underline, offset 3px, and does not recolor the word to blue or red.
-- **Census plate.** Three bands — done, running, queued — and the attention rail. Done is full rows of ink `dot-3` (24 is three rows of eight, no rings). Running and queued show the filled dots first, then rings out to eight. The rail holds the `dot-4` in `dot-red`, the kicker "attention", the numeral, the word "hold", and one short line. The dot is not a button.
-- **Ledger.** Rows, not cards and not bubbles. Time, sentence, a `dot-2` plus its word, and a tabular numeral. The numeral is the count for that line. The plate remains the full count; the ledger does not repeat twenty-four dots. Below 720px the sentence moves to its own line. The row stays inside the margin.
-- **Card.** Paper, a 1px ink rule, radius 0, no shadow. Padding 20px. A kicker, a short title, one sentence, and one status mark. A card does not wear a colored header bar.
-- **Commit control.** `primary` fill, `primary-foreground` label, 1px `primary` border, radius 0, height 44px. One per product view. Hover and press invert it to paper with ink type. The invert on hover is limited to a fine pointer. A coarse pointer gets the same invert on press, then the control returns. It does not scale, lift, or grow a shadow.
-- **Quiet control.** Paper, ink type, 1px `border`. Hover and press fill it with `primary`. Disabled is `muted` type and a `muted` rule, still fully opaque, still the same rectangle, removed from the tab order in a product build.
-- **Field.** A visible label in the kicker style. The field is a 1px ink box, paper fill, radius 0, 16px type, height 44px. Placeholder text is not the label. Focus draws `shadow-focus` (a 3px paper gap and a 2px ink ring) and removes the browser outline. The caret is ink. Focus does not spend blue, yellow, or red.
-- **Error.** The field's rule and the sentence switch to `danger`. The sentence stays. Color is not the only carrier. The error does not add a `dot-red` dot.
-- **Link.** Ink, a 1px underline on hover, offset 3px. Hover does not recolor it to `accent`.
-
-### States
-
-- **Done** is an ink dot plus the word "done". There is no green and no check icon.
-- **Running** is an `accent` dot plus the word "running".
-- **Queued** is a keyed `dot-yellow` dot plus the word "queued".
-- **Hold** is the single `dot-4` plus the word "hold" and the numeral.
-- **Empty** is a census row of eight rings, the numeral `00`, and the words "nothing counted".
-- **Loading** is the word "counting" and one running dot. Dots do not bounce, pulse, or travel.
-- **Disabled** is `muted` at full opacity.
-- **Focus** is the ink ring on every control.
+- **Bar.** Black fill, white type, 64px tall. Name, text tabs, an optional rhythm patch, a search field, and one yellow post button. The active tab is a yellow block with black type. Inactive tabs are black with white type. Tabs abut.
+- **Stories.** Red fill, white type. Avatar, name, and the unseen stack described above.
+- **Post.** One fill for the whole card: white, black, or yellow. Name row, one or two sentences, a `dot-1` count, a numeral, and a solid button. A yellow post may end in the fine-dot plate and the single focal circle.
+- **Inbox.** Blue fill, white type, full height beside the feed from 960px up. Rows separate with a 1px yellow rule. The reply field sits at the bottom of the column.
+- **Tab bar.** Phone only. Five cells, no gap. Feed is yellow when it is the current tab. Post is red. The others are black. White or black type follows the fill.
+- **Field.** White fill, black type, 40px tall, radius 0, 16px text so a phone does not zoom. The label is visible. Focus is a 2px yellow ring (`shadow-focus`), including on the black bar. The caret is black.
+- **Button.** A solid token fill, the matching text pair, radius 0, height 40px or 44px. Hover (fine pointer only) swaps fill and text to another solid pair: yellow becomes black with yellow type, blue becomes white with blue type. Press does the same swap. No lift, no scale, no shadow.
+- **Disabled.** A white fill, black type, and a 2px black rule, still fully opaque. It is not a washed-out version of the enabled button.
+- **Badge.** A yellow square, black numeral, at least 18px. It sits on the messages tab and on a notification row.
 
 ## Motion
 
-Almost none. Color on a control changes in `duration-ui` (120ms), `ease-ui` (linear). Nothing translates, scales, fades in, or parallaxes. The rhythm does not move. Dots do not animate.
+Color on a control swaps in `duration-ui` (120ms), `ease-ui` (linear). Nothing moves, fades, scales, or blurs. Dots do not travel. The switch knob changes side without a fade.
 
-Under `prefers-reduced-motion`, the color change is instant. The invert on hover and press remains, so the control still shows its state.
+Under `prefers-reduced-motion`, the color swap is instant.
 
 ## Accessibility
 
-- Body ink on paper is about 15:1. `muted` is about 6.4:1. `accent` as text or as a dot is about 7.9:1. `danger` text is about 7.2:1. Those are the pairs for reading.
-- `dot-red` against paper is about 4.8:1, which is enough for a large graphical mark and not the pair used for body type. The hold's words stay ink on paper.
-- `dot-yellow` against paper is about 1.3:1. The 2px ink keyline is the edge people actually see. Yellow type on paper, and a yellow dot with no keyline, fail this sheet.
-- The 1px ink rule matches the body pair. A gray hairline does not.
-- Status is a dot plus a word, and a census band also prints the numeral. A person who does not distinguish blue, yellow, and black still has the word and the number.
-- The empty row keeps the words "nothing counted". The error keeps its sentence. The disabled control stays opaque.
-- Focus is the ink ring. It is not the blue, the yellow, or the red, because every control has to show focus without spending a status color.
-- Hit targets that receive a tap are at least 44px. The dots are readings, not controls.
+- White on black is about 19:1. Black on white is about 19:1. Black on yellow is about 15:1. White on blue is about 8:1. White on red is about 5.5:1. `muted` on white is about 11:1 and on yellow about 9:1. Those are the text pairs.
+- Black type stays off blue and off red. White type stays off yellow.
+- A 4px dot is a graphic mark. The word and the numeral travel with it. Unread is a stack plus the preview text, not the stack alone.
+- The 1px yellow rule on blue is about 6.5:1. The 1px black seam between white and yellow matches the body ink.
+- Focus is the yellow ring on every control. It does not rely on a change in opacity.
+- Disabled stays opaque and is removed from the tab order in a product build. The reference shows it disabled.
+- Hits that receive a tap are at least 44px. The dot and the avatar glyph are not the hit.
+
+## Do
+
+- Butt black, white, red, blue, and yellow in large regions. Let a header, a post, a button, and a tab be one of those fills.
+- Keep polka dots at 4, 8, 12, and 16. Repeat the smallest size to count and to make a rhythm.
+- Stack two or three opaque dots when a row needs more than one status. Cover; do not blend.
+- Use one 64px circle in a view, on the fine-dot field, overlapping a flat square.
+- Pair every dot cluster with a word or a numeral.
+- Run the app to the screen edge. Put the phone chrome in a bottom bar of solid cells.
 
 ## Don't
 
-- No dot wallpaper, no random scatter, no mixed diameters in one cluster, no overlap, no rotation, and no dots behind a paragraph.
-- No enlarged census dot standing in for a larger number. No count given to the rhythm row. No numeral inside a `dot-3` or a `dot-2`.
-- No second attention dot in the same product view. No `dot-red` button, no `danger` used as a dot fill, and no field of red dots.
-- No yellow type, no yellow button, no yellow dot without the ink keyline, and no yellow smaller than `dot-2`.
-- No square or triangle as a motif. No primary-colored rectangle used as decoration. A 4px frame, a hard offset shadow, and a black uppercase headline are a poster of blocks, not this census.
-- No squiggle, no pastel chip, no confetti, no zigzag rule, and no striped offset. Those belong to a laminate.
-- No gradient, no blur, no glow, no grain, no photograph, and no icon inside a dot. `shadow-sm`, `shadow-md`, and `shadow-lg` are `none`.
-- No radius on a field, a card, a button, or the plate. `radius-full` is for a dot only. A pill is off this sheet.
-- No uppercase display, no italic headline, no centered lockup, and no second type family.
-- No opacity used to create hierarchy. Disabled is `muted`, not a faded ink.
-- No green success, no spinner, and no animated dot.
-- No line-grid behind the dots. Rules separate regions; they are not graph paper. The repeating unit is the circle.
-- No dropping a census row on the narrow screen, and no shrinking the four diameters so the phone can fit more decoration.
+- No page that is mostly off-white with small colored accents. No centered essay, no giant headline, no magazine column.
+- No dot larger than 16px except the single focal circle. No field of large dots. No mixed random diameters.
+- No opacity, no rgba fade, no tint, no hollow dot, no blur, no gradient, no soft shadow. `shadow-sm`, `shadow-md`, and `shadow-lg` are `none`. A disabled control does not go translucent.
+- No photograph, no dotted wallpaper under a paragraph, and no pattern on every region at once. The rhythm has a region.
+- No pill, no rounded card, no thick 4px frame around every block. The color change is the edge.
+- No second focal circle. An avatar stays at 36px. A stack stays at three dots.
+- No gray text on red or blue. No white text on yellow. No black text on blue or red.
+- No uppercase poster, no italic, no second type family.
+- No green success and no spinner. A like is a row of black or yellow dots plus a numeral.

@@ -6,784 +6,772 @@
 <title>Punkt — Bauhaus Polka Dot</title>
 <style>
 	:root {
-		--color-primary: #1a1a1a;
-		--color-primary-foreground: #f3f0e8;
-		--color-surface: #f3f0e8;
-		--color-surface-foreground: #1a1a1a;
-		--color-surface-raised: #f3f0e8;
-		--color-muted: #5c564c;
-		--color-accent: #0033cc;
-		--color-danger: #9e1220;
-		--color-border: #1a1a1a;
-		--color-dot-red: #d4001a;
-		--color-dot-yellow: #ffd100;
-
-		--radius-full: 9999px;
-		--rule-width: 1px;
-		--keyline: 2px;
-		--dot-gap: 8px;
-		--shadow-focus: 0 0 0 3px #f3f0e8, 0 0 0 5px #1a1a1a;
+		--color-primary: #111111;
+		--color-primary-foreground: #ffffff;
+		--color-surface: #ffffff;
+		--color-surface-foreground: #111111;
+		--color-surface-raised: #ffe500;
+		--color-muted: #3a3a3a;
+		--color-accent: #0033e0;
+		--color-danger: #d4001a;
+		--color-border: #111111;
+		--shadow-focus: 0 0 0 2px #ffe500;
 		--font-sans: Futura, "Avenir Next", "Century Gothic", "Noto Sans Display", "Noto Sans", sans-serif;
-		--tracking-display: -0.045em;
-		--tracking-label: 0.14em;
-		--duration-ui: 120ms;
-		--ease-ui: linear;
-		--margin: 16px;
+		--avatar: 36px;
+		--focal: 64px;
 	}
-
 	*, *::before, *::after { box-sizing: border-box; }
+	html, body { margin: 0; }
 	body {
-		margin: 0;
-		background: var(--color-surface);
+		background: var(--color-primary);
 		color: var(--color-surface-foreground);
 		font-family: var(--font-sans);
-		font-size: 16px;
+		font-size: 15px;
 		font-weight: 400;
-		line-height: 1.5;
+		line-height: 1.4;
 		-webkit-font-smoothing: antialiased;
 	}
-	h1, h2, h3, p, dl, dd, figure { margin: 0; }
-	h1, h2, h3 { font-weight: 700; letter-spacing: -0.03em; line-height: 0.96; }
+	h1, h2, h3, p, figure { margin: 0; }
 	button, input { font: inherit; color: inherit; }
 	a { color: inherit; text-decoration: none; }
-	::selection { background: var(--color-dot-yellow); color: var(--color-primary); }
-
-	.page { padding: 0 var(--margin); }
-	.tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
-	.kicker {
-		margin: 0;
-		font-size: 13px;
-		font-weight: 400;
-		letter-spacing: var(--tracking-label);
-		line-height: 1.3;
-		color: var(--color-muted);
-	}
+	::selection { background: var(--color-surface-raised); color: var(--color-primary); }
+	.tnum { font-variant-numeric: tabular-nums; }
 
 	.d {
-		--s: 8px;
+		--s: 4px;
+		--c: var(--color-primary);
 		display: block;
 		width: var(--s);
 		height: var(--s);
-		border-radius: var(--radius-full);
-		background: var(--color-primary);
-		box-shadow: inset 0 0 0 var(--key, 0px) var(--color-primary);
+		border-radius: 999px;
+		background: var(--c);
 		flex: 0 0 auto;
 	}
-	.s1 { --s: 8px; }
-	.s2 { --s: 16px; }
-	.s3 { --s: 24px; }
-	.s4 { --s: 96px; }
-	.blue { background: var(--color-accent); }
-	.yellow { background: var(--color-dot-yellow); --key: var(--keyline); }
-	.red { background: var(--color-dot-red); }
-	.ring { background: transparent; --key: var(--keyline); }
+	.s1 { --s: 4px; }
+	.s2 { --s: 8px; }
+	.s3 { --s: 12px; }
+	.s4 { --s: 16px; }
+	.blk { --c: var(--color-primary); }
+	.wht { --c: var(--color-primary-foreground); }
+	.yel { --c: var(--color-surface-raised); }
+	.blu { --c: var(--color-accent); }
+	.red { --c: var(--color-danger); }
 
-	.rhythm {
-		display: flex;
-		gap: var(--dot-gap);
-		height: 8px;
-		overflow: hidden;
-		min-width: 0;
-		max-width: 100%;
-	}
+	.row4 { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+	.row4.loose { gap: 8px; }
+	.stack { position: relative; width: 20px; height: 20px; flex: 0 0 auto; }
+	.stack .d { position: absolute; }
+	.stack .d:nth-child(1) { left: 0; top: 0; }
+	.stack .d:nth-child(2) { left: 6px; top: 6px; }
+	.stack .d:nth-child(3) { left: 4px; top: 2px; }
 
-	.mast {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 4px 28px;
-		padding: 14px 0 16px;
-	}
-	.mark {
-		display: inline-flex;
-		align-items: center;
-		gap: 8px;
-		min-height: 44px;
-		font-size: 22px;
+	.av {
+		width: var(--avatar);
+		height: var(--avatar);
+		border-radius: 999px;
+		display: grid;
+		place-items: center;
 		font-weight: 700;
-		letter-spacing: -0.04em;
-		line-height: 1;
+		font-size: 14px;
+		flex: 0 0 auto;
 	}
-	.nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 22px; }
-	.nav a {
-		display: inline-flex;
-		align-items: center;
-		min-height: 44px;
-		font-size: 15px;
-		letter-spacing: 0.04em;
-	}
-	.nav a[aria-current="page"] { font-weight: 700; }
-	.nav a[aria-current="page"]::before {
-		content: "";
-		width: 8px;
-		height: 8px;
-		margin-right: 8px;
-		border-radius: var(--radius-full);
-		background: var(--color-primary);
-	}
-
-	.hero { display: flex; flex-direction: column; gap: 22px; padding-top: 22px; }
-	.intro { display: contents; }
-	.statement { order: 1; }
-	.plate { order: 2; }
-	.facts { order: 3; }
-	h1 { font-size: 46px; letter-spacing: var(--tracking-display); line-height: 0.9; }
-	.deck { margin-top: 16px; max-width: 36em; }
-	.facts { max-width: 320px; border-top: var(--rule-width) solid var(--color-border); }
-	.facts div {
-		display: grid;
-		grid-template-columns: 88px minmax(0, 1fr);
-		gap: 12px;
-		padding: 9px 0;
-		border-bottom: var(--rule-width) solid var(--color-border);
-	}
-	.facts dt { margin: 0; font-size: 13px; letter-spacing: var(--tracking-label); color: var(--color-muted); }
-	.facts dd { margin: 0; font-weight: 700; }
-
-	.plate {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr);
-		width: 100%;
-		max-width: 100%;
-		min-width: 0;
-		border: var(--rule-width) solid var(--color-border);
-		background: var(--color-surface-raised);
-	}
-	.band { padding: 16px 18px; min-width: 0; }
-	.band + .band { border-top: var(--rule-width) solid var(--color-border); }
-	.band-k { display: flex; align-items: baseline; gap: 10px; margin: 0 0 12px; }
-	.band-k .tnum { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
-	.band-k span:last-child { font-size: 13px; letter-spacing: var(--tracking-label); }
-	.census {
-		display: grid;
-		grid-template-columns: repeat(8, 24px);
-		gap: var(--dot-gap);
-		width: max-content;
-		max-width: 100%;
-	}
-	.hold {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 12px 16px;
-		padding: 16px 18px;
-		border-top: var(--rule-width) solid var(--color-border);
-		min-width: 0;
-	}
-	.hold-top { display: flex; flex-direction: row; align-items: center; gap: 16px; }
-	.hold-bot { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-	.hold-k { display: flex; align-items: baseline; gap: 10px; }
-	.hold-k .tnum { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
-	.hold-k span:last-child { font-size: 13px; letter-spacing: var(--tracking-label); color: var(--color-surface-foreground); }
-	.hold-note { font-size: 15px; }
-
-	.ledger-head {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-		align-items: baseline;
-		gap: 8px 20px;
-		margin-top: 22px;
-	}
-	.ledger-head h2 { font-size: 32px; }
-	.ledger { list-style: none; margin: 12px 0 0; padding: 0; }
-	.ledger li {
-		display: grid;
-		grid-template-columns: 64px minmax(0, 1fr) auto;
-		grid-template-areas: "when state num" "what what what";
-		gap: 4px 16px;
-		align-items: center;
-		min-height: 52px;
-		padding: 8px 0;
-		border-top: var(--rule-width) solid var(--color-border);
-	}
-	.ledger .when { grid-area: when; color: var(--color-muted); font-size: 14px; }
-	.ledger .what { grid-area: what; min-width: 0; }
-	.ledger .state { grid-area: state; display: inline-flex; align-items: center; gap: 8px; justify-self: end; }
-	.ledger .num { grid-area: num; font-weight: 700; justify-self: end; }
-
-	.composer {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-		grid-template-areas: "label label" "field field" "quiet run";
-		gap: 8px 12px;
-		align-items: center;
-		margin-top: 8px;
-		padding: 16px 0 8px;
-		border-top: var(--rule-width) solid var(--color-border);
-	}
-	.composer label { grid-area: label; }
-	.field {
-		width: 100%;
-		min-width: 0;
-		height: 44px;
-		padding: 0 12px;
-		border: var(--rule-width) solid var(--color-border);
-		border-radius: 0;
-		background: var(--color-surface);
-		outline: none;
-	}
-	.composer .field { grid-area: field; }
-	.field.is-error { border-color: var(--color-danger); }
-	.field.is-focus, .field:focus-visible, .btn:focus-visible, .nav a:focus-visible, .mark:focus-visible {
-		box-shadow: var(--shadow-focus);
-		outline: none;
-	}
-	.err { color: var(--color-danger); font-size: 14px; margin-top: 8px; }
+	.av.y { background: var(--color-surface-raised); color: var(--color-primary); }
+	.av.b { background: var(--color-accent); color: var(--color-primary-foreground); }
+	.av.k { background: var(--color-primary); color: var(--color-primary-foreground); }
+	.av.w { background: var(--color-surface); color: var(--color-primary); box-shadow: inset 0 0 0 1px var(--color-primary); }
+	.av.r { background: var(--color-danger); color: var(--color-primary-foreground); box-shadow: 0 0 0 2px var(--color-surface-raised); }
+	.av-wrap { position: relative; width: var(--avatar); height: var(--avatar); flex: 0 0 auto; }
+	.av-wrap .corner { position: absolute; right: 0; bottom: 0; }
+	.av-wrap .corner2 { position: absolute; right: 6px; bottom: 0; }
 
 	.btn {
 		appearance: none;
-		height: 44px;
-		padding: 0 18px;
-		border: var(--rule-width) solid var(--color-border);
+		height: 40px;
+		padding: 0 14px;
+		border: 0;
 		border-radius: 0;
-		background: transparent;
 		font-weight: 700;
-		font-size: 15px;
-		letter-spacing: 0.04em;
+		font-size: 14px;
 		cursor: pointer;
-		transition: background var(--duration-ui) var(--ease-ui), color var(--duration-ui) var(--ease-ui);
+		transition: background 120ms linear, color 120ms linear;
 	}
-	.btn.ink { background: var(--color-primary); color: var(--color-primary-foreground); }
-	.composer .btn.ink { grid-area: run; }
-	.composer .btn.quiet { grid-area: quiet; }
+	.btn.yel { background: var(--color-surface-raised); color: var(--color-primary); }
+	.btn.blu { background: var(--color-accent); color: var(--color-primary-foreground); }
+	.btn.red { background: var(--color-danger); color: var(--color-primary-foreground); }
+	.btn.blk { background: var(--color-primary); color: var(--color-primary-foreground); }
+	.btn.wht { background: var(--color-surface); color: var(--color-primary); }
 	.btn:disabled {
-		color: var(--color-muted);
-		border-color: var(--color-muted);
-		background: transparent;
+		background: var(--color-surface);
+		color: var(--color-primary);
+		box-shadow: inset 0 0 0 2px var(--color-primary);
 		cursor: not-allowed;
 	}
-	.btn.block { width: 100%; }
-
-	main { margin-top: 72px; }
-	.sec { padding: 56px 0; border-top: var(--rule-width) solid var(--color-border); }
-	.sec-head { display: grid; gap: 12px; margin: 10px 0 28px; }
-	h2 { font-size: 32px; }
-	.lede { max-width: 38em; }
-
-	.swatches {
-		display: grid;
-		grid-template-columns: 1fr;
-		border: var(--rule-width) solid var(--color-border);
+	.btn:focus-visible, a:focus-visible, input:focus-visible, .switch:focus-visible {
+		outline: 2px solid var(--color-surface-raised);
+		outline-offset: 2px;
 	}
-	.swatch { padding: 16px 18px 18px; border-top: var(--rule-width) solid var(--color-border); min-width: 0; }
-	.swatch:first-child { border-top: 0; }
-	.swatch .name { display: block; margin-top: 12px; font-size: 13px; letter-spacing: var(--tracking-label); }
-	.swatch .role { display: block; margin-top: 4px; }
-	.swatch .err { margin-top: 0; }
-	.swatch.ink {
+	.btn.yel:focus-visible { outline-color: var(--color-primary); }
+
+	.field {
+		height: 40px;
+		width: 100%;
+		min-width: 0;
+		padding: 0 10px;
+		border: 0;
+		border-radius: 0;
+		background: var(--color-surface);
+		color: var(--color-primary);
+		font-size: 16px;
+	}
+	.field.bad { box-shadow: inset 0 0 0 2px var(--color-danger); }
+
+	.switch {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		height: 44px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: inherit;
+		font-weight: 700;
+		cursor: pointer;
+	}
+	.track {
+		width: 44px;
+		height: 24px;
+		padding: 4px;
+		display: flex;
+		align-items: center;
+		background: var(--color-primary);
+	}
+	.switch.on .track { justify-content: flex-end; }
+	.switch.off .track { background: var(--color-surface); box-shadow: inset 0 0 0 2px var(--color-primary); }
+	.knob { width: 16px; height: 16px; border-radius: 999px; background: var(--color-surface-raised); }
+	.switch.off .knob { background: var(--color-primary); }
+	.badge {
+		display: inline-grid;
+		place-items: center;
+		min-width: 18px;
+		height: 18px;
+		padding: 0 4px;
+		background: var(--color-surface-raised);
+		color: var(--color-primary);
+		font-size: 12px;
+		font-weight: 700;
+	}
+
+	.app { background: var(--color-primary); }
+	.bar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px 12px;
+		min-height: 64px;
+		padding: 8px 12px;
 		background: var(--color-primary);
 		color: var(--color-primary-foreground);
 	}
-	.swatch.ink .name { color: var(--color-primary-foreground); }
-	.chip-row { display: flex; align-items: center; gap: 12px; min-height: 24px; }
-
-	.sizes { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 28px 36px; }
-	.size { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
-	.size b { font-weight: 700; font-size: 15px; }
-	.module-note { margin-top: 22px; max-width: 40em; }
-
-	.ctrl-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 16px 0; border-top: var(--rule-width) solid var(--color-border); }
-	.ctrl-block { padding: 16px 0; border-top: var(--rule-width) solid var(--color-border); }
-	.ctrl-block .kicker { margin-bottom: 10px; }
-	.stack-field { display: grid; gap: 8px; max-width: 520px; }
-	.card {
-		max-width: 420px;
-		border: var(--rule-width) solid var(--color-border);
-		padding: 20px;
+	.brand { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+	.brand h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+	.tabs-desk { display: none; }
+	.rhythm {
+		display: none;
+		grid-template-columns: repeat(10, 4px);
+		gap: 4px;
+		width: max-content;
 	}
-	.card h3 { margin: 12px 0; font-size: 28px; }
-	.card .state { display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; }
-	.state-row {
-		display: grid;
-		grid-template-columns: 96px minmax(0, 1fr);
-		gap: 12px;
+	.search { flex: 1 1 140px; min-width: 0; display: flex; align-items: center; gap: 8px; }
+	.search span {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+	}
+	.grow { margin-left: auto; display: flex; align-items: center; gap: 12px; flex: 1 1 180px; min-width: 0; }
+	.grow .search { flex: 1; }
+
+	.split { display: flex; flex-direction: column; min-width: 0; }
+	.stories {
+		display: flex;
 		align-items: center;
-		min-height: 48px;
-		padding: 8px 0;
-		border-top: var(--rule-width) solid var(--color-border);
-	}
-	.state-row b { font-weight: 700; }
-	.state-mark { display: inline-flex; align-items: center; gap: 8px; }
-
-	.narrow { display: grid; gap: 28px; align-items: start; }
-	.handset {
-		border: var(--rule-width) solid var(--color-border);
-		padding: 12px 12px 14px;
-		max-width: 360px;
+		gap: 12px;
+		padding: 12px;
+		background: var(--color-danger);
+		color: var(--color-primary-foreground);
 		min-width: 0;
 	}
-	.handset .h-mast { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; }
-	.handset .mark { font-size: 18px; }
-	.handset h3 { margin: 14px 0 0; font-size: 36px; letter-spacing: var(--tracking-display); line-height: 0.9; }
-	.handset .plate { margin-top: 14px; }
-	.handset .band { padding: 12px; }
-	.handset .hold { width: auto; border-left: 0; border-top: var(--rule-width) solid var(--color-border); }
-	.handset .rhythm { margin-top: 8px; }
-	.handset > .kicker { margin-top: 12px; }
-	.on-hold .btn { margin-top: 12px; }
-	.h-run { width: 100%; margin-top: 12px; }
-	.hand-cap { margin-top: 8px; }
+	.story-row { display: flex; gap: 12px; min-width: 0; }
+	.story { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 44px; }
+	.story b { font-size: 11px; font-weight: 700; max-width: 44px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+	.story-patch { display: none; }
+
+	.post { padding: 12px; min-width: 0; }
+	.post.light { background: var(--color-surface); color: var(--color-primary); }
+	.post.dark { background: var(--color-primary); color: var(--color-primary-foreground); }
+	.post.yel { background: var(--color-surface-raised); color: var(--color-primary); display: flex; flex-direction: column; }
+	.who { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+	.who .name { font-weight: 700; }
+	.who .time { margin-left: auto; font-size: 12px; }
+	.post.light .time, .post.yel .time { color: var(--color-muted); }
+	.body { margin: 4px 0 10px; max-width: 62ch; }
+	.acts { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 10px; }
+	.acts .count { font-size: 13px; font-weight: 700; }
+	.composer, .reply {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 8px;
+		align-items: center;
+		margin-top: 10px;
+	}
+	.composer span, .reply span { font-size: 12px; letter-spacing: 0.06em; }
+	.err { color: var(--color-danger); font-size: 13px; font-weight: 700; margin-top: 6px; }
+	.post.dark .err { color: var(--color-surface-raised); }
+
+	.pat { position: relative; min-height: 128px; margin-top: 12px; overflow: hidden; }
+	.pat svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+	.focal {
+		position: absolute;
+		left: 20px;
+		top: 24px;
+		width: var(--focal);
+		height: var(--focal);
+		border-radius: 999px;
+		background: var(--color-danger);
+	}
+	.sq {
+		position: absolute;
+		left: 60px;
+		top: 48px;
+		width: 48px;
+		height: 48px;
+		background: var(--color-accent);
+	}
+
+	.inbox {
+		background: var(--color-accent);
+		color: var(--color-primary-foreground);
+		padding: 12px;
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		min-width: 0;
+	}
+	.inbox h2, .post h2, .profile h2, .alerts h2, .sec h2 {
+		font-size: 16px;
+		font-weight: 700;
+		letter-spacing: -0.02em;
+	}
+	.inbox-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; }
+	.thread {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 8px;
+		align-items: center;
+		min-height: 56px;
+		padding: 6px 0;
+		border-top: 1px solid var(--color-surface-raised);
+	}
+	.thread .preview { display: block; font-size: 13px; }
+	.thread .meta { font-size: 12px; }
+	.reply { margin-top: 12px; }
+
+	.profile, .alerts, .sec { padding: 16px 12px 20px; min-width: 0; }
+	.profile { background: var(--color-primary); color: var(--color-primary-foreground); }
+	.alerts { background: var(--color-surface); color: var(--color-primary); }
+	.who-lg { display: flex; align-items: center; gap: 12px; margin: 8px 0 12px; }
+	.who-lg h2 { font-size: 22px; }
+	.stats { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+	.stat { padding: 12px; min-width: 0; }
+	.stat b { display: block; font-size: 22px; letter-spacing: -0.03em; }
+	.stat.y { background: var(--color-surface-raised); color: var(--color-primary); }
+	.stat.r { background: var(--color-danger); color: var(--color-primary-foreground); }
+	.stat.w { background: var(--color-surface); color: var(--color-primary); }
+	.note { font-size: 13px; margin-top: 8px; }
+	.alert {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 10px;
+		align-items: center;
+		min-height: 52px;
+		border-top: 1px solid var(--color-primary);
+		padding: 6px 0;
+	}
+
+	.tabbar {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 5;
+		display: grid;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		height: 56px;
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+	}
+	.tabbar a {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 3px;
+		min-width: 0;
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+	}
+	.tabbar a.on { background: var(--color-surface-raised); color: var(--color-primary); }
+	.tabbar a.post { background: var(--color-danger); color: var(--color-primary-foreground); }
+	.app { padding-bottom: 56px; }
+
+	.sec { border-top: 0; }
+	.sec .kicker { font-size: 12px; letter-spacing: 0.08em; margin-bottom: 6px; }
+	.sec .lede { max-width: 62ch; margin: 6px 0 14px; }
+	.swatches { display: grid; grid-template-columns: 1fr 1fr; }
+	.sw { min-height: 84px; padding: 12px; font-size: 13px; }
+	.sw b { display: block; font-size: 14px; margin-bottom: 4px; }
+	.sw.k { background: var(--color-primary); color: var(--color-primary-foreground); }
+	.sw.r { background: var(--color-danger); color: var(--color-primary-foreground); }
+	.sw.u { background: var(--color-accent); color: var(--color-primary-foreground); }
+	.sw.y { background: var(--color-surface-raised); color: var(--color-primary); }
+	.sw.w { background: var(--color-surface); color: var(--color-primary); box-shadow: inset 0 0 0 1px var(--color-primary); }
+	.scale { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 18px 28px; }
+	.scale figure { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+	.scale figcaption { font-size: 12px; letter-spacing: 0.06em; }
+	.pair { display: grid; gap: 16px; }
+	.ctrl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 0; }
+	.stack-field { display: grid; gap: 6px; max-width: 480px; }
+	.narrow { display: grid; gap: 20px; }
+	.handset {
+		width: 100%;
+		max-width: 360px;
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+		overflow: hidden;
+	}
+	.handset .hb {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		padding: 8px 10px;
+		min-height: 52px;
+	}
+	.handset .hs { display: flex; gap: 10px; padding: 10px; background: var(--color-danger); }
+	.handset .hp { padding: 10px; background: var(--color-surface); color: var(--color-primary); }
+	.handset .ht {
+		display: grid;
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+		height: 52px;
+		text-align: center;
+		font-size: 10px;
+		font-weight: 700;
+	}
+	.handset .ht span { display: grid; place-items: center; }
+	.handset .ht .on { background: var(--color-surface-raised); color: var(--color-primary); }
+	.handset .ht .go { background: var(--color-danger); }
 	.rules { list-style: none; margin: 0; padding: 0; }
 	.rules li {
 		display: grid;
-		grid-template-columns: 36px minmax(0, 1fr);
-		gap: 12px;
-		padding: 14px 0;
-		border-top: var(--rule-width) solid var(--color-border);
+		grid-template-columns: 28px minmax(0, 1fr);
+		gap: 8px;
+		padding: 10px 0;
+		border-top: 1px solid var(--color-primary);
 	}
-	.rules li::before {
-		content: counter(rule, decimal-leading-zero);
-		counter-increment: rule;
-		color: var(--color-muted);
-		font-variant-numeric: tabular-nums;
-	}
-	.rules { counter-reset: rule; }
-	.rules b { font-weight: 700; }
-
-	.compare { display: grid; gap: 28px; }
-	.cmp-off, .cmp-on { margin: 0; min-width: 0; min-height: 280px; }
+	.compare { display: grid; gap: 16px; }
+	.cmp-off, .cmp-on { min-height: 220px; margin: 0; }
 	.cmp-off {
 		position: relative;
 		overflow: hidden;
-		padding: 22px 18px 18px;
+		padding: 20px 16px;
 		text-align: center;
-		color: #fff8f1;
-		background: linear-gradient(145deg, #ffd23a 0%, #f4a0c4 46%, #7ddec0 100%);
+		color: #fff;
+		background: linear-gradient(140deg, #ffd23a, #f4a0c4 50%, #9ad);
 		border-radius: 28px;
-		box-shadow: 8px 8px 0 0 #1c1412;
 	}
-	.cmp-off figcaption, .cmp-on figcaption { letter-spacing: 0.14em; font-size: 13px; }
-	.cmp-off figcaption { color: #1c1412; }
-	.bad-tri {
-		width: 0; height: 0; margin: 14px auto 0;
-		border-left: 16px solid transparent;
-		border-right: 16px solid transparent;
-		border-bottom: 28px solid #1c1412;
-	}
-	.bad-squig { display: block; width: 140px; height: 28px; margin: 8px auto 0; }
-	.bad-title { margin-top: 8px; font-weight: 700; font-size: 32px; letter-spacing: -0.03em; text-transform: uppercase; line-height: 0.95; color: #1c1412; }
-	.bad-pill {
-		display: inline-block;
-		margin-top: 14px;
-		padding: 10px 20px;
+	.cmp-off .big {
+		width: 72px;
+		height: 72px;
 		border-radius: 999px;
-		background: #fff8f1;
-		color: #1c1412;
-		font-weight: 700;
+		margin: 12px auto;
+		background: #0033e0;
+		opacity: 0.35;
 	}
-	.bad-dot { position: absolute; border-radius: 50%; }
-	.bad-dot.a { width: 14px; height: 14px; background: #1e4ad8; top: 16px; left: 8%; }
-	.bad-dot.b { width: 28px; height: 28px; background: #c41832; top: 28px; right: 10%; }
-	.bad-dot.c { width: 10px; height: 10px; background: #1c1412; bottom: 22px; left: 18%; }
-	.bad-dot.d { width: 22px; height: 22px; background: #fff8f1; top: 46%; left: 6%; }
-	.bad-dot.e { width: 16px; height: 16px; background: #ffd23a; bottom: 18px; right: 16%; }
-	.cmp-on { border-top: var(--rule-width) solid var(--color-border); border-bottom: var(--rule-width) solid var(--color-border); padding: 8px 0 16px; }
-	.on-hold { display: flex; align-items: center; gap: 16px; margin-top: 18px; }
-	.note { margin-top: 20px; max-width: 40em; }
-
+	.cmp-off .ghost {
+		width: 16px;
+		height: 16px;
+		border-radius: 999px;
+		background: #111;
+		opacity: 0.3;
+		display: inline-block;
+	}
+	.cmp-off h3 { font-size: 28px; letter-spacing: -0.03em; text-transform: uppercase; }
+	.cmp-off .pill { display: inline-block; margin-top: 8px; padding: 8px 16px; border-radius: 999px; background: #fff; color: #111; font-weight: 700; }
+	.cmp-on { display: grid; grid-template-columns: 1fr 1fr; }
+	.cmp-on div { padding: 12px; min-height: 180px; }
+	.cmp-on .a { background: var(--color-danger); color: var(--color-primary-foreground); }
+	.cmp-on .b { background: var(--color-surface-raised); color: var(--color-primary); }
 	.foot {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 8px 22px;
-		padding: 18px 0 28px;
-		border-top: var(--rule-width) solid var(--color-border);
-		font-size: 13px;
-		letter-spacing: 0.08em;
+		gap: 8px 16px;
+		padding: 14px 12px 24px;
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+		font-size: 12px;
+		letter-spacing: 0.06em;
 	}
 
 	@media (min-width: 720px) {
-		:root { --margin: 28px; --tracking-label: 0.12em; }
-		h1 { font-size: 60px; }
-		h2, .ledger-head h2 { font-size: 36px; }
-		.ledger li {
-			grid-template-columns: 72px minmax(0, 1fr) 128px 48px;
-			grid-template-areas: "when what state num";
-			gap: 12px 16px;
-		}
-		.composer {
-			grid-template-columns: 72px minmax(0, 1fr) auto auto;
-			grid-template-areas: "label field quiet run";
-			gap: 12px 16px;
-		}
-		.swatches { grid-template-columns: 1fr 1fr; }
-		.swatch:nth-child(odd) { border-right: var(--rule-width) solid var(--color-border); }
-		.swatch:nth-child(-n+2) { border-top: 0; }
-		.state-row { grid-template-columns: 120px minmax(0, 1fr); }
+		.swatches { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+		.stories, .post, .inbox, .profile, .alerts, .sec { padding-left: 16px; padding-right: 16px; }
+		.bar { padding-left: 16px; padding-right: 16px; }
 	}
-
 	@media (min-width: 960px) {
-		:root { --margin: 48px; }
-		h1 { font-size: 72px; }
-		.hero {
+		.app { min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 0; }
+		.tabs-desk { display: flex; align-items: stretch; align-self: stretch; }
+		.tabs-desk a {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			padding: 0 12px;
+			min-height: 44px;
+			font-weight: 700;
+			background: var(--color-primary);
+			color: var(--color-primary-foreground);
+		}
+		.tabs-desk a.on { background: var(--color-surface-raised); color: var(--color-primary); }
+		.rhythm { display: grid; }
+		.search { position: relative; }
+		.search span { position: static; width: auto; height: auto; overflow: visible; clip: auto; font-size: 12px; letter-spacing: 0.08em; }
+		.split { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 320px; min-height: 0; }
+		.col { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: var(--color-primary); }
+		.post.yel { flex: 1; min-height: 0; }
+		.pat { flex: 1; min-height: 160px; }
+		.story-patch {
 			display: grid;
-			grid-template-columns: minmax(0, 1fr) auto;
-			column-gap: 48px;
-			row-gap: 0;
-			align-items: start;
-			padding-top: 28px;
+			grid-template-columns: repeat(8, 4px);
+			gap: 4px;
+			margin-left: auto;
 		}
-		.intro { display: block; grid-column: 1; grid-row: 1; }
-		.statement { order: 0; }
-		.plate {
-			order: 0;
-			grid-column: 2;
-			grid-row: 1;
-			width: max-content;
-			max-width: 100%;
-			grid-template-columns: auto 168px;
-			justify-self: end;
-		}
-		.facts { order: 0; margin-top: 28px; }
-		.hold {
-			width: 168px;
-			flex-direction: column;
-			flex-wrap: nowrap;
-			align-items: flex-start;
-			justify-content: space-between;
-			border-top: 0;
-			border-left: var(--rule-width) solid var(--color-border);
-		}
-		.hold-top { flex-direction: column; align-items: flex-start; gap: 14px; }
-		.sec-head { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); align-items: end; gap: 24px 40px; }
-		h2 { font-size: 40px; }
-		.swatches { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-		.swatch { border-right: var(--rule-width) solid var(--color-border); border-top: var(--rule-width) solid var(--color-border); }
-		.swatch:nth-child(odd) { border-right: var(--rule-width) solid var(--color-border); }
-		.swatch:nth-child(3n) { border-right: 0; }
-		.swatch:nth-child(-n+3) { border-top: 0; }
-		.narrow { grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 40px; }
-		.compare { grid-template-columns: 1fr 1fr; gap: 40px; align-items: stretch; }
+		.inbox { padding: 16px; }
+		.tabbar { display: none; }
+		.pair, .compare, .narrow { grid-template-columns: 1fr 1fr; align-items: start; }
+		.sec h2 { font-size: 22px; }
 	}
-
-	@media (min-width: 1200px) {
-		:root { --margin: 56px; }
-		h1 { font-size: 104px; }
-		.hero { column-gap: 64px; }
-	}
-
 	@media (hover: hover) and (pointer: fine) {
-		.btn.ink:hover { background: var(--color-primary-foreground); color: var(--color-primary); }
-		.btn.quiet:hover { background: var(--color-primary); color: var(--color-primary-foreground); }
-		.nav a:hover, .mark:hover { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+		.btn.yel:hover { background: var(--color-primary); color: var(--color-surface-raised); }
+		.btn.blu:hover { background: var(--color-surface); color: var(--color-accent); }
+		.btn.red:hover { background: var(--color-surface); color: var(--color-danger); }
+		.btn.blk:hover { background: var(--color-surface-raised); color: var(--color-primary); }
+		.btn:disabled:hover { background: var(--color-surface); color: var(--color-primary); }
 	}
-	.btn.ink:active { background: var(--color-primary-foreground); color: var(--color-primary); }
-	.btn.quiet:active { background: var(--color-primary); color: var(--color-primary-foreground); }
-	.btn:disabled:active, .btn:disabled:hover { background: transparent; color: var(--color-muted); }
-
 	@media (prefers-reduced-motion: reduce) {
 		.btn { transition: none; }
 	}
-
-	/* The handset is a narrow sheet even when the page is wide. */
-	.handset .plate {
-		width: 100%;
-		max-width: 100%;
-		grid-template-columns: minmax(0, 1fr);
-		justify-self: stretch;
-	}
-	.handset .hold {
-		width: auto;
-		max-width: 100%;
-		flex-direction: row;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: flex-start;
-		border-top: var(--rule-width) solid var(--color-border);
-		border-left: 0;
-	}
-	.handset { overflow: hidden; }
 </style>
 </head>
 <body>
-<div class="page">
-	<header class="mast">
-		<a class="mark" href="#census">punkt<span class="d s2" aria-hidden="true"></span></a>
-		<nav class="nav" aria-label="Punkt">
-			<a href="#census" aria-current="page">census</a>
-			<a href="#ledger">ledger</a>
-			<a href="#model">model</a>
+<div class="app">
+	<header class="bar">
+		<a class="brand" href="#feed"><h1>punkt</h1></a>
+		<nav class="tabs-desk" aria-label="Punkt">
+			<a class="on" href="#feed" aria-current="page">feed</a>
+			<a href="#inbox">messages <span class="badge tnum">3</span></a>
+			<a href="#profile">profile</a>
 		</nav>
-	</header>
-	<div class="rhythm" aria-hidden="true"><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span></div>
-
-	<div class="hero">
-		<div class="intro">
-			<div class="statement">
-				<p class="kicker">local census</p>
-				<h1>one dot<br>per step.</h1>
-				<p class="deck">Punkt keeps the model on this machine. A finished step is one black dot. Nothing in this census was sent out.</p>
-			</div>
-			<dl class="facts" id="model">
-				<div><dt>model</dt><dd>on device</dd></div>
-				<div><dt>row</dt><dd class="tnum">8</dd></div>
-				<div><dt>sent</dt><dd class="tnum">0 bytes</dd></div>
-			</dl>
+		<div class="rhythm" aria-hidden="true"><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span></div>
+		<div class="grow">
+			<label class="search" for="q"><span>search</span><input class="field" id="q" type="text" value="ava" autocomplete="off"></label>
+			<button class="btn yel" type="button">post</button>
 		</div>
-		<section class="plate" id="census" aria-label="Full count">
-			<div class="bands">
-				<div class="band">
-					<p class="band-k"><span class="tnum">24</span><span>done</span></p>
-					<div class="census" aria-hidden="true"><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span></div>
-				</div>
-				<div class="band">
-					<p class="band-k"><span class="tnum">03</span><span>running</span></p>
-					<div class="census" aria-hidden="true"><span class="d s3 blue"></span><span class="d s3 blue"></span><span class="d s3 blue"></span><span class="d s3 ring"></span><span class="d s3 ring"></span><span class="d s3 ring"></span><span class="d s3 ring"></span><span class="d s3 ring"></span></div>
-				</div>
-				<div class="band">
-					<p class="band-k"><span class="tnum">05</span><span>queued</span></p>
-					<div class="census" aria-hidden="true"><span class="d s3 yellow"></span><span class="d s3 yellow"></span><span class="d s3 yellow"></span><span class="d s3 yellow"></span><span class="d s3 yellow"></span><span class="d s3 ring"></span><span class="d s3 ring"></span><span class="d s3 ring"></span></div>
-				</div>
-			</div>
-			<div class="hold">
-				<div class="hold-top">
-					<p class="kicker">attention</p>
-					<span class="d s4 red" aria-hidden="true"></span>
-				</div>
-				<div class="hold-bot">
-					<p class="hold-k"><span class="tnum">01</span><span>hold</span></p>
-					<p class="hold-note">needs a person</p>
-				</div>
-			</div>
-		</section>
-	</div>
-
-	<div class="ledger-head" id="ledger">
-		<h2>latest lines</h2>
-		<p class="kicker">the plate holds the full count</p>
-	</div>
-	<ol class="ledger">
-		<li>
-			<span class="when tnum">09:14</span>
-			<span class="what">indexed notes/grid.md</span>
-			<span class="state"><span class="d s2" aria-hidden="true"></span>done</span>
-			<span class="num tnum">08</span>
-		</li>
-		<li>
-			<span class="when tnum">09:22</span>
-			<span class="what">cited the three paths</span>
-			<span class="state"><span class="d s2" aria-hidden="true"></span>done</span>
-			<span class="num tnum">06</span>
-		</li>
-		<li>
-			<span class="when tnum">09:31</span>
-			<span class="what">drafting the reply</span>
-			<span class="state"><span class="d s2 blue" aria-hidden="true"></span>running</span>
-			<span class="num tnum">03</span>
-		</li>
-		<li>
-			<span class="when tnum">09:40</span>
-			<span class="what">waiting on the hold</span>
-			<span class="state"><span class="d s2 yellow" aria-hidden="true"></span>queued</span>
-			<span class="num tnum">05</span>
-		</li>
-	</ol>
-	<form class="composer">
-		<label class="kicker" for="step">step</label>
-		<input class="field" id="step" type="text" value="count the files still in notes/" autocomplete="off">
-		<button class="btn quiet" type="button">clear</button>
-		<button class="btn ink" type="button">run</button>
-	</form>
-
-	<main>
-		<section class="sec" id="color">
-			<p class="kicker">01 — color</p>
-			<div class="sec-head">
-				<h2>ink, and three dots</h2>
-				<p class="lede">Paper and ink are fields. Blue, yellow, and red show up as dots. Yellow always keeps an ink keyline. The error red is a sentence, not another circle.</p>
-			</div>
-			<div class="swatches">
-				<div class="swatch">
-					<span class="chip-row">field</span>
-					<span class="name">surface</span>
-					<span class="role">the paper. long text sits here, in ink.</span>
-				</div>
-				<div class="swatch ink">
-					<span class="chip-row">field</span>
-					<span class="name">primary</span>
-					<span class="role">the ink, and the commit control.</span>
-				</div>
-				<div class="swatch">
-					<span class="chip-row"><span class="d s3 blue" aria-hidden="true"></span>running</span>
-					<span class="name">accent</span>
-					<span class="role">a step in progress. also fine as text.</span>
-				</div>
-				<div class="swatch">
-					<span class="chip-row"><span class="d s3 yellow" aria-hidden="true"></span>queued</span>
-					<span class="name">dot-yellow</span>
-					<span class="role">the keyline is the edge. never a word.</span>
-				</div>
-				<div class="swatch">
-					<span class="chip-row">one per view</span>
-					<span class="name">dot-red</span>
-					<span class="role">the hold, drawn at 96px. not a small dot.</span>
-				</div>
-				<div class="swatch">
-					<span class="chip-row"><span class="err">stays on this machine.</span></span>
-					<span class="name">danger</span>
-					<span class="role">the error sentence. not a dot.</span>
-				</div>
-			</div>
-		</section>
-
-		<section class="sec" id="module">
-			<p class="kicker">02 — dot module</p>
-			<div class="sec-head">
-				<h2>four sizes, one gap</h2>
-				<p class="lede">The gap is 8px wherever dots line up. A larger count is more dots, not a bigger dot. The red circle is a different sign, and it still carries a numeral.</p>
-			</div>
-			<div class="sizes">
-				<div class="size"><span class="d s1" aria-hidden="true"></span><b class="tnum">8</b><span class="kicker">rhythm</span></div>
-				<div class="size"><span class="d s2" aria-hidden="true"></span><b class="tnum">16</b><span class="kicker">status</span></div>
-				<div class="size"><span class="d s3" aria-hidden="true"></span><b class="tnum">24</b><span class="kicker">one step</span></div>
-				<div class="size"><span class="d s4 red" aria-hidden="true"></span><b class="tnum">96</b><span class="kicker">the hold</span></div>
-			</div>
-			<p class="module-note">A census row is eight cells. Filled dots are the count. Rings are the rest of the row, not a second number. The rhythm of 8px dots under the mast is allowed to run off the edge, and it never sits next to a numeral.</p>
-			<div class="ctrl-block">
-				<p class="band-k"><span class="tnum">03</span><span>running</span></p>
-				<div class="census" aria-hidden="true"><span class="d s3 blue"></span><span class="d s3 blue"></span><span class="d s3 blue"></span><span class="d s3 ring"></span><span class="d s3 ring"></span><span class="d s3 ring"></span><span class="d s3 ring"></span><span class="d s3 ring"></span></div>
-			</div>
-		</section>
-
-		<section class="sec" id="controls">
-			<p class="kicker">03 — controls</p>
-			<div class="sec-head">
-				<h2>square controls, round counts</h2>
-				<p class="lede">Buttons and fields stay square. The circle is reserved for a reading. Focus is an ink ring, so a status color is never spent on it.</p>
-			</div>
-			<div class="ctrl-row">
-				<button class="btn ink" type="button">run</button>
-				<button class="btn quiet" type="button">clear</button>
-				<button class="btn quiet" type="button" disabled>clear</button>
-			</div>
-			<div class="ctrl-block">
-				<div class="stack-field">
-					<label class="kicker" for="step-focus">step, focused</label>
-					<input class="field is-focus" id="step-focus" type="text" value="count the files still in notes/" autocomplete="off">
-				</div>
-			</div>
-			<div class="ctrl-block">
-				<div class="stack-field">
-					<label class="kicker" for="step-bad">step</label>
-					<input class="field is-error" id="step-bad" type="text" value="send the notes out" autocomplete="off">
-					<p class="err">stays on this machine. the line was not counted.</p>
-				</div>
-			</div>
-			<div class="ctrl-block">
-				<article class="card">
-					<p class="kicker">note</p>
-					<h3>the files stayed put</h3>
-					<p>notes/grid.md was read here and not copied. the count went up by eight.</p>
-					<p class="state"><span class="d s2" aria-hidden="true"></span>done</p>
-				</article>
-			</div>
-			<div class="ctrl-block">
-				<div class="state-row"><b>done</b><span class="state-mark"><span class="d s2" aria-hidden="true"></span>an ink dot, and the word</span></div>
-				<div class="state-row"><b>running</b><span class="state-mark"><span class="d s2 blue" aria-hidden="true"></span>blue, same size as done</span></div>
-				<div class="state-row"><b>queued</b><span class="state-mark"><span class="d s2 yellow" aria-hidden="true"></span>yellow, with the keyline</span></div>
-				<div class="state-row"><b>empty</b><span class="state-mark"><span class="d s3 ring" aria-hidden="true"></span><span class="tnum">00</span> nothing counted</span></div>
-				<div class="state-row"><b>counting</b><span class="state-mark"><span class="d s2 blue" aria-hidden="true"></span>the word, not a spinner</span></div>
-			</div>
-		</section>
-
-		<section class="sec" id="narrow">
-			<p class="kicker">04 — a narrow sheet</p>
-			<div class="sec-head">
-				<h2>same dots, one column</h2>
-				<p class="lede">The handset is a square frame. Inside it, the census has already stacked the way a 390px sheet stacks. The four diameters do not change.</p>
-			</div>
-			<div class="narrow">
-				<div>
-					<div class="handset">
-						<div class="h-mast">
-							<span class="mark">punkt<span class="d s2" aria-hidden="true"></span></span>
-							<span>census</span>
-						</div>
-						<div class="rhythm" aria-hidden="true"><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span></div>
-						<p class="kicker">local census</p>
-						<h3>one dot<br>per step.</h3>
-						<div class="plate" aria-hidden="true">
-							<div class="bands">
-								<div class="band">
-									<p class="band-k"><span class="tnum">24</span><span>done</span></p>
-									<div class="census"><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span></div>
-								</div>
-								<div class="band">
-									<p class="band-k"><span class="tnum">03</span><span>running</span></p>
-									<div class="census"><span class="d s3 blue"></span><span class="d s3 blue"></span><span class="d s3 blue"></span><span class="d s3 ring"></span><span class="d s3 ring"></span><span class="d s3 ring"></span><span class="d s3 ring"></span><span class="d s3 ring"></span></div>
-								</div>
-								<div class="band">
-									<p class="band-k"><span class="tnum">05</span><span>queued</span></p>
-									<div class="census"><span class="d s3 yellow"></span><span class="d s3 yellow"></span><span class="d s3 yellow"></span><span class="d s3 yellow"></span><span class="d s3 yellow"></span><span class="d s3 ring"></span><span class="d s3 ring"></span><span class="d s3 ring"></span></div>
-								</div>
-							</div>
-							<div class="hold">
-								<span class="d s4 red"></span>
-								<div class="hold-bot">
-									<p class="hold-k"><span class="tnum">01</span><span>hold</span></p>
-									<p class="hold-note">needs a person</p>
-								</div>
-							</div>
-						</div>
-						<button class="btn ink h-run" type="button">run</button>
+	</header>
+	<div class="split">
+		<div class="col" id="feed">
+			<section class="stories" aria-label="Stories">
+				<div class="story-row">
+					<div class="story">
+						<span class="av-wrap"><span class="av y">A</span><span class="d s2 blk corner"></span><span class="d s2 red corner2"></span></span>
+						<b>Ava</b>
 					</div>
-					<p class="kicker hand-cap">390 — statement, then the plate</p>
-				</div>
-				<ul class="rules">
-					<li><span><b>Margin.</b> 56px from 1200px, 48px from 960px, 28px from 720px, 16px below that. The rule stays 1px.</span></li>
-					<li><span><b>Columns.</b> Below 960px the hero stacks: statement, plate, then the index. The attention rail moves under the bands and becomes a row. The eight-dot row stays eight across.</span></li>
-					<li><span><b>Type.</b> The headline goes 104, then 72, then 60, then 46. Body stays 16px. Labels stay 13px, and tracking tightens below 720px so a kicker fits the margin.</span></li>
-					<li><span><b>Dots.</b> 8, 16, 24, and 96 do not shrink. The gap stays 8px. A phone does not invent a fifth size.</span></li>
-					<li><span><b>Ledger.</b> Below 720px the time, the status, and the numeral share a line. The sentence moves under them.</span></li>
-					<li><span><b>Composer.</b> Below 720px the field is full width. Clear and run share the next row, each 44px tall.</span></li>
-					<li><span><b>Pointer.</b> The invert is limited to a fine pointer. A coarse pointer gets the same invert on press. The ink focus ring still shows for a keyboard.</span></li>
-				</ul>
-			</div>
-		</section>
-
-		<section class="sec" id="off">
-			<p class="kicker">05 — off the module</p>
-			<div class="sec-head">
-				<h2>what breaks the count</h2>
-				<p class="lede">The left sample scatters mixed dots, a triangle, a squiggle, a gradient, and a pill. The right sample is the same subject: one size for the count, one red dot, a numeral, a square control.</p>
-			</div>
-			<div class="compare">
-				<figure class="cmp-off">
-					<figcaption>off-style</figcaption>
-					<span class="bad-dot a" aria-hidden="true"></span>
-					<span class="bad-dot b" aria-hidden="true"></span>
-					<span class="bad-dot c" aria-hidden="true"></span>
-					<span class="bad-dot d" aria-hidden="true"></span>
-					<span class="bad-dot e" aria-hidden="true"></span>
-					<div class="bad-tri" aria-hidden="true"></div>
-					<svg class="bad-squig" viewBox="0 0 120 24" aria-hidden="true"><path d="M2 14 C16 2 28 22 44 12 S70 2 88 14 112 8 118 12" fill="none" stroke="#1c1412" stroke-width="3"/></svg>
-					<p class="bad-title">dots!!!</p>
-					<span class="bad-pill">join</span>
-				</figure>
-				<figure class="cmp-on">
-					<figcaption>on-style</figcaption>
-					<p class="band-k"><span class="tnum">08</span><span>done</span></p>
-					<div class="census" aria-hidden="true"><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span><span class="d s3"></span></div>
-					<div class="on-hold">
-						<span class="d s4 red" aria-hidden="true"></span>
-						<div>
-							<p class="hold-k"><span class="tnum">01</span><span>hold</span></p>
-							<p class="hold-note">needs a person</p>
-							<button class="btn ink" type="button">run</button>
-						</div>
+					<div class="story">
+						<span class="av-wrap"><span class="av b">N</span><span class="d s2 yel corner"></span><span class="d s2 wht corner2"></span></span>
+						<b>Nico</b>
 					</div>
-				</figure>
+					<div class="story">
+						<span class="av k">R</span>
+						<b>Rim</b>
+					</div>
+					<div class="story">
+						<span class="av-wrap"><span class="av w">J</span><span class="d s2 red corner"></span><span class="d s2 blu corner2"></span></span>
+						<b>Jun</b>
+					</div>
+					<div class="story">
+						<span class="av r">S</span>
+						<b>Sol</b>
+					</div>
+				</div>
+				<div class="story-patch" aria-hidden="true"><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span></div>
+			</section>
+			<article class="post light">
+				<div class="who">
+					<span class="av y">A</span>
+					<span class="name">Ava</span>
+					<span class="d s2 red" aria-hidden="true"></span>
+					<span class="time tnum">2m</span>
+				</div>
+				<p class="body">Counted twelve likes without sending the thread off this device.</p>
+				<div class="row4" aria-hidden="true"><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span></div>
+				<div class="acts">
+					<span class="count"><span class="tnum">12</span> likes</span>
+					<button class="btn blu" type="button">comment</button>
+				</div>
+				<div class="composer">
+					<label for="c1">comment</label>
+					<input class="field" id="c1" type="text" value="still on this device" autocomplete="off">
+					<button class="btn blk" type="button">send</button>
+				</div>
+			</article>
+			<article class="post dark">
+				<div class="who">
+					<span class="av w">R</span>
+					<span class="name">Rim</span>
+					<span class="d s2 yel" aria-hidden="true"></span>
+					<span class="time tnum">18m</span>
+				</div>
+				<p class="body">Joined the circle. The badge is a yellow square, not a faded pip.</p>
+				<div class="acts">
+					<span class="badge tnum">3</span>
+					<span class="count">new alerts</span>
+					<button class="btn yel" type="button">open</button>
+				</div>
+			</article>
+			<article class="post yel">
+				<div class="who">
+					<span class="av b">N</span>
+					<span class="name">Nico</span>
+					<span class="time tnum">1h</span>
+				</div>
+				<p class="body">Unseen stories wear a stack of dots. Every dot below is solid.</p>
+				<div class="stack" aria-hidden="true"><span class="d s4 red"></span><span class="d s3 blu"></span><span class="d s2 blk"></span></div>
+				<div class="pat" aria-hidden="true">
+					<svg>
+						<defs>
+							<pattern id="dots" width="8" height="8" patternUnits="userSpaceOnUse">
+								<rect width="8" height="8" fill="#ffe500"/>
+								<circle cx="4" cy="4" r="2" fill="#111111"/>
+							</pattern>
+						</defs>
+						<rect width="100%" height="100%" fill="url(#dots)"/>
+					</svg>
+					<span class="sq"></span>
+					<span class="focal"></span>
+				</div>
+			</article>
+		</div>
+		<aside class="inbox" id="inbox">
+			<div class="inbox-head">
+				<h2>messages</h2>
+				<button class="switch on" type="button" aria-pressed="true"><span class="track"><span class="knob"></span></span>pins</button>
 			</div>
-			<p class="note">Also outside this sheet: a colored rectangle as decoration, a 4px frame, uppercase display type, a dot grid behind a paragraph, and a second red dot in the same view.</p>
-		</section>
-	</main>
-	<footer class="foot">
-		<span>punkt</span>
-		<span>bauhaus polka dot</span>
-		<span>one dot per step</span>
-		<span class="tnum">01–05</span>
-	</footer>
+			<div class="thread">
+				<span class="av y">A</span>
+				<span><b>Ava</b><span class="preview">The count stayed local.</span></span>
+				<span class="stack" aria-hidden="true"><span class="d s2 yel"></span><span class="d s2 red"></span><span class="d s2 wht"></span></span>
+			</div>
+			<div class="thread">
+				<span class="av y">N</span>
+				<span><b>Nico</b><span class="preview">Bring the yellow field.</span></span>
+				<span class="d s2 yel" aria-hidden="true"></span>
+			</div>
+			<div class="thread">
+				<span class="av w">R</span>
+				<span><b>Rim</b><span class="preview">Profile is a black block.</span></span>
+				<span class="d s2 wht" aria-hidden="true"></span>
+			</div>
+			<div class="thread">
+				<span class="av k">J</span>
+				<span><b>Jun</b><span class="preview">Tab bar is five solids.</span></span>
+				<span class="badge tnum">2</span>
+			</div>
+			<div class="thread">
+				<span class="av r">S</span>
+				<span><b>Sol</b><span class="preview">Seen. No stack on mine.</span></span>
+				<span class="d s1 wht" aria-hidden="true"></span>
+			</div>
+			<div class="reply">
+				<label for="reply">reply</label>
+				<input class="field" id="reply" type="text" value="on this device" autocomplete="off">
+				<button class="btn yel" type="button">send</button>
+			</div>
+		</aside>
+	</div>
 </div>
+<nav class="tabbar" aria-label="Phone">
+	<a class="on" href="#feed">feed</a>
+	<a href="#inbox">chat</a>
+	<a class="post" href="#feed">post</a>
+	<a href="#alerts">alerts</a>
+	<a href="#profile">you</a>
+</nav>
+
+<section class="profile" id="profile">
+	<p class="kicker">you</p>
+	<div class="who-lg">
+		<span class="av y">A</span>
+		<div>
+			<h2>Ava Lin</h2>
+			<p>Local circle. Nothing here is sent out.</p>
+		</div>
+	</div>
+	<div class="stats">
+		<div class="stat y"><b class="tnum">48</b>people</div>
+		<div class="stat r"><b class="tnum">12</b>posts</div>
+		<div class="stat w"><b class="tnum">3</b>pins</div>
+	</div>
+	<button class="switch off" type="button" aria-pressed="false"><span class="track"><span class="knob"></span></span>local only</button>
+</section>
+<section class="alerts" id="alerts">
+	<h2>alerts</h2>
+	<div class="alert">
+		<span class="stack" aria-hidden="true"><span class="d s2 red"></span><span class="d s2 yel"></span></span>
+		<span>Nico replied to the count.</span>
+		<span class="badge tnum">1</span>
+	</div>
+	<div class="alert">
+		<span class="d s2 blu" aria-hidden="true"></span>
+		<span>Rim liked the thread.</span>
+		<span class="tnum">12</span>
+	</div>
+	<div class="alert">
+		<span class="d s4 red" aria-hidden="true"></span>
+		<span>Jun started a story.</span>
+		<span>now</span>
+	</div>
+	<p class="err">Could not pin that reply. It is still on this device.</p>
+</section>
+
+<section class="sec" id="color">
+	<p class="kicker">01 — color blocks</p>
+	<h2>fields that touch</h2>
+	<p class="lede">Black, red, blue, yellow, and white are the surfaces. They meet with no gap. White text stays off yellow. Black text stays off red and blue.</p>
+	<div class="swatches">
+		<div class="sw k"><b>primary</b>bar, dark post, tab bar</div>
+		<div class="sw r"><b>danger</b>stories, compose, focal</div>
+		<div class="sw u"><b>accent</b>inbox, comment</div>
+		<div class="sw y"><b>surface-raised</b>active tab, plate</div>
+		<div class="sw w"><b>surface</b>a post, not the page</div>
+	</div>
+</section>
+<section class="sec" id="module" style="background:#fff">
+	<p class="kicker">02 — dot scale</p>
+	<h2>four sizes, all solid</h2>
+	<p class="lede">4, 8, 12, 16. A count repeats the smallest. A stack overlaps two or three. Nothing here is translucent.</p>
+	<div class="scale">
+		<figure><span class="d s1"></span><figcaption class="tnum">4 rhythm</figcaption></figure>
+		<figure><span class="d s2 red"></span><figcaption class="tnum">8 status</figcaption></figure>
+		<figure><span class="d s3 blu"></span><figcaption class="tnum">12 badge</figcaption></figure>
+		<figure><span class="d s4 yel" style="box-shadow:inset 0 0 0 1px #111"></span><figcaption class="tnum">16 knob</figcaption></figure>
+		<figure>
+			<span class="stack"><span class="d s4 red"></span><span class="d s3 blu"></span><span class="d s2 yel"></span></span>
+			<figcaption>stack</figcaption>
+		</figure>
+	</div>
+	<div class="pair">
+		<div>
+			<p class="kicker">tight count</p>
+			<div class="row4" aria-hidden="true"><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span></div>
+		</div>
+		<div>
+			<p class="kicker">loose rhythm</p>
+			<div class="row4 loose" aria-hidden="true"><span class="d s1 red"></span><span class="d s1 red"></span><span class="d s1 red"></span><span class="d s1 red"></span><span class="d s1 red"></span><span class="d s1 red"></span></div>
+		</div>
+	</div>
+</section>
+<section class="sec" id="controls" style="background:#ffe500">
+	<p class="kicker">03 — controls</p>
+	<h2>solid buttons, solid switch</h2>
+	<div class="ctrl">
+		<button class="btn yel" type="button">post</button>
+		<button class="btn blu" type="button">comment</button>
+		<button class="btn red" type="button">alert</button>
+		<button class="btn blk" type="button">send</button>
+		<button class="btn wht" type="button" disabled>send</button>
+		<span class="badge tnum">3</span>
+	</div>
+	<div class="stack-field">
+		<label for="focus">search, focused</label>
+		<input class="field" id="focus" type="text" value="ava" autocomplete="off" style="box-shadow:0 0 0 2px #111">
+	</div>
+	<div class="stack-field" style="margin-top:10px">
+		<label for="bad">reply</label>
+		<input class="field bad" id="bad" type="text" value="send it to the cloud" autocomplete="off">
+		<p class="err">Stays on this device. The line was not posted.</p>
+	</div>
+	<div class="ctrl">
+		<button class="switch on" type="button" aria-pressed="true"><span class="track"><span class="knob"></span></span>pins on</button>
+		<button class="switch off" type="button" aria-pressed="false"><span class="track"><span class="knob"></span></span>pins off</button>
+	</div>
+</section>
+<section class="sec" id="narrow" style="background:#fff">
+	<p class="kicker">04 — 390</p>
+	<h2>feed, then a bottom bar</h2>
+	<p class="lede">Below 960px the inbox follows the feed. The tab bar is fixed. Dots stay 4, 8, 12, and 16.</p>
+	<div class="narrow">
+		<div class="handset">
+			<div class="hb"><strong>punkt</strong><span class="btn yel" style="display:inline-grid;place-items:center;height:36px">post</span></div>
+			<div class="hs">
+				<span class="av y">A</span><span class="av b">N</span><span class="av k">R</span><span class="av w">J</span><span class="av r">S</span>
+			</div>
+			<div class="hp">
+				<p><b>Ava</b> · 2m</p>
+				<p>Counted twelve likes on this device.</p>
+				<div class="row4" aria-hidden="true"><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span><span class="d s1"></span></div>
+			</div>
+			<div class="ht"><span class="on">feed</span><span>chat</span><span class="go">post</span><span>alerts</span><span>you</span></div>
+		</div>
+		<ul class="rules">
+			<li><span><b>Columns.</b> From 960px the feed and a 320px inbox sit side by side with no gutter. Below that, the inbox follows the posts.</span></li>
+			<li><span><b>Bar.</b> The phone bar is 56px, five equal cells, fixed to the bottom. Post is red. The current tab is yellow. The page pads 56px so the last row stays visible.</span></li>
+			<li><span><b>Stories.</b> Five avatars at 36px fit a 390px width inside 12px of padding. The dot patch on the red bar is desktop-only.</span></li>
+			<li><span><b>Dots.</b> 4, 8, 12, and 16 do not change. The 64px circle stays one, inside the yellow field.</span></li>
+			<li><span><b>Type.</b> Names stay 15px. Fields stay 16px. There is no display headline on the phone.</span></li>
+			<li><span><b>Pointer.</b> Hover swaps a fill only for a fine pointer. Press swaps it for a finger. Focus is a solid yellow or black ring.</span></li>
+		</ul>
+	</div>
+</section>
+<section class="sec" id="off" style="background:#fff">
+	<p class="kicker">05 — off the block</p>
+	<h2>what breaks the app</h2>
+	<div class="compare">
+		<figure class="cmp-off">
+			<figcaption>off-style</figcaption>
+			<span class="ghost"></span> <span class="ghost"></span> <span class="ghost"></span>
+			<div class="big"></div>
+			<h3>the dot issue</h3>
+			<span class="pill">subscribe</span>
+		</figure>
+		<figure class="cmp-on">
+			<div class="a">
+				<figcaption>on-style</figcaption>
+				<p><b>stories</b></p>
+				<div class="row4" aria-hidden="true"><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span><span class="d s1 yel"></span></div>
+			</div>
+			<div class="b">
+				<p><b>12</b> likes</p>
+				<div class="stack" aria-hidden="true"><span class="d s4 red"></span><span class="d s3 blu"></span><span class="d s2 blk"></span></div>
+				<button class="btn blk" type="button" style="margin-top:12px">post</button>
+			</div>
+		</figure>
+	</div>
+	<p class="lede">Also outside: a faded dot, a giant circle used as a texture, a rounded card, a centered headline, and a page that is mostly white.</p>
+</section>
+<footer class="foot">
+	<span>punkt</span>
+	<span>bauhaus polka dot</span>
+	<span>blocks touch, dots stay solid</span>
+</footer>
 </body>
 </html>
