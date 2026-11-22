@@ -7,20 +7,18 @@
 <style>
 	:root {
 		--ink: #1c1b19;
-		--paper: #fffcf7;
-		--canvas: #f4f1ea;
+		--paper: #f4f1ea;
 		--muted: #5e584e;
 		--blue: #1847d6;
 		--red: #d0121c;
 		--yellow: #ffe14a;
-		--line: #e3ddd2;
 		--sans: Inter, "Segoe UI", Roboto, "Noto Sans", sans-serif;
-		--focus: 0 0 0 2px #fffcf7, 0 0 0 4px #1c1b19;
+		--focus: 0 0 0 2px #f4f1ea, 0 0 0 4px #1c1b19;
 	}
 	*, *::before, *::after { box-sizing: border-box; }
 	html, body { margin: 0; }
 	body {
-		background: var(--canvas);
+		background: var(--paper);
 		color: var(--ink);
 		font-family: var(--sans);
 		font-size: 16px;
@@ -31,98 +29,94 @@
 	h1, h2, h3, p { margin: 0; }
 	button, input { font: inherit; color: inherit; }
 	a { color: inherit; text-decoration: none; }
-	img, svg { display: block; }
+	svg { display: block; }
 	::selection { background: var(--yellow); color: var(--ink); }
 	.tnum { font-variant-numeric: tabular-nums; }
 	.ico { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
 
 	.shell {
-		width: min(1240px, calc(100% - 32px));
+		width: min(1180px, calc(100% - 32px));
 		margin: 0 auto;
-		padding: 16px 0 112px;
+		padding: 20px 0 80px;
 		display: grid;
-		gap: 16px;
+		gap: 28px;
 	}
 	.side, .rail { display: none; }
 	.phonebar {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		min-height: 48px;
-		margin-bottom: 8px;
+		display: flex; align-items: center; justify-content: space-between; min-height: 48px;
 	}
-	.phonebar strong { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
-	.iconbtn {
-		width: 40px; height: 40px; border: 0; border-radius: 12px;
-		background: transparent; display: grid; place-items: center; cursor: pointer;
+	.phonebar strong { font-size: 20px; font-weight: 600; letter-spacing: -0.03em; }
+
+	.feed { display: grid; gap: 20px; min-width: 0; align-content: start; }
+	.post + .post { margin-top: 28px; }
+	.stories { display: flex; gap: 18px 22px; flex-wrap: wrap; }
+	.story { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; width: 48px; }
+	.story em { font-style: normal; font-size: 13px; font-weight: 500; color: var(--muted); }
+
+	.avatar {
+		width: 36px; height: 36px; border-radius: 999px;
+		display: grid; place-items: center; position: relative;
+		font-size: 14px; font-weight: 600; line-height: 1;
+	}
+	.avatar.yel { background: var(--yellow); color: var(--ink); }
+	.avatar.blu { background: var(--blue); color: var(--paper); }
+	.avatar.ink { background: var(--ink); color: var(--paper); }
+	.avatar.red { background: var(--red); color: var(--paper); }
+	.avatar.mark { background: var(--paper); color: var(--ink); overflow: hidden; }
+	.avatar.mark i {
+		position: absolute; left: 0; top: 0; width: 70%; height: 70%;
+		background: var(--blue); border-bottom-right-radius: 100%;
+	}
+	.avatar.mark b { position: relative; }
+	.pip {
+		position: absolute; right: -1px; bottom: -1px; width: 8px; height: 8px;
+		border-radius: 999px; background: var(--red);
 	}
 
-	.feed { display: grid; gap: 16px; min-width: 0; }
-	.stories { display: flex; gap: 16px; overflow: hidden; padding: 4px 2px 8px; }
-	.story { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 56px; flex: 0 0 auto; }
-	.story span { font-size: 13px; font-weight: 500; color: var(--muted); }
-
-	.avatar { position: relative; width: 40px; height: 40px; border-radius: 999px; box-shadow: 0 0 0 2px var(--line); }
-	.avatar.live { box-shadow: 0 0 0 2px var(--yellow); }
-	.avatar i { position: absolute; top: 0; bottom: 0; width: 50%; }
-	.avatar i:first-child { left: 0; border-radius: 40px 0 0 40px; }
-	.avatar i:last-of-type { right: 0; border-radius: 0 40px 40px 0; }
-	.avatar .pip { position: absolute; right: -1px; bottom: -1px; width: 8px; height: 8px; border-radius: 999px; background: var(--blue); box-shadow: 0 0 0 2px var(--paper); }
-	.a-red { background: var(--red); }
-	.a-yel { background: var(--yellow); }
-	.a-blu { background: var(--blue); }
-	.a-ink { background: var(--ink); }
-
-	.seg {
-		display: grid; grid-template-columns: 1fr 1fr; background: var(--line);
-		border-radius: 999px; padding: 3px; height: 40px;
-	}
+	.seg { display: flex; gap: 22px; align-items: flex-end; }
 	.seg button {
-		border: 0; border-radius: 999px; background: transparent; font-weight: 600; font-size: 14px; cursor: pointer;
+		border: 0; background: transparent; padding: 8px 0 10px; cursor: pointer;
+		font-size: 15px; font-weight: 500; color: var(--muted); position: relative;
 	}
-	.seg button.on { background: var(--ink); color: var(--paper); }
+	.seg button.on { color: var(--ink); font-weight: 600; }
+	.seg button.on::after {
+		content: ""; position: absolute; left: 0; bottom: 0; width: 14px; height: 3px; background: var(--yellow);
+	}
 
-	.composer {
-		display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; align-items: center;
+	.composer, .reply {
+		display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: end;
 	}
-	.reply {
-		display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; margin-top: 12px;
-	}
+	.reply { margin-top: 16px; }
 	.reply .lbl { grid-column: 1 / -1; }
 	.field {
-		height: 44px; width: 100%; min-width: 0; border: 1px solid var(--line); border-radius: 12px;
-		background: var(--paper); padding: 0 12px; font-size: 16px;
+		height: 44px; width: 100%; min-width: 0; border: 0; border-bottom: 1px solid var(--ink);
+		border-radius: 0; background: transparent; padding: 0 0 4px; font-size: 16px;
 	}
-	.field:focus { outline: none; box-shadow: var(--focus); }
-	.field.bad { border-color: var(--red); }
+	.field:focus { outline: none; border-bottom-width: 2px; }
+	.field.bad { border-bottom-color: var(--red); }
 	.lbl { font-size: 13px; font-weight: 500; color: var(--muted); }
-	.err { color: var(--red); font-size: 13px; font-weight: 600; }
+	.err { color: var(--red); font-size: 13px; font-weight: 600; margin-top: 8px; }
 
 	.btn {
-		height: 40px; padding: 0 16px; border-radius: 999px; border: 0; font-weight: 600; font-size: 14px;
-		cursor: pointer; transition: background 140ms cubic-bezier(0.2, 0, 0, 1), color 140ms cubic-bezier(0.2, 0, 0, 1), transform 140ms cubic-bezier(0.2, 0, 0, 1);
+		height: 40px; padding: 0 14px; border: 0; border-radius: 0; background: transparent;
+		font-weight: 600; font-size: 14px; cursor: pointer;
+		transition: background 120ms cubic-bezier(0.2, 0, 0, 1), color 120ms cubic-bezier(0.2, 0, 0, 1);
 	}
-	.btn.ink { background: var(--ink); color: var(--paper); box-shadow: 3px 3px 0 var(--red); }
-	.btn.quiet { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
-	.btn:disabled { background: var(--paper); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); cursor: not-allowed; }
-	.btn:focus-visible, .iconbtn:focus-visible, .side a:focus-visible, .tabbar a:focus-visible, .seg button:focus-visible {
-		outline: none; box-shadow: var(--focus);
+	.btn.ink { background: var(--ink); color: var(--paper); }
+	.btn:disabled { color: var(--muted); background: transparent; cursor: not-allowed; }
+	.btn:focus-visible, a:focus-visible, .field:focus-visible, .seg button:focus-visible {
+		outline: 2px solid var(--ink); outline-offset: 3px;
 	}
 
-	.card {
-		background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 16px;
-		min-width: 0;
-	}
-	.card.clip { overflow: hidden; padding: 0 0 16px; }
-	.card.clip .who, .card.clip .pname, .card.clip .sub { margin-left: 16px; margin-right: 16px; }
+	.post { display: grid; gap: 12px; min-width: 0; }
 	.who { display: flex; align-items: center; gap: 12px; }
 	.who .name { font-weight: 600; font-size: 15px; }
 	.who .meta { display: block; font-size: 13px; font-weight: 500; color: var(--muted); }
 	.who .time { margin-left: auto; font-size: 13px; font-weight: 500; color: var(--muted); }
-	.body { margin: 12px 0; }
-	.mosaic { display: grid; gap: 0; border-radius: 16px; overflow: hidden; background: var(--paper); border: 1px solid var(--line); }
+
+	.mosaic { display: grid; gap: 0; background: var(--paper); }
 	.mosaic.post { grid-template-columns: repeat(4, 1fr); }
-	.mosaic.profile { grid-template-columns: repeat(3, 1fr); margin: 0 0 16px; border: 0; border-radius: 20px 20px 0 0; }
+	.mosaic.profile { grid-template-columns: repeat(3, 1fr); width: min(100%, 240px); }
 	.tile { aspect-ratio: 1; min-width: 0; }
 	.tile.bar { grid-column: span 2; aspect-ratio: 2 / 1; }
 	.tile.red { background: var(--red); }
@@ -136,148 +130,119 @@
 	.h-w { border-radius: 100% 0 0 100%; }
 	.h-e { border-radius: 0 100% 100% 0; }
 	.h-n { border-radius: 100% 100% 0 0; }
-	.focal {
-		display: grid; place-items: center; background: var(--yellow);
-	}
-	.focal b {
-		width: 64px; height: 64px; border-radius: 999px; background: var(--red);
-	}
+	.focal { display: grid; place-items: center; background: var(--yellow); }
+	.focal b { width: 64px; height: 64px; border-radius: 999px; background: var(--red); }
 	.dotcell { position: relative; background: var(--ink); overflow: hidden; }
 	.dotcell svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-	.acts { display: flex; gap: 8px; margin-top: 12px; }
+	.acts { display: flex; gap: 18px; }
 	.acts button {
-		height: 40px; padding: 0 12px; border: 0; border-radius: 12px; background: transparent;
-		display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px; cursor: pointer;
+		height: 44px; padding: 0; border: 0; background: transparent;
+		display: inline-flex; align-items: center; gap: 6px;
+		font-weight: 600; font-size: 14px; cursor: pointer;
 	}
 	.acts .ico { width: 18px; height: 18px; }
 
-	.side {
-		position: sticky; top: 24px; align-self: start; display: none;
-		flex-direction: column; gap: 8px; padding-top: 8px;
-	}
-	.logo { font-size: 20px; font-weight: 600; letter-spacing: -0.03em; padding: 8px 12px 16px; }
+	.side { display: none; flex-direction: column; gap: 4px; position: sticky; top: 28px; align-self: start; }
+	.logo { font-size: 18px; font-weight: 600; letter-spacing: -0.03em; padding: 4px 0 20px; }
 	.side a {
-		display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px;
-		border-radius: 12px; font-weight: 600; font-size: 15px;
+		display: flex; align-items: center; gap: 10px; min-height: 44px;
+		font-weight: 500; font-size: 15px;
 	}
-	.side a.on { background: var(--ink); color: var(--paper); }
-	.badge {
-		margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
-		background: var(--yellow); color: var(--ink); font-size: 13px; font-weight: 600;
-		display: inline-grid; place-items: center;
-	}
-	.side .btn { margin-top: 12px; }
+	.side a.on { font-weight: 600; }
+	.side a.on::before { content: ""; width: 8px; height: 8px; background: var(--yellow); }
+	.side .btn { margin-top: 20px; align-self: flex-start; }
 
-	.rail { display: none; flex-direction: column; gap: 16px; }
-	.rail h2 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
-	.pname { font-size: 32px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; margin-top: 12px; }
-	.sub { font-size: 13px; font-weight: 500; color: var(--muted); margin-top: 4px; }
-	.thread {
-		display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: center;
-		padding: 10px 0; border-top: 1px solid var(--line); min-height: 60px;
-	}
+	.rail { display: none; flex-direction: column; gap: 40px; padding-top: 8px; }
+	.rail h2 { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
+	.pname { font-size: 28px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; margin-top: 16px; }
+	.sub { font-size: 13px; font-weight: 500; color: var(--muted); margin-top: 6px; }
+	.thread { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; padding: 8px 0; }
 	.thread b { font-weight: 600; font-size: 15px; }
 	.thread em { font-style: normal; display: block; font-size: 13px; font-weight: 500; color: var(--muted); }
-	.pip { width: 8px; height: 8px; border-radius: 999px; background: var(--yellow); }
-	.empty { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: center; }
-	.mini { display: grid; grid-template-columns: 1fr 1fr; width: 56px; height: 56px; border-radius: 12px; overflow: hidden; }
-	.mini i { display: block; }
-	.mini .red { background: var(--red); }
-	.mini .yel { background: var(--yellow); }
-	.mini .blu { background: var(--blue); }
-	.mini .q { border-bottom-right-radius: 100%; }
+	.note { margin-top: 8px; max-width: 28ch; }
 
 	.tabbar {
-		position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 5;
-		height: 62px; display: grid; grid-template-columns: repeat(4, 1fr);
-		background: var(--paper); border: 1px solid var(--ink); border-radius: 20px;
-		box-shadow: 2px 2px 0 var(--ink);
+		position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+		height: 56px; display: grid; grid-template-columns: repeat(4, 1fr);
+		background: var(--paper);
 	}
-	.tabbar a { display: grid; place-items: center; border-radius: 16px; margin: 6px; }
-	.tabbar a.on { background: var(--yellow); }
-	.fab {
-		position: fixed; right: 16px; bottom: 88px; z-index: 6;
-		width: 56px; height: 56px; border-radius: 999px; border: 0; cursor: pointer;
-		background: var(--ink); color: var(--paper); display: grid; place-items: center;
-		box-shadow: 3px 3px 0 var(--red);
+	.tabbar a {
+		display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+		font-size: 13px; font-weight: 500; color: var(--muted); min-height: 44px;
 	}
+	.tabbar a.on { color: var(--ink); font-weight: 600; }
+	.tabbar a.on::before { content: ""; width: 12px; height: 3px; background: var(--yellow); }
 
-	.sec { width: min(1240px, calc(100% - 32px)); margin: 0 auto; padding: 8px 0 28px; }
-	.sec h2 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+	.sec { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 12px 0 32px; }
+	.sec h2 { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
 	.kicker { font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 4px; }
 	.lede { margin: 8px 0 16px; max-width: 62ch; }
-	.swatches { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-	.sw { border-radius: 16px; padding: 14px; min-height: 76px; font-size: 13px; font-weight: 500; }
-	.sw b { display: block; font-size: 15px; font-weight: 600; margin-bottom: 4px; }
-	.sw.canvas { background: var(--canvas); box-shadow: inset 0 0 0 1px var(--line); }
-	.sw.card { background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); }
-	.sw.ink { background: var(--ink); color: var(--paper); }
-	.sw.red { background: var(--red); color: var(--paper); }
-	.sw.blu { background: var(--blue); color: var(--paper); }
-	.sw.yel { background: var(--yellow); }
-	.scale { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; }
-	.scale figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
-	.scale figcaption { font-size: 13px; font-weight: 500; }
+	.swatches { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+	.sw b { display: block; font-weight: 600; margin-bottom: 2px; }
+	.sw.ink { background: var(--ink); color: var(--paper); padding: 12px; }
+	.sw.red { background: var(--red); color: var(--paper); padding: 12px; }
+	.sw.blu { background: var(--blue); color: var(--paper); padding: 12px; }
+	.sw.yel { background: var(--yellow); padding: 12px; }
+	.scale { display: flex; gap: 24px; align-items: flex-end; flex-wrap: wrap; }
+	.scale figure { margin: 0; }
+	.scale figcaption { font-size: 13px; font-weight: 500; margin-top: 8px; }
 	.d { display: block; border-radius: 999px; background: var(--ink); }
 	.d.s1 { width: 4px; height: 4px; }
-	.d.s2 { width: 8px; height: 8px; background: var(--yellow); box-shadow: inset 0 0 0 1px var(--ink); }
+	.d.s2 { width: 8px; height: 8px; background: var(--yellow); }
 	.d.s3 { width: 12px; height: 12px; background: var(--blue); }
 	.d.s4 { width: 16px; height: 16px; background: var(--red); }
-	.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-	.handset {
-		width: 100%; max-width: 360px; background: var(--canvas); border-radius: 24px;
-		border: 1px solid var(--ink); padding: 12px 12px 8px; box-shadow: 2px 2px 0 var(--ink);
-	}
+	.row { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+	.handset { max-width: 320px; }
 	.handset .hb { display: flex; justify-content: space-between; align-items: center; min-height: 44px; font-weight: 600; }
-	.handset .hs { display: flex; gap: 12px; padding: 8px 0; }
-	.handset .hc { background: var(--paper); border-radius: 16px; border: 1px solid var(--line); padding: 12px; }
-	.handset .ht { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 10px; background: var(--paper); border-radius: 16px; border: 1px solid var(--ink); height: 52px; }
-	.handset .ht span { display: grid; place-items: center; }
-	.handset .ht .on { background: var(--yellow); border-radius: 12px; margin: 4px; }
-	.rules { list-style: none; margin: 0; padding: 0; }
-	.rules li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; padding: 10px 0; border-top: 1px solid var(--line); font-size: 15px; }
-	.compare { display: grid; gap: 16px; }
-	.cmp-off, .cmp-on { margin: 0; min-height: 200px; }
-	.cmp-off {
-		padding: 16px; text-align: center; color: #fff; border-radius: 28px;
-		background: linear-gradient(145deg, #ff4d6a, #1847d6 60%, #ffe14a);
+	.handset .hs { display: flex; gap: 16px; padding: 12px 0 20px; }
+	.handset .ht {
+		display: grid; grid-template-columns: repeat(4, 1fr); height: 56px;
+		font-size: 13px; font-weight: 500; color: var(--muted);
 	}
-	.cmp-off .ghost { width: 48px; height: 48px; border-radius: 999px; margin: 8px auto; background: #fff; opacity: 0.35; }
-	.cmp-off h3 { font-size: 28px; letter-spacing: -0.03em; text-transform: uppercase; }
-	.cmp-on { background: var(--paper); border: 1px solid var(--line); border-radius: 20px; padding: 12px; }
-	.foot { width: min(1240px, calc(100% - 32px)); margin: 0 auto; padding: 8px 0 32px; font-size: 13px; font-weight: 500; color: var(--muted); display: flex; gap: 16px; flex-wrap: wrap; }
+	.handset .ht span { display: grid; place-items: center; align-content: center; }
+	.handset .ht .on { color: var(--ink); font-weight: 600; }
+	.handset .ht .on::before { content: ""; width: 12px; height: 3px; background: var(--yellow); }
+	.rules { list-style: none; margin: 0; padding: 0; }
+	.rules li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; padding: 12px 0; }
+	.compare { display: grid; gap: 28px; }
+	.cmp-off, .cmp-on { margin: 0; }
+	.cmp-off {
+		padding: 20px 16px; text-align: center; color: #fff; border-radius: 28px;
+		background: linear-gradient(145deg, #ff4d6a, #1847d6 55%, #ffe14a);
+		box-shadow: 4px 4px 0 #d0121c;
+	}
+	.cmp-off h3 { font-size: 26px; letter-spacing: -0.03em; text-transform: uppercase; }
+	.cmp-off .pill { display: inline-block; margin-top: 10px; padding: 8px 16px; border-radius: 999px; background: #111; color: #fff; }
+	.foot {
+		width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 8px 0 28px;
+		font-size: 13px; font-weight: 500; color: var(--muted); display: flex; gap: 16px; flex-wrap: wrap;
+	}
 
 	@media (min-width: 720px) {
-		.swatches { grid-template-columns: repeat(3, 1fr); }
+		.swatches { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 	}
 	@media (min-width: 960px) {
 		.shell {
-			width: min(1240px, calc(100% - 48px));
-			padding: 24px 0 32px;
-			grid-template-columns: 220px minmax(0, 1fr) 300px;
-			gap: 24px;
+			width: min(1180px, calc(100% - 56px));
+			padding: 28px 0 40px;
+			grid-template-columns: 200px minmax(0, 1fr) 280px;
+			gap: 40px;
 			align-items: start;
 		}
 		.side { display: flex; }
 		.rail { display: flex; }
-		.phonebar, .tabbar, .fab { display: none; }
-		.feed { max-width: 640px; margin: 0 auto; width: 100%; }
-		.swatches { grid-template-columns: repeat(6, 1fr); }
-		.compare, .narrow { grid-template-columns: 1fr 1fr; align-items: start; }
-		.sec h2 { font-size: 20px; }
+		.phonebar, .tabbar { display: none; }
+		.feed { max-width: 600px; width: 100%; }
+		.compare, .split { grid-template-columns: 1fr 1fr; align-items: start; }
 	}
 	@media (hover: hover) and (pointer: fine) {
 		.btn.ink:hover { background: var(--yellow); color: var(--ink); }
-		.btn.quiet:hover { background: var(--ink); color: var(--paper); }
-		.side a:not(.on):hover, .iconbtn:hover, .acts button:hover { background: #efeae3; }
-		.btn:disabled:hover { background: var(--paper); color: var(--muted); }
+		.side a:not(.on):hover { color: var(--red); }
+		.btn:disabled:hover { background: transparent; color: var(--muted); }
 	}
-	.btn.ink:active { transform: translate(2px, 2px); box-shadow: none; }
-	.btn:disabled:active { transform: none; }
 	@media (prefers-reduced-motion: reduce) {
 		.btn { transition: none; }
-		.btn.ink:active { transform: none; }
 	}
 </style>
 </head>
@@ -286,42 +251,41 @@
 	<aside class="side">
 		<div class="logo">Punkt</div>
 		<nav aria-label="Punkt">
-			<a class="on" href="#feed" aria-current="page"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20H4Z"/></svg>Home</a>
-			<a href="#inbox"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14v9H8l-3 3Z"/></svg>Messages<span class="badge tnum">3</span></a>
-			<a href="#alerts"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16h12l-1.5-2V10a4.5 4.5 0 0 0-9 0v4Z"/></svg>Alerts</a>
-			<a href="#profile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M5.5 19c1.4-2.8 3.4-4 6.5-4s5.1 1.2 6.5 4"/></svg>Profile</a>
+			<a class="on" href="#feed" aria-current="page">Home</a>
+			<a href="#inbox">Messages</a>
+			<a href="#plans">Plans</a>
+			<a href="#profile">Profile</a>
 		</nav>
 		<button class="btn ink" type="button">New post</button>
 	</aside>
 	<main class="feed" id="feed">
 		<div class="phonebar">
 			<strong>Punkt</strong>
-			<button class="iconbtn" type="button" aria-label="Search"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/></svg></button>
+			<button class="btn ink" type="button">Post</button>
 		</div>
 		<div class="stories" aria-label="Stories">
-			<div class="story"><span class="avatar live"><i class="a-red"></i><i class="a-yel"></i><b class="pip"></b></span><span>Maya</span></div>
-			<div class="story"><span class="avatar"><i class="a-blu"></i><i class="a-ink"></i></span><span>Jonah</span></div>
-			<div class="story"><span class="avatar live"><i class="a-yel"></i><i class="a-red"></i><b class="pip"></b></span><span>Priya</span></div>
-			<div class="story"><span class="avatar"><i class="a-ink"></i><i class="a-yel"></i></span><span>Leo</span></div>
-			<div class="story"><span class="avatar live"><i class="a-blu"></i><i class="a-yel"></i><b class="pip"></b></span><span>Nora</span></div>
+			<div class="story"><span class="avatar yel">M<b class="pip"></b></span><em>Maya</em></div>
+			<div class="story"><span class="avatar blu">J</span><em>Jonah</em></div>
+			<div class="story"><span class="avatar ink">P<b class="pip"></b></span><em>Priya</em></div>
+			<div class="story"><span class="avatar mark" aria-hidden="true"><i></i><b>L</b></span><em>Leo</em></div>
+			<div class="story"><span class="avatar red">N</span><em>Nora</em></div>
 		</div>
 		<div class="seg" role="tablist" aria-label="Feed">
 			<button class="on" type="button">For you</button>
 			<button type="button">Following</button>
 		</div>
 		<div class="composer">
-			<span class="avatar"><i class="a-red"></i><i class="a-yel"></i></span>
-			<label class="lbl" for="draft" style="position:absolute;width:1px;height:1px;overflow:hidden">Post</label>
-			<input class="field" id="draft" type="text" placeholder="Share a note" autocomplete="off">
+			<label class="lbl" for="draft" style="position:absolute;width:1px;height:1px;overflow:hidden">Note</label>
+			<input class="field" id="draft" type="text" placeholder="Write a note" autocomplete="off">
 			<button class="btn ink" type="button">Post</button>
 		</div>
-		<article class="card">
+		<article class="post">
 			<div class="who">
-				<span class="avatar live"><i class="a-red"></i><i class="a-yel"></i><b class="pip"></b></span>
+				<span class="avatar yel">M<b class="pip"></b></span>
 				<span><span class="name">Maya Chen</span><span class="meta">@maya</span></span>
 				<span class="time tnum">12m</span>
 			</div>
-			<p class="body">Hung the new print above the desk and left the windows open. The studio smells like paper.</p>
+			<p>Hung the new print above the desk and left the windows open. The studio smells like paper.</p>
 			<div class="mosaic post" aria-hidden="true">
 				<i class="tile red q-br"></i>
 				<i class="tile blu q-bl"></i>
@@ -340,13 +304,13 @@
 				<button type="button"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14v8H9l-4 3Z"/></svg><span class="tnum">24</span></button>
 			</div>
 		</article>
-		<article class="card">
+		<article class="post">
 			<div class="who">
-				<span class="avatar"><i class="a-blu"></i><i class="a-ink"></i></span>
+				<span class="avatar blu">J</span>
 				<span><span class="name">Jonah Adler</span><span class="meta">@jonah</span></span>
 				<span class="time tnum">1h</span>
 			</div>
-			<p class="body">Late table at Corso is free after eight. I'll be the one with the blue notebook.</p>
+			<p>Late table at Corso is free after eight. I'll be the one with the blue notebook.</p>
 			<div class="mosaic post" aria-hidden="true">
 				<i class="tile blu h-n"></i>
 				<i class="tile yel"></i>
@@ -363,7 +327,7 @@
 		</article>
 	</main>
 	<aside class="rail">
-		<article class="card clip" id="profile">
+		<section id="profile">
 			<div class="mosaic profile" aria-hidden="true">
 				<i class="tile red q-br"></i>
 				<i class="tile yel q-bl"></i>
@@ -372,143 +336,127 @@
 				<i class="tile yel h-e"></i>
 				<i class="tile red q-tl"></i>
 			</div>
-			<div class="who">
-				<span class="avatar live"><i class="a-red"></i><i class="a-yel"></i><b class="pip"></b></span>
-				<span><span class="name">Maya Chen</span><span class="meta">Local circle</span></span>
-			</div>
-			<p class="pname">Maya</p>
+			<p class="pname">Maya Chen</p>
 			<p class="sub"><span class="tnum">128</span> following · <span class="tnum">340</span> posts</p>
-		</article>
-		<article class="card" id="inbox">
+		</section>
+		<section id="inbox">
 			<h2>Messages</h2>
 			<div class="thread">
-				<span class="avatar"><i class="a-blu"></i><i class="a-ink"></i></span>
+				<span class="avatar blu">J</span>
 				<span><b>Jonah Adler</b><em>Saved you a seat.</em></span>
 			</div>
 			<div class="thread">
-				<span class="avatar"><i class="a-yel"></i><i class="a-red"></i></span>
+				<span class="avatar ink">P</span>
 				<span><b>Priya Shah</b><em>On the 6:40, window seat.</em></span>
 			</div>
 			<div class="thread">
-				<span class="avatar"><i class="a-ink"></i><i class="a-yel"></i></span>
+				<span class="avatar mark"><i></i><b>L</b></span>
 				<span><b>Leo Martins</b><em>The print looks right in daylight.</em></span>
 			</div>
 			<div class="reply">
 				<label class="lbl" for="reply">Reply</label>
 				<input class="field" id="reply" type="text" value="See you at 8" autocomplete="off">
-				<button class="btn quiet" type="button">Send</button>
+				<button class="btn" type="button">Send</button>
 			</div>
-		</article>
-		<article class="card" id="alerts">
-			<div class="empty">
-				<div class="mini" aria-hidden="true"><i class="red q"></i><i class="yel"></i><i class="blu"></i><i class="yel q"></i></div>
-				<div>
-					<h2>You're up to date</h2>
-					<p class="sub">No new notes since this morning.</p>
-				</div>
-			</div>
-		</article>
+		</section>
+		<section id="plans">
+			<h2>Thursday</h2>
+			<p class="note">Corso after eight. Jonah is holding the corner table.</p>
+		</section>
 	</aside>
 </div>
 <nav class="tabbar" aria-label="Phone">
-	<a class="on" href="#feed" aria-label="Home"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20H4Z"/></svg></a>
-	<a href="#inbox" aria-label="Messages"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14v9H8l-3 3Z"/></svg></a>
-	<a href="#alerts" aria-label="Alerts"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16h12l-1.5-2V10a4.5 4.5 0 0 0-9 0v4Z"/></svg></a>
-	<a href="#profile" aria-label="Profile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M5.5 19c1.4-2.8 3.4-4 6.5-4s5.1 1.2 6.5 4"/></svg></a>
+	<a class="on" href="#feed"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20H4Z"/></svg>Home</a>
+	<a href="#inbox"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 6h14v9H8l-3 3Z"/></svg>Chat</a>
+	<a href="#plans"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16h12l-1.5-2V10a4.5 4.5 0 0 0-9 0v4Z"/></svg>Alerts</a>
+	<a href="#profile"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M5.5 19c1.4-2.8 3.4-4 6.5-4s5.1 1.2 6.5 4"/></svg>You</a>
 </nav>
-<button class="fab" type="button" aria-label="New post"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
 
 <section class="sec" id="color">
 	<p class="kicker">01 — Color</p>
-	<h2>Canvas first, primaries inside the frame</h2>
-	<p class="lede">The shell stays warm. Red, blue, and yellow are tiles, one button, and the focal circle.</p>
+	<h2>Paper, then a few tiles</h2>
+	<p class="lede">The page is one warm ground. Red, blue, and yellow show up in the picture and in a mark.</p>
 	<div class="swatches">
-		<div class="sw canvas"><b>surface</b>canvas</div>
-		<div class="sw card"><b>raised</b>cards</div>
-		<div class="sw ink"><b>primary</b>ink</div>
-		<div class="sw red"><b>danger</b>focal, tiles</div>
-		<div class="sw blu"><b>accent</b>tiles</div>
-		<div class="sw yel"><b>yellow</b>active tab</div>
+		<div class="sw"><b>surface</b>the paper</div>
+		<div class="sw ink"><b>primary</b>ink, the post button</div>
+		<div class="sw red"><b>danger</b>the circle, an error</div>
+		<div class="sw yel"><b>yellow</b>a tile, the active bar</div>
 	</div>
 </section>
 <section class="sec" id="geometry">
 	<p class="kicker">02 — Tiles</p>
-	<h2>Shapes that share an edge</h2>
-	<p class="lede">Square, bar, half, and quarter. Gap inside the mosaic is zero. One red circle.</p>
-	<div class="mosaic post" aria-hidden="true" style="max-width:480px">
+	<h2>Edges that meet</h2>
+	<p class="lede">Square, bar, half, quarter. No gap. One red circle.</p>
+	<div class="mosaic post" aria-hidden="true" style="max-width:420px">
 		<i class="tile red q-br"></i><i class="tile blu q-bl"></i><i class="tile yel"></i><i class="tile ink h-e"></i>
 		<i class="tile yel bar"></i><i class="tile focal"><b></b></i><i class="tile blu q-tl"></i>
 	</div>
 </section>
 <section class="sec" id="dots">
 	<p class="kicker">03 — Dots</p>
-	<h2>Four sizes, fully solid</h2>
+	<h2>Four sizes</h2>
 	<div class="scale">
-		<figure><span class="d s1"></span><figcaption>4 texture</figcaption></figure>
-		<figure><span class="d s2"></span><figcaption>8 status</figcaption></figure>
-		<figure><span class="d s3"></span><figcaption>12 pip</figcaption></figure>
-		<figure><span class="d s4"></span><figcaption>16 top</figcaption></figure>
+		<figure><span class="d s1"></span><figcaption>4</figcaption></figure>
+		<figure><span class="d s2"></span><figcaption>8</figcaption></figure>
+		<figure><span class="d s3"></span><figcaption>12</figcaption></figure>
+		<figure><span class="d s4"></span><figcaption>16</figcaption></figure>
 	</div>
 </section>
 <section class="sec" id="controls">
 	<p class="kicker">04 — Controls</p>
-	<h2>Pills, fields, press</h2>
+	<h2>A square button, a bottom line</h2>
 	<div class="row">
 		<button class="btn ink" type="button">Post</button>
-		<button class="btn quiet" type="button">Send</button>
-		<button class="btn quiet" type="button" disabled>Post</button>
+		<button class="btn" type="button">Send</button>
+		<button class="btn" type="button" disabled>Post</button>
 	</div>
-	<div style="display:grid;gap:8px;max-width:420px;margin-top:12px">
+	<div style="max-width:360px;margin-top:20px">
 		<label class="lbl" for="bad">Reply</label>
-		<input class="field bad" id="bad" type="text" value="Send this to the cloud" autocomplete="off">
+		<input class="field bad" id="bad" type="text" value="Send this out" autocomplete="off">
 		<p class="err">Stays on this device. Nothing was posted.</p>
 	</div>
 </section>
 <section class="sec" id="narrow">
 	<p class="kicker">05 — 390</p>
-	<h2>Inset feed, floating post</h2>
-	<div class="narrow">
+	<h2>A bar on the canvas</h2>
+	<div class="split">
 		<div class="handset">
-			<div class="hb"><span>Punkt</span><span class="tnum">9:41</span></div>
+			<div class="hb"><span>Punkt</span><span class="btn ink">Post</span></div>
 			<div class="hs">
-				<span class="avatar live"><i class="a-red"></i><i class="a-yel"></i></span>
-				<span class="avatar"><i class="a-blu"></i><i class="a-ink"></i></span>
-				<span class="avatar"><i class="a-yel"></i><i class="a-red"></i></span>
+				<span class="avatar yel">M</span>
+				<span class="avatar blu">J</span>
+				<span class="avatar ink">P</span>
 			</div>
-			<div class="hc">
-				<p><b>Maya Chen</b> <span class="tnum">12m</span></p>
-				<p>Hung the new print above the desk.</p>
-			</div>
+			<p><b>Maya Chen</b> <span class="tnum">12m</span></p>
+			<p>Hung the new print above the desk.</p>
 			<div class="ht"><span class="on">Home</span><span>Chat</span><span>Alerts</span><span>You</span></div>
 		</div>
 		<ul class="rules">
-			<li><span><b>Inset.</b> 16px below 960px, 24px above. Cards do not touch the screen edge.</span></li>
-			<li><span><b>Columns.</b> Sidebar, feed (max 640), rail from 960px. Below that, only the feed.</span></li>
-			<li><span><b>Phone bar.</b> 62px, inset 12px, four icons. The current tab is yellow. Compose is a 56px circle, 16px from the right, above the bar.</span></li>
-			<li><span><b>Type.</b> Body stays 16px. Captions stay 13px. The profile name is the only 32px line.</span></li>
-			<li><span><b>Tiles.</b> The mosaic keeps a zero gap. The 64px circle does not grow on the phone.</span></li>
-			<li><span><b>Press.</b> A fine pointer turns the ink pill yellow. A press steps it 2px and drops the offset. Reduced motion keeps the color and skips the step.</span></li>
+			<li><span><b>Inset.</b> 16px below 960px, 28px above. Type does not meet the screen edge.</span></li>
+			<li><span><b>Columns.</b> Sidebar, feed (max 600), rail from 960px. Below that, the feed alone.</span></li>
+			<li><span><b>Tab bar.</b> 56px, flush to the bottom, same paper as the page. No box, no shadow. The current tab has a 12 by 3 yellow bar.</span></li>
+			<li><span><b>Post.</b> The word in the top bar. There is no floating button.</span></li>
+			<li><span><b>Space.</b> 48px between posts. 12px from a name to its sentence. No rule between them.</span></li>
+			<li><span><b>Tiles.</b> The picture keeps a zero gap. The red circle stays 64px.</span></li>
 		</ul>
 	</div>
 </section>
 <section class="sec" id="off">
-	<p class="kicker">06 — Off the shell</p>
-	<h2>What leaves the product</h2>
+	<p class="kicker">06 — Off the page</p>
+	<h2>What this shell refuses</h2>
 	<div class="compare">
 		<figure class="cmp-off">
 			<figcaption>Off-style</figcaption>
-			<div class="ghost"></div>
-			<h3>dots everywhere</h3>
+			<h3>post now</h3>
+			<span class="pill">Subscribe</span>
 		</figure>
 		<figure class="cmp-on">
 			<figcaption>On-style</figcaption>
-			<div class="mini" style="width:72px;height:72px;display:grid;grid-template-columns:1fr 1fr;border-radius:12px;overflow:hidden;margin:8px 0">
-				<i class="tile red q-br"></i><i class="tile yel"></i><i class="tile blu"></i><i class="tile ink q-tl"></i>
-			</div>
+			<p style="margin:12px 0">Maya, 12m</p>
 			<button class="btn ink" type="button">Post</button>
 		</figure>
 	</div>
 </section>
-<footer class="foot"><span>Punkt</span><span>Bauhaus Polka Dot</span><span>Warm shell, tiled pictures</span></footer>
+<footer class="foot"><span>Punkt</span><span>Bauhaus Polka Dot</span></footer>
 </body>
 </html>

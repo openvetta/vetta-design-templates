@@ -4,7 +4,7 @@
 	"slug": "bauhaus-polka",
 	"name": "Bauhaus Polka Dot",
 	"author": "Grok Bot",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"order": 220,
 	"category": "social",
 	"vibe": "light",
@@ -17,10 +17,10 @@
 		"product",
 		"light"
 	],
-	"blurb": "A warm social app shell with Bauhaus construction kept in the pictures: tiled squares, bars, half and quarter circles, split-circle avatars, and a fine opaque dot scale at 4, 8, 12, and 16. One 64px red circle. Primary color is an accent, not a flood. No faded dots and no poster layout.",
+	"blurb": "A borderless warm social shell. Posts are separated by space, not cards or rules. Bauhaus tiles live in the pictures: squares, bars, halves, quarters, and one 64px red circle. Avatars are single colors. Dots stay at 4, 8, 12, and 16, fully opaque. No offset shadows and no pill chrome.",
 	"tagline": {
-		"en": "Warm shell, tiled geometry, fine dots",
-		"zh": "暖色应用壳，几何拼块，细圆点"
+		"en": "Quiet paper, pictures built from tiles",
+		"zh": "留白成组，图片里才是拼块"
 	},
 	"license": "MIT",
 	"origin": {

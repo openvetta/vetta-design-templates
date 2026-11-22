@@ -1,45 +1,47 @@
-/* Bauhaus Polka Dot — a warm app shell, tiled geometry, a fine opaque dot scale.
+/* Bauhaus Polka Dot — warm canvas, borderless chrome, tiled pictures.
    Original system authored by Grok Bot. */
 @theme {
 	--color-primary: #1c1b19;
-	--color-primary-foreground: #fffcf7;
+	--color-primary-foreground: #f4f1ea;
 	--color-surface: #f4f1ea;
 	--color-surface-foreground: #1c1b19;
-	--color-surface-raised: #fffcf7;
+	--color-surface-raised: #f4f1ea;
 	--color-muted: #5e584e;
 	--color-accent: #1847d6;
 	--color-danger: #d0121c;
 	--color-border: #1c1b19;
 
-	--color-line: #e3ddd2;
 	--color-block-yellow: #ffe14a;
 	--color-block-red: #d0121c;
 	--color-block-blue: #1847d6;
 	--color-block-black: #1c1b19;
-	--color-block-white: #fffcf7;
+	--color-block-white: #f4f1ea;
 
-	--radius-sm: 8px;
-	--radius-md: 12px;
-	--radius-lg: 16px;
-	--radius-xl: 20px;
-	--radius-2xl: 24px;
+	/* Chrome is square. Circles are avatars, the focal, and dots. */
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
 	--radius-full: 999px;
 
-	/* Solid offsets only. No blur. */
-	--shadow-sm: 2px 2px 0 #1c1b19;
-	--shadow-md: 3px 3px 0 #1c1b19;
-	--shadow-lg: 3px 3px 0 #d0121c;
-	--shadow-focus: 0 0 0 2px #fffcf7, 0 0 0 4px #1c1b19;
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 2px #f4f1ea, 0 0 0 4px #1c1b19;
 
-	--rule-width: 1px;
+	--rule-width: 0px;
 	--module: 8px;
+	--space-related: 12px;
+	--space-group: 48px;
+	--space-block: 40px;
 
 	--dot-1: 4px;
 	--dot-2: 8px;
 	--dot-3: 12px;
 	--dot-4: 16px;
 	--focal: 64px;
-	--avatar: 40px;
+	--avatar: 36px;
 
 	--font-sans: Inter, "Segoe UI", Roboto, "Noto Sans", sans-serif;
 
@@ -47,5 +49,5 @@
 	--tracking-title: -0.02em;
 
 	--ease-ui: cubic-bezier(0.2, 0, 0, 1);
-	--duration-ui: 140ms;
+	--duration-ui: 120ms;
 }
