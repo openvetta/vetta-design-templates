@@ -101,7 +101,7 @@ A count is a numeral. It is not a row of dots. Dots do not overlap in the chrome
 - **Profile and messages.** Plain blocks on the canvas. A title, then the lines. No card, no rule between messages. The gap is 16px.
 - **Field.** No box. Paper fill, square, 44px, 16px type. A 1px ink line sits on the bottom only. Focus thickens that line to 2px. The label is visible. An error turns the line and the sentence to `danger`.
 - **Button.** Square, 40px, weight 600. The primary is an ink fill and paper type, with no offset. Hover (fine pointer) turns it yellow with ink type. Press darkens nothing and moves nothing. The quiet control is the word alone. Disabled is `muted` type, still opaque, with no box.
-- **Tab bar.** Flush to the bottom edge, canvas fill, no border, no shadow, no floating capsule. Four items: icon plus a 13px label. The current item carries a 12px by 3px yellow bar above the icon. Compose is the word "Post" in the top bar, the same primary button as the sidebar. There is no floating action button.
+- **Tab bar.** Flush to the bottom edge, canvas fill, no border, no shadow, no floating capsule. Four items: icon plus a 13px label. The current item carries a 12px by 3px yellow bar, placed inside the 56px bar, above the icon. It does not sit in the page above the bar. Compose is the single "Post" control beside the field. The phone title does not repeat it. There is no floating action button.
 - **Icons.** Inline strokes, 22px, 1.75px, round caps, in the same file.
 
 ## Motion

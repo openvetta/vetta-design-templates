@@ -62,12 +62,11 @@
 	.avatar.blu { background: var(--blue); color: var(--paper); }
 	.avatar.ink { background: var(--ink); color: var(--paper); }
 	.avatar.red { background: var(--red); color: var(--paper); }
-	.avatar.mark { background: var(--paper); color: var(--ink); overflow: hidden; }
+	.avatar.mark { background: var(--yellow); overflow: hidden; }
 	.avatar.mark i {
-		position: absolute; left: 0; top: 0; width: 70%; height: 70%;
+		position: absolute; left: 0; top: 0; width: 100%; height: 100%;
 		background: var(--blue); border-bottom-right-radius: 100%;
 	}
-	.avatar.mark b { position: relative; }
 	.pip {
 		position: absolute; right: -1px; bottom: -1px; width: 8px; height: 8px;
 		border-radius: 999px; background: var(--red);
@@ -168,11 +167,15 @@
 		background: var(--paper);
 	}
 	.tabbar a {
+		position: relative;
 		display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-		font-size: 13px; font-weight: 500; color: var(--muted); min-height: 44px;
+		font-size: 13px; font-weight: 500; color: var(--muted); height: 56px;
 	}
 	.tabbar a.on { color: var(--ink); font-weight: 600; }
-	.tabbar a.on::before { content: ""; width: 12px; height: 3px; background: var(--yellow); }
+	.tabbar a.on::before {
+		content: ""; position: absolute; top: 6px; left: 50%; width: 12px; height: 3px;
+		background: var(--yellow); transform: translateX(-50%);
+	}
 
 	.sec { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 12px 0 32px; }
 	.sec h2 { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
@@ -200,9 +203,12 @@
 		display: grid; grid-template-columns: repeat(4, 1fr); height: 56px;
 		font-size: 13px; font-weight: 500; color: var(--muted);
 	}
-	.handset .ht span { display: grid; place-items: center; align-content: center; }
+	.handset .ht span { position: relative; display: grid; place-items: center; align-content: center; }
 	.handset .ht .on { color: var(--ink); font-weight: 600; }
-	.handset .ht .on::before { content: ""; width: 12px; height: 3px; background: var(--yellow); }
+	.handset .ht .on::before {
+		content: ""; position: absolute; top: 6px; left: 50%; width: 12px; height: 3px;
+		background: var(--yellow); transform: translateX(-50%);
+	}
 	.rules { list-style: none; margin: 0; padding: 0; }
 	.rules li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; padding: 12px 0; }
 	.compare { display: grid; gap: 28px; }
@@ -261,13 +267,12 @@
 	<main class="feed" id="feed">
 		<div class="phonebar">
 			<strong>Punkt</strong>
-			<button class="btn ink" type="button">Post</button>
 		</div>
 		<div class="stories" aria-label="Stories">
 			<div class="story"><span class="avatar yel">M<b class="pip"></b></span><em>Maya</em></div>
 			<div class="story"><span class="avatar blu">J</span><em>Jonah</em></div>
 			<div class="story"><span class="avatar ink">P<b class="pip"></b></span><em>Priya</em></div>
-			<div class="story"><span class="avatar mark" aria-hidden="true"><i></i><b>L</b></span><em>Leo</em></div>
+			<div class="story"><span class="avatar mark" aria-hidden="true"><i></i></span><em>Leo</em></div>
 			<div class="story"><span class="avatar red">N</span><em>Nora</em></div>
 		</div>
 		<div class="seg" role="tablist" aria-label="Feed">
@@ -350,7 +355,7 @@
 				<span><b>Priya Shah</b><em>On the 6:40, window seat.</em></span>
 			</div>
 			<div class="thread">
-				<span class="avatar mark"><i></i><b>L</b></span>
+				<span class="avatar mark" aria-hidden="true"><i></i></span>
 				<span><b>Leo Martins</b><em>The print looks right in daylight.</em></span>
 			</div>
 			<div class="reply">
@@ -421,7 +426,7 @@
 	<h2>A bar on the canvas</h2>
 	<div class="split">
 		<div class="handset">
-			<div class="hb"><span>Punkt</span><span class="btn ink">Post</span></div>
+			<div class="hb"><span>Punkt</span></div>
 			<div class="hs">
 				<span class="avatar yel">M</span>
 				<span class="avatar blu">J</span>
