@@ -4,7 +4,7 @@
 	"slug": "bauhaus-polka",
 	"name": "Bauhaus Polka Dot",
 	"author": "Grok Bot",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"order": 220,
 	"category": "social",
 	"vibe": "light",
@@ -12,22 +12,22 @@
 		"bauhaus",
 		"polka",
 		"dots",
-		"primary",
-		"color-block",
+		"geometry",
 		"social",
+		"product",
 		"light"
 	],
-	"blurb": "Bauhaus polka as a local-first social app: black, white, red, blue, and yellow fields butted edge to edge, with a fine opaque dot scale at 4, 8, 12, and 16 for rhythm, counts, badges, and stacked status. One 64px circle at most. No faded dots, no editorial poster, no mostly-white page with small accents.",
+	"blurb": "A warm social app shell with Bauhaus construction kept in the pictures: tiled squares, bars, half and quarter circles, split-circle avatars, and a fine opaque dot scale at 4, 8, 12, and 16. One 64px red circle. Primary color is an accent, not a flood. No faded dots and no poster layout.",
 	"tagline": {
-		"en": "Primary blocks, a fine opaque dot scale",
-		"zh": "原色色块相接，细圆点不透明"
+		"en": "Warm shell, tiled geometry, fine dots",
+		"zh": "暖色应用壳，几何拼块，细圆点"
 	},
 	"license": "MIT",
 	"origin": {
 		"type": "curated",
 		"author": "Grok Bot",
 		"sourceUrl": "https://www.moma.org/artists/399-herbert-bayer",
-		"note": "Authored by Grok Bot. Original Bauhaus Polka Dot system for Punkt, a local-first social app: primary fields butt edge to edge, and the polka scale is fine and fully opaque (4, 8, 12, 16) with one focal circle. Mood only, from the Bauhaus graphic workshop and from two counting traditions, not from a copied poster. Herbert Bayer's Universal alphabet (1925) is a lowercase geometric sans built from a limited set of forms; MoMA records it as the signature lowercase of the school (https://www.moma.org/artists/399-herbert-bayer) and the 2009 Inside/Out note shows the drawing eliminating uppercase (https://www.moma.org/explore/inside_out/2009/11/06/bauhaus-the-graphic-design-department-goes-back-to-school/). Kandinsky's 1923 Bauhaus questionnaire paired yellow with the triangle, red with the square, and blue with the circle (Centre Pompidou, via Google Arts & Culture: https://artsandculture.google.com/story/bauhaus-the-importance-of-shapes-the-centre-pompidou/OwURAJwcVUkTow). This system keeps the circle and retires the square and the triangle. László Moholy-Nagy, who taught the preliminary course and the metal workshop from 1923, treated type and geometric form as one clear message (MoMA: https://www.moma.org/artists/4049-laszlo-moholy-nagy). Josef Albers's teaching, later written up as Interaction of Color, treats a color as a role beside its neighbor, which is why yellow here is a large keyed dot and never small type. Quantity follows the Isotype rule stated by Otto Neurath: a greater number is more marks of the same size, not one enlarged mark (Isotype Revisited: https://isotyperevisited.org/2012/08/introduction.php; University of Vienna: https://isotype.univie.ac.at/en/abstract/). The unit is an original circle, not a Gerd Arntz pictogram. Contemporary dot grids are a measure, and they fail when the dots grow into wallpaper (https://freedesignmd.com/lexicon/dot-grid-texture). An orderly dot grid reads as structure; an irregular scatter reads as something else (AD Middle East: https://www.admiddleeast.com/story/trend-report-polka-dots-are-everywhere-from-the-runway-to-the-living-room-and-beyond). Palette, screens, and copy are original. No posters, photographs, font files, or marks."
+		"note": "Authored by Grok Bot. Original Bauhaus Polka Dot system for Punkt, a local-first social app. The shell is warm and quiet; squares, bars, half circles, and quarter circles tile inside media, profile headers, and split-circle avatars. The polka scale is fine and fully opaque (4, 8, 12, 16), with one 64px red circle. The triangle stays out. Mood only, from the Bauhaus graphic workshop and from two counting traditions, not from a copied poster. Herbert Bayer's Universal alphabet (1925) is a lowercase geometric sans built from a limited set of forms; MoMA records it as the signature lowercase of the school (https://www.moma.org/artists/399-herbert-bayer) and the 2009 Inside/Out note shows the drawing eliminating uppercase (https://www.moma.org/explore/inside_out/2009/11/06/bauhaus-the-graphic-design-department-goes-back-to-school/). Kandinsky's 1923 Bauhaus questionnaire paired yellow with the triangle, red with the square, and blue with the circle (Centre Pompidou, via Google Arts & Culture: https://artsandculture.google.com/story/bauhaus-the-importance-of-shapes-the-centre-pompidou/OwURAJwcVUkTow). László Moholy-Nagy, who taught the preliminary course and the metal workshop from 1923, treated type and geometric form as one clear message (MoMA: https://www.moma.org/artists/4049-laszlo-moholy-nagy). Josef Albers's teaching, later written up as Interaction of Color, treats a color as a role beside its neighbor, which is why yellow here is a tile and an active tab, never small type. Quantity follows the Isotype rule stated by Otto Neurath: a greater number is more marks of the same size, not one enlarged mark (Isotype Revisited: https://isotyperevisited.org/2012/08/introduction.php; University of Vienna: https://isotype.univie.ac.at/en/abstract/). The unit is an original circle, not a Gerd Arntz pictogram. Contemporary dot grids are a measure, and they fail when the dots grow into wallpaper (https://freedesignmd.com/lexicon/dot-grid-texture). An orderly dot grid reads as structure; an irregular scatter reads as something else (AD Middle East: https://www.admiddleeast.com/story/trend-report-polka-dots-are-everywhere-from-the-runway-to-the-living-room-and-beyond). Palette, screens, and copy are original. No posters, photographs, font files, or marks."
 	},
 	"assets": {
 		"spec": "DESIGN.md",
