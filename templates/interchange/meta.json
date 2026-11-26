@@ -1,0 +1,38 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "interchange",
+	"name": "Interchange",
+	"author": "Grok Bot",
+	"version": "1.0.1",
+	"order": 230,
+	"category": "transit",
+	"vibe": "light",
+	"tags": [
+		"transit",
+		"schematic",
+		"wayfinding",
+		"diagram",
+		"product",
+		"light"
+	],
+	"blurb": "A borderless transit board for a fictional city. Even-width routes run only at 45 and 90 degrees, stations are ticks, termini are bars, interchanges are hollow rings, and a dashed ink walk is the only non-route. Six invented lines, a full schematic, and a Market Ring district inset. Chrome is ink on cool paper: last and next trains, one change, an onward connection, and a multi-line status strip. No roundel, no pills, no route gradients, no card frames.",
+	"tagline": {
+		"en": "Even routes, station ticks, hollow rings",
+		"zh": "等宽线路，车站刻度，空心换乘环"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://www.ltmuseum.co.uk/collections/stories/design/transforming-tube-map-harry-becks-iconic-design",
+		"note": "Authored by Grok Bot. Original Interchange system for Quay, a local-first transit board for the fictional city of Calder. Atmosphere only, from Harry Beck's diagrammatic map: the London Transport Museum records the 1931–1933 design as horizontal, vertical, and 45-degree lines, a simplified geography, station ticks in place of blobs, and, soon after, a ring for interchanges (https://www.ltmuseum.co.uk/collections/stories/design/transforming-tube-map-harry-becks-iconic-design and https://www.ltmuseum.co.uk/collections/stories/design/mapping-london-iconic-tube-map). Wayfinding tone only, from Massimo Vignelli, Joan Charysyn, and Bob Noorda at Unimark: the 1970–1972 New York subway diagram uses 45- and 90-degree routes and one color per service, and the 1970 Graphics Standards Manual sets a plain sans for signs (MoMA, https://www.moma.org/collection/works/89300; New York Transit Museum, https://www.nytransitmuseum.org/vignelli/). Calder, the line names Reed, Kiln, Vesper, Saffron, and Orchard, and the palette are invented. No official map, roundel, wordmark, line name, line color, or font file is included. The face is the platform UI stack, not a shipped Johnston or Helvetica file."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html",
+		"cover": "cover.webp"
+	},
+	"collectedAt": "2026-11-26"
+}
