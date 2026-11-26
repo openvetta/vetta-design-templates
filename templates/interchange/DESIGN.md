@@ -1,16 +1,16 @@
 # Interchange
 
-A worked example ships as `demo.html`: Quay, a local-first transit board for the fictional city of Calder. The first screen is the station board at Market Ring: a schematic of five lines, the next trains, a trip with one change, and a service note. Below 960px the same board stacks and a flush dock sits on the bottom edge.
+A worked example ships as `demo.html`: Quay, a local-first transit board for the fictional city of Calder. The first screen is the station board at Market Ring: a full schematic of six lines, the next trains with a last-and-next pair, a trip with one change, an onward connection, and a status strip. Below 960px the map becomes the Market Ring district, the columns stack, and a flush dock sits on the bottom edge.
 
 ## Atmosphere
 
-Cool paper, ink, and a diagram that does the talking. Geography is gone. What remains is the sequence of stations, the direction of each line, and where the lines meet. The city is Calder. The lines are Reed, Kiln, Vesper, Saffron, and Orchard. None of these names, and none of these colors, belong to a real network.
+Cool paper, ink, and a diagram that does the talking. Geography is gone. What remains is the sequence of stations, the direction of each line, and where the lines meet. The city is Calder. The lines are Reed, Kiln, Vesper, Saffron, Orchard, and the Cinder branch. None of these names, and none of these colors, belong to a real network.
 
 The board is a product, not a poster. A person opens it to see the next train and how to change. The diagram is the picture. Departure times are the other picture. Chrome stays quiet so the routes can keep their colors.
 
 This fits a departure board, a trip with a change, a station page, and a service note. It is a poor fit for a marketing page, a feed, a map with streets, and any screen that needs a photograph, a roundel, or several filled cards.
 
-The reference copy is a weekday morning at 07:42. The saved trip is North Quay to South Gate, 22 minutes, one change at Market Ring, due 08:04. Saffron is holding at Basin. The sentences are about trains. They do not describe the interface.
+The reference copy is a weekday morning at 07:42. The saved trip is North Quay to South Gate, 22 minutes, one change at Market Ring, due 08:04. An onward ride reaches Cinder Wharf by changing at Lantern, or by a 4 minute walk from Glass Court. Saffron is holding at Basin until 08:14. Vesper is a minute late. Cinder is a shuttle. The sentences are about trains. They do not describe the interface.
 
 ## Color roles
 
@@ -22,7 +22,7 @@ Frames take color from the tokens in `theme.css`. `surface` and `surface-raised`
 - `accent` is the Reed trunk, the same value as `line-reed`. It appears in chrome once: the 16 by 3 active mark. It is not a button fill. Paper on this teal is about 6.9:1, which is why type on the route is avoided.
 - `danger` is the alert word and a late status. It is about 8.7:1 on paper. It is never a route, never a fill behind a sentence, and never the color of a line that is merely busy.
 - `border` is the ink, at `rule-width` (1px). It is the legend rule only. A gray hairline around a block is outside this system.
-- `line-reed`, `line-kiln`, `line-vesper`, `line-saffron`, and `line-orchard` are flat route colors. Against paper they sit between about 5.9:1 (Kiln) and about 10:1 (Vesper). They paint strokes and the 22 by 10 identity bar. They do not paint sentences, buttons, or page backgrounds.
+- `line-reed`, `line-kiln`, `line-vesper`, `line-saffron`, `line-orchard`, and `line-cinder` are flat route colors. Against paper they sit between about 5.9:1 (Kiln) and about 10:1 (Vesper). Cinder, the branch, is about 8.1:1. They paint strokes, terminus bars, and the 22 by 10 identity bar. They do not paint sentences, buttons, or page backgrounds.
 
 One screen may show every line in the diagram and in the legend. Chrome outside the diagram uses ink, muted, the single accent mark, and danger only when a train is late or a line is holding. A gradient along a route, a tinted card, or a second accent hue is a different system.
 
@@ -48,7 +48,7 @@ The module is 4px. Use 4, 8, 12, 16, 24, 32, 40, and 48. Do not invent a 10px or
 - Page inset is 16px below 960px and 32px from 960px up. The board is at most 1320px wide and centered in the paper. Text does not touch the viewport edge.
 - From 960px up: two columns, diagram 1.4 and the board 0.9, gap 40px. The columns start together. The header is one row: wordmark, city, four text items, clock.
 - Below 960px the header links leave. The columns stack in this order: diagram and legend, next trains, trip, service note. The dock is fixed to the bottom edge, full width, 56px, on the same paper. The page clears it by 56px at the end of the scroll.
-- Below 960px the wide diagram is replaced by the compact diagram. Every route, ring, and tick remains. Intermediate names drop (Ash Wharf, Harbor Steps, Glass Court, Kiln Yard, Lantern). Interchanges and termini keep their names.
+- Below 960px the wide diagram is replaced by the Market Ring district. The caption says it is not the full network. Every station inside the district is drawn. Lines that continue outward run off the frame instead of growing a false terminus. Harbor Steps, Lime Walk, Wick, and Culvert keep their ticks and drop their names. Interchanges, the in-district terminus, and the branch keep their names.
 - Rows, the dock, and the solid button are at least 44px tall. The dock is 56px. Route bars, ticks, and rings are not targets.
 - Nothing scrolls sideways at 1440 or at 390. The diagram is `width: 100%` of its column. The compact drawing's viewBox is 360 wide so it fits a 390px viewport after the 16px inset.
 
@@ -58,20 +58,40 @@ The first screen is the board. A centered slogan, a hero photograph, or a card g
 
 ### Diagram
 
-The diagram is schematic. It is not to scale, and it says so in one muted line. There is no river, no street, and no north arrow.
+The diagram is schematic. It is not to scale, and it says so in one muted line. There is no street and no north arrow.
 
 Routes use only four directions: 0°, 90°, and the two diagonals at 45° and 135°. A segment is horizontal, vertical, or has equal absolute dx and dy. A curve, a 30° cut, or a free angle is outside the system.
 
 - The route stroke is `stroke-route` (10px) in user units, so it scales with the figure. Every route on a diagram uses that one width. Caps are butt. Joins are miter, miter limit 2, so a 45° corner stays sharp and does not spike.
 - Color is flat. One class, one `line-*` token, no gradient, no dash, no opacity.
 - When two routes share a corridor they run parallel. Center to center is `corridor` (14px): the 10px strokes plus a 4px paper gap. They do not overlap and they do not blend.
-- A route ends at a terminus tick or at the center of a ring. It does not fade out.
+- A route ends at a terminus bar or at the center of a ring. It does not fade out.
 
-### Station tick
+### Building a fuller network
 
-An ordinary station, including a terminus, is a tick. The tick is ink, `stroke-tick` (2.5px), `tick-span` (20px) long, butt caps, centered on the route and perpendicular to it. On a horizontal route the tick is vertical. On a vertical route the tick is horizontal. On a corner, the tick is perpendicular to the segment the name sits beside.
+Name a station for a place on the line (Weir, Tannery, Rope Walk), not for the diagram. Add a station only where a tick or a ring has room: at least 8px of paper between a label and the nearest stroke, and a segment long enough that the ring does not swallow it.
+
+A branch leaves an existing station at 0°, 45°, 90°, or 135° and keeps the same stroke. Cinder leaves Lantern, where it meets Vesper, and ends at Cinder Wharf. The meeting station becomes a ring. A branch does not start in empty paper.
+
+An interchange is any station where two or more routes meet. Market Ring takes four. East Shed takes two. Lantern takes two, including the branch. Each route gets its own chord across the paper disc. Routes that only pass near each other do not share a ring.
+
+A terminus is the end of a route: a bar in the route color, 16px long, the same 10px weight, perpendicular to the route, centered on the last point. Intermediate stations stay ink ticks. An interchange is never also a terminus bar.
+
+A walk is how a rider changes without a train. It is a 2px ink dash (`stroke-walk`), gaps of about 3.5px, butt caps, and it stops short of the route stroke and the ring. Glass Court to Lantern is the reference walk, 4 minutes on foot. The dash is never a route color and never a second stroke width on a line.
+
+A fare zone, if the board needs one, is a 1px ink hairline in open paper, with the words "Zone 1" in the 12px label size. It does not cross a route or a label. A river, if the geography matters to a change of trains, is the same kind of hairline, labeled with the river's name, and it is not a colored route. The reference board leaves both off the hero and keeps the walk, because the walk changes a trip.
+
+A station board shows the district around the station the rider is in, plus the departures from that station. The full system map can sit beside that board on a wide screen. On a narrow screen, show the district, say that it is not the full network, and draw every station inside the district. Outer termini stay off the frame: the line runs to the edge. Drop intermediate names before dropping a tick, a ring, or a route.
+
+The reference full map names about twenty stations on six lines. A board does not need more than that to feel complete. Past that, the next cut is a name, not a station.
+
+### Station tick and terminus bar
+
+An ordinary station is a tick. The tick is ink, `stroke-tick` (2.5px), `tick-span` (20px) long, butt caps, centered on the route and perpendicular to it. On a horizontal route the tick is vertical. On a vertical route the tick is horizontal. On a corner, the tick is perpendicular to the segment the name sits beside.
 
 The tick crosses the route so about 5px of ink shows on each side of the 10px stroke. It is not a dot, not a diamond, and not a filled circle. Interchanges do not also take a tick.
+
+A terminus takes a bar instead of a tick. The bar is the route color, 16px long, `stroke-route` thick, perpendicular to the route, centered on the last point, so the line ends in a T. Ash Wharf, Rope Walk, North Quay, Beacon, South Gate, Basin, Moor, and Cinder Wharf are the reference termini.
 
 ### Interchange ring
 
@@ -85,19 +105,19 @@ Labels are ink, 12px (14px on the compact drawing), placed in an open quadrant a
 
 ### Legend
 
-The legend is the only place a hairline appears in the chrome. A 1px `border` rule sits above a row of identity bars. Each item is a 22 by 10 bar in the line color, the line name in ink, and a status word. Open is `muted`. Hold is `danger`. The bar does not change color when the status changes. The row wraps as whole items. It does not scroll sideways.
+A 1px `border` rule sits above a row of identity bars. Each item is a 22 by 10 bar in the line color, the line name in ink, and a status word. Open and Shuttle are `muted`. Hold and "1 late" are `danger`. The bar does not change color when the status changes. The row wraps as whole items. It does not scroll sideways. The legend covers every line, not only the line that is in trouble.
 
 ### Departure row
 
-A row is a 22 by 10 bar, the line name at 16px, the destination and platform at 13px `muted`, and the time at 22px tabular. Minimum height 56px. Rows are separated by 8px of paper, not by rules. A late train keeps an ink time. The words "1 min late" are `danger`, so color is not the only signal. The connecting train can add the word "connects" in ink. There is no pill, no avatar, and no countdown ring.
+A row is a 22 by 10 bar, the line name at 16px, the destination and platform letter at 13px `muted`, and the next time at 22px tabular. The small line under the time is the last departure, and the late words when the train is late: "Last 07:30 · 1 late". Minimum height 48px. Rows are separated by 4px of paper, not by rules. A late train keeps an ink time. The words "1 late" are `danger`, so color is not the only signal. The connecting train can add the word "connects" in ink. A through station lists both directions, as Reed does for Rope Walk and Ash Wharf. There is no pill, no avatar, and no countdown ring.
 
 ### Trip
 
-A trip title is 20px. Under it, one meta line: duration, the number of changes, and the due time. Each leg repeats the departure row. A change leg uses an ink bar, not a line color, because walking between platforms is not a route. The reference trip is one change. A second change is allowed; a graphic of three overlapping circles is not.
+A trip title is 20px. Under it, one meta line: duration, the number of changes, and the due time. Each leg repeats the departure row. A change leg uses an ink bar, not a line color, because walking between platforms is not a route. The reference trip is one change. Under the legs, one sentence can carry an onward connection and a walk: Cinder Wharf via Lantern, and the 4 minute walk from Glass Court. A second full itinerary is for a second saved trip, not for decoration. A graphic of three overlapping circles is not a change.
 
 ### Service note
 
-A short heading, then the line bar and the line name, then two sentences. The word Holding is `danger`. The rest is ink. There is no filled banner, no icon circle, and no left-edge rule.
+A short heading, then one row per affected line: the identity bar, the line name, and a status in words. Hold is `danger`. A late train says "1 late". A shuttle says how often it runs. The reference strip covers Saffron, Vesper, and Cinder. The legend under the map is the same news for every line, in one word each. There is no filled banner, no icon circle, and no left-edge rule.
 
 ### Header, dock, button
 
@@ -127,12 +147,12 @@ Under `prefers-reduced-motion`, the fill change is instant. Hover and press stil
 ## Don't
 
 - No angle other than 0°, 45°, 90°, and 135°. No curve, no hand-drawn wobble, and no geography under the routes.
-- No second stroke width on a route. No gradient, dash, glow, blur, or opacity on a line. No transparent hole. The ring interior is `surface` paint.
+- No second stroke width on a route. No gradient, glow, blur, or opacity on a line. The only dash is the walking link, in ink. No transparent hole. The ring interior is `surface` paint.
 - No station dot, diamond, or filled disc. No tick on an interchange. No roundel: a disc with a bar is not the wordmark and not a station.
-- No official network's line names, line colors, roundel, or wordmark. Calder's five names and five tokens are the set.
+- No official network's line names, line colors, roundel, or wordmark. Calder's six names and six tokens are the set.
 - No font file. No second family. Times stay in the UI face, tabular.
-- No pill, no avatar, no split-color face, no offset shadow, no card frame, and no hairline except the legend rule. `radius-full` is 0. `shadow-sm`, `shadow-md`, and `shadow-lg` are `none`.
+- No pill, no avatar, no split-color face, no offset shadow, and no card frame. A hairline is the legend rule, or a zone or river mark that does not cross a route. `radius-full` is 0. `shadow-sm`, `shadow-md`, and `shadow-lg` are `none`.
 - No route color as a page fill, a button, or a sentence. No `danger` route. No `muted` fill.
 - No floating dock. The dock, when it is on screen, is flush with the bottom edge.
-- No horizontal scroll. No dropping a route from the compact diagram to make it fit. Drop names before dropping geometry.
+- No horizontal scroll. No dropping a route from the district inset to make it fit. Drop names before dropping geometry. A district that omits a station inside its frame is a different map. Say so in the caption.
 - No poster headline in place of the board. The first screen is the diagram and the next trains.

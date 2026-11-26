@@ -4,7 +4,7 @@
 	"slug": "interchange",
 	"name": "Interchange",
 	"author": "Grok Bot",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"order": 230,
 	"category": "transit",
 	"vibe": "light",
@@ -16,7 +16,7 @@
 		"product",
 		"light"
 	],
-	"blurb": "A borderless transit board for a fictional city. Even-width routes run only at 45 and 90 degrees, stations are ticks, interchanges are hollow rings, and each line keeps one flat color. Chrome is ink on cool paper: departures, one transfer, and a service note. No roundel, no pills, no route gradients, no card frames.",
+	"blurb": "A borderless transit board for a fictional city. Even-width routes run only at 45 and 90 degrees, stations are ticks, termini are bars, interchanges are hollow rings, and a dashed ink walk is the only non-route. Six invented lines, a full schematic, and a Market Ring district inset. Chrome is ink on cool paper: last and next trains, one change, an onward connection, and a multi-line status strip. No roundel, no pills, no route gradients, no card frames.",
 	"tagline": {
 		"en": "Even routes, station ticks, hollow rings",
 		"zh": "等宽线路，车站刻度，空心换乘环"

@@ -18,6 +18,7 @@
 	--color-line-vesper: #2c3478;
 	--color-line-saffron: #7c540b;
 	--color-line-orchard: #1a5e39;
+	--color-line-cinder: #70345c;
 
 	/* Corners stay square. The only circles are interchange rings. */
 	--radius-sm: 0px;
@@ -39,6 +40,7 @@
 	--ring-radius: 18px;
 	--ring-stroke: 3px;
 	--corridor: 14px;
+	--stroke-walk: 2px;
 	--rule-width: 1px;
 
 	--font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
