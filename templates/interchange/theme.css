@@ -1,0 +1,60 @@
+/* Interchange — schematic transit for the fictional city of Calder.
+   Even routes, station ticks, hollow rings. Original system by Grok Bot.
+   Line colors are flat identity. Chrome stays ink on cool paper. */
+@theme {
+	--color-primary: #1b1d1c;
+	--color-primary-foreground: #f2f4f3;
+	--color-surface: #f2f4f3;
+	--color-surface-foreground: #1b1d1c;
+	--color-surface-raised: #f2f4f3;
+	--color-muted: #4e544f;
+	--color-accent: #0c5e56;
+	--color-danger: #86192a;
+	--color-border: #1b1d1c;
+
+	/* One flat color per invented line. Accent is the Reed trunk. */
+	--color-line-reed: #0c5e56;
+	--color-line-kiln: #a33b1c;
+	--color-line-vesper: #2c3478;
+	--color-line-saffron: #7c540b;
+	--color-line-orchard: #1a5e39;
+
+	/* Corners stay square. The only circles are interchange rings. */
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	/* No drop shadow. The focus token is a paper gap plus an ink ring. */
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 2px #f2f4f3, 0 0 0 4px #1b1d1c;
+
+	--stroke-route: 10px;
+	--stroke-tick: 2.5px;
+	--tick-span: 20px;
+	--ring-radius: 18px;
+	--ring-stroke: 3px;
+	--corridor: 14px;
+	--rule-width: 1px;
+
+	--font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+
+	--tracking-display: -0.03em;
+	--tracking-title: -0.02em;
+
+	--space-1: 4px;
+	--space-2: 8px;
+	--space-3: 12px;
+	--space-4: 16px;
+	--space-5: 24px;
+	--space-6: 32px;
+	--space-7: 40px;
+	--space-8: 48px;
+
+	--ease-ui: linear;
+	--duration-ui: 120ms;
+}

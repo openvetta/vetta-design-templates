@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quay — Interchange</title>
+<style>
+	:root {
+		--color-primary: #1b1d1c;
+		--color-primary-foreground: #f2f4f3;
+		--color-surface: #f2f4f3;
+		--color-surface-foreground: #1b1d1c;
+		--color-surface-raised: #f2f4f3;
+		--color-muted: #4e544f;
+		--color-accent: #0c5e56;
+		--color-danger: #86192a;
+		--color-border: #1b1d1c;
+		--color-line-reed: #0c5e56;
+		--color-line-kiln: #a33b1c;
+		--color-line-vesper: #2c3478;
+		--color-line-saffron: #7c540b;
+		--color-line-orchard: #1a5e39;
+		--font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+		--tracking-display: -0.03em;
+		--tracking-title: -0.02em;
+		--duration-ui: 120ms;
+		--ease-ui: linear;
+		--focus: 0 0 0 2px #f2f4f3, 0 0 0 4px #1b1d1c;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	html, body { margin: 0; background: var(--color-surface); }
+	body {
+		color: var(--color-surface-foreground);
+		font-family: var(--font-sans);
+		font-size: 16px;
+		line-height: 1.45;
+		font-weight: 400;
+		-webkit-font-smoothing: antialiased;
+		padding-bottom: 56px;
+	}
+	h1, h2, h3, p, ul, ol, figure { margin: 0; padding: 0; }
+	ul, ol { list-style: none; }
+	button { font: inherit; color: inherit; background: transparent; border: 0; border-radius: 0; padding: 0; cursor: pointer; }
+	svg { display: block; max-width: 100%; height: auto; }
+	::selection { background: var(--color-surface-foreground); color: var(--color-surface); }
+	:focus { outline: none; }
+	:focus-visible { outline: 2px solid var(--color-surface-foreground); outline-offset: 3px; }
+	.tnum { font-variant-numeric: tabular-nums; }
+
+	.app {
+		width: min(1320px, 100%);
+		margin: 0 auto;
+		padding: 16px 16px 28px;
+		min-height: calc(100vh - 56px);
+	}
+	.top {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		min-height: 48px;
+	}
+	.brand { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
+	.brand strong { font-size: 22px; font-weight: 600; letter-spacing: var(--tracking-display); }
+	.brand span { font-size: 13px; font-weight: 500; color: var(--color-muted); }
+	.nav { display: none; align-items: center; gap: 24px; margin-left: 16px; }
+	.nav button, .dock button {
+		position: relative;
+		font-size: 14px;
+		font-weight: 500;
+		color: var(--color-muted);
+		min-height: 44px;
+	}
+	.nav button.on, .dock button.on { color: var(--color-surface-foreground); font-weight: 600; }
+	.nav button.on::after, .dock button.on::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		bottom: 6px;
+		width: 16px;
+		height: 3px;
+		background: var(--color-accent);
+	}
+	.clock { margin-left: auto; font-size: 20px; font-weight: 600; letter-spacing: var(--tracking-title); }
+
+	.place { margin: 12px 0 16px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+	.place h1, .station {
+		font-size: 28px;
+		font-weight: 600;
+		letter-spacing: var(--tracking-display);
+		line-height: 1.15;
+	}
+	.place p { font-size: 14px; font-weight: 500; color: var(--color-muted); }
+
+	.board { display: grid; gap: 32px; }
+	.diagram, .facts { min-width: 0; }
+	.facts { display: grid; gap: 24px; align-content: start; }
+	.facts h2, .diagram-label {
+		font-size: 20px;
+		font-weight: 600;
+		letter-spacing: var(--tracking-title);
+		line-height: 1.3;
+		margin-bottom: 8px;
+	}
+	.scale { margin-top: 8px; font-size: 13px; font-weight: 500; color: var(--color-muted); }
+	.map-wide { display: none; }
+	.names text {
+		fill: var(--color-surface-foreground);
+		font-family: var(--font-sans);
+		font-weight: 500;
+	}
+	.reed { stroke: var(--color-line-reed); }
+	.kiln { stroke: var(--color-line-kiln); }
+	.vesper { stroke: var(--color-line-vesper); }
+	.saffron { stroke: var(--color-line-saffron); }
+	.orchard { stroke: var(--color-line-orchard); }
+	.hole { fill: var(--color-surface); stroke: none; }
+	.ring { fill: none; stroke: var(--color-surface-foreground); }
+	.tick { fill: none; stroke: var(--color-surface-foreground); }
+
+	.legend {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 12px;
+		margin-top: 8px;
+		padding-top: 12px;
+		border-top: 1px solid var(--color-border);
+	}
+	.legend li { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+	.legend em { font-style: normal; font-weight: 500; color: var(--color-muted); }
+	.legend em.late { color: var(--color-danger); }
+
+	.bar, .chip { display: block; height: 10px; }
+	.bar { width: 22px; }
+	.chip { width: 48px; }
+	.bar.reed, .chip.reed { background: var(--color-line-reed); }
+	.bar.kiln, .chip.kiln { background: var(--color-line-kiln); }
+	.bar.vesper, .chip.vesper { background: var(--color-line-vesper); }
+	.bar.saffron, .chip.saffron { background: var(--color-line-saffron); }
+	.bar.orchard, .chip.orchard { background: var(--color-line-orchard); }
+	.bar.ink, .chip.ink { background: var(--color-surface-foreground); }
+	.chip.danger { background: var(--color-danger); }
+
+	.rows { display: grid; gap: 8px; }
+	.dep, .step {
+		display: grid;
+		grid-template-columns: 22px minmax(0, 1fr) auto;
+		column-gap: 12px;
+		align-items: center;
+		min-height: 56px;
+	}
+	.dep b, .step b { display: block; font-size: 16px; font-weight: 600; line-height: 1.3; }
+	.dep .to, .step .to { display: block; margin-top: 2px; font-size: 13px; font-weight: 500; color: var(--color-muted); }
+	.when { text-align: right; }
+	.when strong { display: block; font-size: 22px; font-weight: 600; letter-spacing: var(--tracking-title); line-height: 1.2; }
+	.when span { display: block; font-size: 13px; font-weight: 500; color: var(--color-muted); }
+	.when span.late { color: var(--color-danger); }
+	.trip-title { font-size: 20px; font-weight: 600; letter-spacing: var(--tracking-title); line-height: 1.3; }
+	.meta { margin: 4px 0 12px; font-size: 13px; font-weight: 500; color: var(--color-muted); }
+	.who { display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 8px; }
+	.alert p { max-width: 46ch; }
+	.bad { color: var(--color-danger); }
+
+	.dock {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 3;
+		display: flex;
+		height: 56px;
+		background: var(--color-surface);
+	}
+	.dock button { flex: 1; min-height: 56px; }
+	.dock button.on::after { left: 50%; margin-left: -8px; bottom: 8px; }
+
+	.guide {
+		width: min(1320px, 100%);
+		margin: 0 auto;
+		padding: 8px 16px 40px;
+	}
+	.guide h2 {
+		font-size: 28px;
+		font-weight: 600;
+		letter-spacing: var(--tracking-display);
+		line-height: 1.15;
+		margin: 48px 0 12px;
+	}
+	.guide p { max-width: 68ch; }
+	.guide p + p { margin-top: 8px; }
+	.swatches { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 16px; margin-top: 20px; }
+	.swatches li { min-width: 0; }
+	.swatches b { display: block; margin-top: 8px; font-size: 14px; font-weight: 600; }
+	.swatches span { display: block; font-size: 13px; font-weight: 500; color: var(--color-muted); }
+	.spec { width: min(100%, 440px); margin-top: 16px; }
+	.pair { display: grid; gap: 24px; margin-top: 8px; }
+	.notes { display: grid; gap: 12px; margin-top: 12px; }
+	.notes li { max-width: 62ch; font-size: 15px; line-height: 1.45; }
+	.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 16px; }
+	.btn {
+		min-height: 44px;
+		padding: 0 16px;
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+		font-size: 14px;
+		font-weight: 600;
+		border-radius: 0;
+		transition: background var(--duration-ui) var(--ease-ui), color var(--duration-ui) var(--ease-ui);
+	}
+	.btn.quiet { background: transparent; color: var(--color-surface-foreground); padding: 0 8px; }
+	.compare { display: grid; gap: 28px; margin-top: 16px; }
+	.compare figcaption { margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--color-muted); }
+	.cmp-off { padding: 0 12px 16px 0; }
+	.cmp-off .fake {
+		background: #ffffff;
+		border-radius: 28px;
+		box-shadow: 8px 10px 0 #d9cffc;
+		padding: 16px;
+	}
+	.cmp-off .roundel {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+		background: #5c4fd6;
+		position: relative;
+		margin-bottom: 8px;
+	}
+	.cmp-off .roundel::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 18px;
+		height: 12px;
+		background: #ffffff;
+	}
+	.cmp-off .caught { margin-top: 8px; font-weight: 600; color: #6b6280; }
+	.cmp-off .pill {
+		display: inline-block;
+		margin-top: 8px;
+		padding: 6px 14px;
+		border-radius: 999px;
+		background: #5c4fd6;
+		color: #ffffff;
+		font-size: 13px;
+		font-weight: 600;
+	}
+	.cmp-on .sample { display: grid; gap: 16px; }
+	.mobile { display: grid; gap: 24px; margin-top: 8px; }
+	.device {
+		width: min(390px, 100%);
+		background: var(--color-surface-foreground);
+		padding: 8px;
+	}
+	.screen { background: var(--color-surface); padding: 12px 12px 0; }
+	.device .place { margin: 12px 0 8px; }
+	.device .station { font-size: 28px; }
+	.device .dock {
+		display: flex;
+		position: static;
+		margin: 12px -12px 0;
+		width: auto;
+	}
+
+	@media (min-width: 800px) {
+		.swatches { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+		.pair { grid-template-columns: 1fr 1fr; align-items: start; }
+		.compare { grid-template-columns: 1fr 1fr; align-items: start; }
+	}
+	@media (min-width: 960px) {
+		body { padding-bottom: 0; }
+		.app { padding: 28px 32px 40px; min-height: 100vh; }
+		.place { margin: 16px 0 20px; }
+		.place h1 { font-size: 32px; }
+		.nav { display: flex; }
+		.board { grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.9fr); gap: 40px; align-items: start; }
+		.map-wide { display: block; }
+		.map-narrow { display: none; }
+		.dock { display: none; }
+		.guide { padding: 8px 32px 64px; }
+		.mobile { grid-template-columns: 390px minmax(0, 1fr); align-items: start; }
+	}
+	@media (hover: hover) and (pointer: fine) {
+		.btn:hover { background: var(--color-surface); color: var(--color-surface-foreground); box-shadow: inset 0 0 0 2px var(--color-surface-foreground); }
+		.btn.quiet:hover { background: transparent; box-shadow: none; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.btn { transition: none; }
+	}
+</style>
+</head>
+<body>
+<div class="app">
+	<header class="top">
+		<div class="brand"><strong>Quay</strong><span>Calder</span></div>
+		<nav class="nav" aria-label="Quay">
+			<button type="button" class="on" aria-current="page">Board</button>
+			<button type="button">Lines</button>
+			<button type="button">Trip</button>
+			<button type="button">Alerts</button>
+		</nav>
+		<time class="clock tnum" datetime="2026-11-26T07:42">07:42</time>
+	</header>
+	<div class="place">
+		<h1>Market Ring</h1>
+		<p>Step-free · change for four lines</p>
+	</div>
+	<div class="board">
+		<section class="diagram" id="network" aria-label="Calder schematic">
+			<svg class="map map-wide" viewBox="0 0 680 520" role="img">
+				<title>Schematic of Calder. Reed, Kiln, Orchard, Vesper, and Saffron. Not to scale.</title>
+				<g fill="none" stroke-width="10" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2">
+					<polyline class="orchard" points="320,36 320,188"/>
+					<polyline class="reed" points="44,188 624,188"/>
+					<polyline class="kiln" points="320,188 320,464"/>
+					<polyline class="vesper" points="320,188 452,320 548,320"/>
+					<polyline class="saffron" points="624,36 624,464"/>
+				</g>
+				<g>
+					<circle class="hole" cx="320" cy="188" r="17"/>
+					<circle class="hole" cx="624" cy="188" r="17"/>
+				</g>
+				<g fill="none" stroke-width="10" stroke-linecap="butt">
+					<polyline class="reed" points="302,188 338,188"/>
+					<polyline class="orchard" points="320,170 320,188"/>
+					<polyline class="kiln" points="320,188 320,206"/>
+					<polyline class="vesper" points="320,188 333,201"/>
+					<polyline class="reed" points="606,188 624,188"/>
+					<polyline class="saffron" points="624,170 624,206"/>
+				</g>
+				<g fill="none" stroke-width="3">
+					<circle class="ring" cx="320" cy="188" r="18"/>
+					<circle class="ring" cx="624" cy="188" r="18"/>
+				</g>
+				<g fill="none" stroke-width="2.5" stroke-linecap="butt">
+					<line class="tick" x1="44" y1="178" x2="44" y2="198"/>
+					<line class="tick" x1="168" y1="178" x2="168" y2="198"/>
+					<line class="tick" x1="468" y1="178" x2="468" y2="198"/>
+					<line class="tick" x1="310" y1="36" x2="330" y2="36"/>
+					<line class="tick" x1="614" y1="36" x2="634" y2="36"/>
+					<line class="tick" x1="310" y1="320" x2="330" y2="320"/>
+					<line class="tick" x1="452" y1="310" x2="452" y2="330"/>
+					<line class="tick" x1="548" y1="310" x2="548" y2="330"/>
+					<line class="tick" x1="310" y1="464" x2="330" y2="464"/>
+					<line class="tick" x1="614" y1="464" x2="634" y2="464"/>
+				</g>
+				<g class="names" font-size="12">
+					<text x="44" y="170" text-anchor="middle">Ash Wharf</text>
+					<text x="168" y="170" text-anchor="middle">Harbor Steps</text>
+					<text x="468" y="170" text-anchor="middle">Glass Court</text>
+					<text x="336" y="40" text-anchor="start">North Quay</text>
+					<text x="608" y="40" text-anchor="end">Beacon</text>
+					<text x="296" y="230" text-anchor="end">Market Ring</text>
+					<text x="600" y="230" text-anchor="end">East Shed</text>
+					<text x="302" y="324" text-anchor="end">Kiln Yard</text>
+					<text x="452" y="348" text-anchor="middle">Lantern</text>
+					<text x="548" y="304" text-anchor="middle">Moor</text>
+					<text x="320" y="492" text-anchor="middle">South Gate</text>
+					<text x="624" y="492" text-anchor="middle">Basin</text>
+				</g>
+			</svg>
+				<svg class="map map-narrow" viewBox="0 0 360 292" role="img">
+				<title>Schematic of Calder, compact. Not to scale.</title>
+				<g fill="none" stroke-width="10" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2">
+					<polyline class="orchard" points="122,24 122,96"/>
+					<polyline class="reed" points="16,96 302,96"/>
+					<polyline class="kiln" points="122,96 122,252"/>
+					<polyline class="vesper" points="122,96 192,166 248,166"/>
+					<polyline class="saffron" points="302,24 302,214"/>
+				</g>
+				<g>
+					<circle class="hole" cx="122" cy="96" r="15"/>
+					<circle class="hole" cx="302" cy="96" r="15"/>
+				</g>
+				<g fill="none" stroke-width="10" stroke-linecap="butt">
+					<polyline class="reed" points="106,96 138,96"/>
+					<polyline class="orchard" points="122,80 122,96"/>
+					<polyline class="kiln" points="122,96 122,112"/>
+					<polyline class="vesper" points="122,96 133,107"/>
+					<polyline class="reed" points="286,96 302,96"/>
+					<polyline class="saffron" points="302,80 302,112"/>
+				</g>
+				<g fill="none" stroke-width="3">
+					<circle class="ring" cx="122" cy="96" r="16"/>
+					<circle class="ring" cx="302" cy="96" r="16"/>
+				</g>
+				<g fill="none" stroke-width="2.5" stroke-linecap="butt">
+					<line class="tick" x1="16" y1="86" x2="16" y2="106"/>
+					<line class="tick" x1="62" y1="86" x2="62" y2="106"/>
+					<line class="tick" x1="196" y1="86" x2="196" y2="106"/>
+					<line class="tick" x1="112" y1="24" x2="132" y2="24"/>
+					<line class="tick" x1="292" y1="24" x2="312" y2="24"/>
+					<line class="tick" x1="112" y1="180" x2="132" y2="180"/>
+					<line class="tick" x1="192" y1="156" x2="192" y2="176"/>
+					<line class="tick" x1="248" y1="156" x2="248" y2="176"/>
+					<line class="tick" x1="112" y1="252" x2="132" y2="252"/>
+					<line class="tick" x1="292" y1="214" x2="312" y2="214"/>
+				</g>
+				<g class="names" font-size="13">
+					<text x="122" y="15" text-anchor="middle">North Quay</text>
+					<text x="302" y="15" text-anchor="middle">Beacon</text>
+					<text x="102" y="132" text-anchor="end">Market Ring</text>
+					<text x="282" y="74" text-anchor="end">East Shed</text>
+					<text x="248" y="152" text-anchor="middle">Moor</text>
+					<text x="122" y="274" text-anchor="middle">South Gate</text>
+					<text x="302" y="236" text-anchor="middle">Basin</text>
+				</g>
+			</svg>
+			<p class="scale">Schematic. Not to scale.</p>
+			<ul class="legend">
+				<li><i class="bar reed"></i><span>Reed</span><em>Open</em></li>
+				<li><i class="bar kiln"></i><span>Kiln</span><em>Open</em></li>
+				<li><i class="bar orchard"></i><span>Orchard</span><em>Open</em></li>
+				<li><i class="bar vesper"></i><span>Vesper</span><em>Open</em></li>
+				<li><i class="bar saffron"></i><span>Saffron</span><em class="late">Hold</em></li>
+			</ul>
+		</section>
+		<div class="facts">
+			<section id="trains">
+				<h2>Next trains</h2>
+				<ul class="rows">
+					<li class="dep">
+						<i class="bar reed"></i>
+						<div><b>Reed</b><span class="to">East Shed · Platform A</span></div>
+						<div class="when"><strong class="tnum">3 min</strong><span>On time</span></div>
+					</li>
+					<li class="dep">
+						<i class="bar orchard"></i>
+						<div><b>Orchard</b><span class="to">North Quay · Platform B</span></div>
+						<div class="when"><strong class="tnum">8 min</strong><span>On time</span></div>
+					</li>
+					<li class="dep">
+						<i class="bar vesper"></i>
+						<div><b>Vesper</b><span class="to">Moor · Platform D</span></div>
+						<div class="when"><strong class="tnum">11 min</strong><span class="late">1 min late</span></div>
+					</li>
+					<li class="dep">
+						<i class="bar kiln"></i>
+						<div><b>Kiln</b><span class="to">South Gate · Platform C · connects</span></div>
+						<div class="when"><strong class="tnum">12 min</strong><span>On time</span></div>
+					</li>
+				</ul>
+			</section>
+			<section id="trip">
+				<h2>Trip</h2>
+				<p class="trip-title">North Quay to South Gate</p>
+				<p class="meta tnum">22 min · 1 change · due 08:04</p>
+				<ol class="rows">
+					<li class="step">
+						<i class="bar orchard"></i>
+						<div><b>Orchard</b><span class="to">North Quay to Market Ring · Platform B</span></div>
+						<div class="when"><strong class="tnum">8 min</strong></div>
+					</li>
+					<li class="step">
+						<i class="bar ink"></i>
+						<div><b>Change</b><span class="to">Platform B to Platform C</span></div>
+						<div class="when"><strong class="tnum">4 min</strong></div>
+					</li>
+					<li class="step">
+						<i class="bar kiln"></i>
+						<div><b>Kiln</b><span class="to">Market Ring to South Gate · Platform C</span></div>
+						<div class="when"><strong class="tnum">10 min</strong></div>
+					</li>
+				</ol>
+			</section>
+			<section class="alert" id="service">
+				<h2>Service</h2>
+				<p class="who"><i class="bar saffron"></i><span>Saffron · Basin</span></p>
+				<p><span class="bad">Holding</span> for a signal fault. The last train left at 07:36. The next is expected at 08:14. East Shed is still open for Reed.</p>
+			</section>
+		</div>
+	</div>
+</div>
+<nav class="dock" aria-label="Quay">
+	<button type="button" class="on" aria-current="page">Board</button>
+	<button type="button">Lines</button>
+	<button type="button">Trip</button>
+	<button type="button">Alerts</button>
+</nav>
+<article class="guide">
+	<h2>01 — Color</h2>
+	<p>Each line has one flat color. The name beside a bar is ink, so the word does not depend on the stroke. Accent is Reed, and it is also the small mark under the active item. Danger is only a late train or a hold. Muted is a word, not a fill.</p>
+	<ul class="swatches">
+		<li><i class="chip reed"></i><b>Reed</b><span>line-reed · accent</span></li>
+		<li><i class="chip kiln"></i><b>Kiln</b><span>line-kiln</span></li>
+		<li><i class="chip vesper"></i><b>Vesper</b><span>line-vesper</span></li>
+		<li><i class="chip saffron"></i><b>Saffron</b><span>line-saffron</span></li>
+		<li><i class="chip orchard"></i><b>Orchard</b><span>line-orchard</span></li>
+		<li><i class="chip ink"></i><b>Ink</b><span>primary · surface-foreground</span></li>
+		<li><i class="chip danger"></i><b>Danger</b><span>late and holding only</span></li>
+		<li><b>Paper</b><span>surface, and surface-raised. The page is the swatch.</span></li>
+	</ul>
+
+	<h2>02 — Stroke</h2>
+	<p>Routes are 10px, butt caps, miter joins, miter limit 2. A segment is horizontal, vertical, or 45 degrees, which means equal absolute dx and dy. Parallel routes in one corridor sit 14px center to center, so a 4px gap of paper remains between the strokes.</p>
+	<div class="pair">
+		<svg class="spec" viewBox="0 0 320 110" role="img" aria-label="A square corner beside a 45 degree corner">
+			<g fill="none" stroke-width="10" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2">
+				<polyline class="kiln" points="16,24 96,24 96,96"/>
+				<polyline class="reed" points="150,96 200,46 304,46"/>
+			</g>
+		</svg>
+		<svg class="spec" viewBox="0 0 240 64" role="img" aria-label="Two routes 14px apart">
+			<g fill="none" stroke-width="10" stroke-linecap="butt">
+				<polyline class="reed" points="8,20 232,20"/>
+				<polyline class="kiln" points="8,34 232,34"/>
+			</g>
+		</svg>
+	</div>
+
+	<h2>03 — Marks</h2>
+	<p>A station is an ink tick, 2.5px by 20px, perpendicular to the route. An interchange is a hollow ring: radius 18px, a 3px ink stroke, and an opaque paper disc with the routes redrawn across it. The ring is not a logo. Quay is set in the same face as the board, with no symbol.</p>
+	<svg class="spec" viewBox="0 0 360 100" role="img" aria-label="A tick at Harbor Steps and a ring at Market Ring">
+		<g fill="none" stroke-width="10" stroke-linecap="butt">
+			<polyline class="orchard" points="16,40 344,40"/>
+		</g>
+		<circle class="hole" cx="250" cy="40" r="17"/>
+		<g fill="none" stroke-width="10" stroke-linecap="butt">
+			<polyline class="orchard" points="232,40 268,40"/>
+		</g>
+		<circle class="ring" cx="250" cy="40" r="18" stroke-width="3" fill="none"/>
+		<g fill="none" stroke-width="2.5" stroke-linecap="butt">
+			<line class="tick" x1="80" y1="30" x2="80" y2="50"/>
+		</g>
+		<g class="names" font-size="12">
+			<text x="80" y="78" text-anchor="middle">Harbor Steps</text>
+			<text x="250" y="78" text-anchor="middle">Market Ring</text>
+		</g>
+	</svg>
+
+	<h2>04 — Controls</h2>
+	<p>A row is a 22 by 10 bar, a name, a platform, and a tabular time. Rows sit 8px apart. The solid button is ink on a 44px square target. The quiet one is type only. Focus is an ink ring with a paper gap, not a shadow.</p>
+	<ul class="rows">
+		<li class="dep">
+			<i class="bar reed"></i>
+			<div><b>Reed</b><span class="to">East Shed · Platform A</span></div>
+			<div class="when"><strong class="tnum">3 min</strong><span>On time</span></div>
+		</li>
+	</ul>
+	<div class="controls">
+		<button type="button" class="btn">Save trip</button>
+		<button type="button" class="btn quiet">Not now</button>
+	</div>
+
+	<h2>05 — Off the diagram</h2>
+	<p>The left figure breaks the board: a bar through a disc, a curved gradient, dots for stations, a pill, a soft card, and an offset shadow. The right figure is the same news, drawn in the system.</p>
+	<div class="compare">
+		<figure class="cmp-off">
+			<div class="fake">
+				<div class="roundel"></div>
+				<svg viewBox="0 0 280 88" role="img" aria-label="A curved gradient with dot stations">
+					<defs>
+						<linearGradient id="offgrad" x1="0" y1="0" x2="1" y2="0">
+							<stop offset="0" stop-color="#6d5efc"/>
+							<stop offset="1" stop-color="#ff7ab6"/>
+						</linearGradient>
+					</defs>
+					<path d="M8 68 C 70 70, 80 12, 140 30 S 220 78, 272 22" fill="none" stroke="url(#offgrad)" stroke-width="10" stroke-linecap="round"/>
+					<circle cx="140" cy="30" r="7" fill="#6d5efc"/>
+					<circle cx="200" cy="62" r="7" fill="#ff7ab6"/>
+				</svg>
+				<p class="caught">You're all caught up</p>
+				<span class="pill">2 min</span>
+			</div>
+			<figcaption>Curved, dotted, barred</figcaption>
+		</figure>
+		<figure class="cmp-on">
+			<div class="sample">
+				<svg viewBox="0 0 280 100" role="img" aria-label="A flat 45 degree route with a tick and a ring">
+					<g fill="none" stroke-width="10" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2">
+						<polyline class="reed" points="12,72 88,72 128,32 268,32"/>
+					</g>
+					<circle class="hole" cx="128" cy="32" r="15"/>
+					<g fill="none" stroke-width="10" stroke-linecap="butt">
+						<polyline class="reed" points="117,43 139,21"/>
+						<polyline class="reed" points="112,32 144,32"/>
+					</g>
+					<circle class="ring" cx="128" cy="32" r="16" stroke-width="3" fill="none"/>
+					<g fill="none" stroke-width="2.5" stroke-linecap="butt">
+						<line class="tick" x1="48" y1="62" x2="48" y2="82"/>
+					</g>
+				</svg>
+				<ul class="rows">
+					<li class="dep">
+						<i class="bar reed"></i>
+						<div><b>Reed</b><span class="to">East Shed · Platform A</span></div>
+						<div class="when"><strong class="tnum">3 min</strong><span>On time</span></div>
+					</li>
+				</ul>
+			</div>
+			<figcaption>Flat, 45 degrees, tick and ring</figcaption>
+		</figure>
+	</div>
+
+	<h2>06 — 390 wide</h2>
+	<p>The frame is the board at a phone width. The dock is flush with the bottom of the frame: full width, 56px, square, the same paper as the screen.</p>
+	<div class="mobile">
+		<figure>
+			<div class="device">
+				<div class="screen">
+					<div class="top">
+						<div class="brand"><strong>Quay</strong><span>Calder</span></div>
+						<time class="clock tnum" datetime="2026-11-26T07:42">07:42</time>
+					</div>
+					<div class="place">
+						<p class="station">Market Ring</p>
+						<p>Step-free · four lines</p>
+					</div>
+					<svg class="map" viewBox="0 0 360 292" role="img" aria-label="Compact Calder schematic">
+						<g fill="none" stroke-width="10" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2">
+							<polyline class="orchard" points="122,24 122,96"/>
+							<polyline class="reed" points="16,96 302,96"/>
+							<polyline class="kiln" points="122,96 122,252"/>
+							<polyline class="vesper" points="122,96 192,166 248,166"/>
+							<polyline class="saffron" points="302,24 302,214"/>
+						</g>
+						<g>
+							<circle class="hole" cx="122" cy="96" r="15"/>
+							<circle class="hole" cx="302" cy="96" r="15"/>
+						</g>
+						<g fill="none" stroke-width="10" stroke-linecap="butt">
+							<polyline class="reed" points="106,96 138,96"/>
+							<polyline class="orchard" points="122,80 122,96"/>
+							<polyline class="kiln" points="122,96 122,112"/>
+							<polyline class="vesper" points="122,96 133,107"/>
+							<polyline class="reed" points="286,96 302,96"/>
+							<polyline class="saffron" points="302,80 302,112"/>
+						</g>
+						<g fill="none" stroke-width="3">
+							<circle class="ring" cx="122" cy="96" r="16"/>
+							<circle class="ring" cx="302" cy="96" r="16"/>
+						</g>
+						<g fill="none" stroke-width="2.5" stroke-linecap="butt">
+							<line class="tick" x1="16" y1="86" x2="16" y2="106"/>
+							<line class="tick" x1="62" y1="86" x2="62" y2="106"/>
+							<line class="tick" x1="196" y1="86" x2="196" y2="106"/>
+							<line class="tick" x1="112" y1="24" x2="132" y2="24"/>
+							<line class="tick" x1="292" y1="24" x2="312" y2="24"/>
+							<line class="tick" x1="112" y1="180" x2="132" y2="180"/>
+							<line class="tick" x1="192" y1="156" x2="192" y2="176"/>
+							<line class="tick" x1="248" y1="156" x2="248" y2="176"/>
+							<line class="tick" x1="112" y1="252" x2="132" y2="252"/>
+							<line class="tick" x1="292" y1="214" x2="312" y2="214"/>
+						</g>
+						<g class="names" font-size="13">
+							<text x="122" y="15" text-anchor="middle">North Quay</text>
+							<text x="302" y="15" text-anchor="middle">Beacon</text>
+							<text x="102" y="132" text-anchor="end">Market Ring</text>
+							<text x="282" y="74" text-anchor="end">East Shed</text>
+							<text x="248" y="152" text-anchor="middle">Moor</text>
+							<text x="122" y="274" text-anchor="middle">South Gate</text>
+							<text x="302" y="236" text-anchor="middle">Basin</text>
+						</g>
+					</svg>
+					<p class="scale">Schematic. Not to scale.</p>
+					<ul class="rows">
+						<li class="dep">
+							<i class="bar reed"></i>
+							<div><b>Reed</b><span class="to">East Shed · A</span></div>
+							<div class="when"><strong class="tnum">3 min</strong><span>On time</span></div>
+						</li>
+						<li class="dep">
+							<i class="bar kiln"></i>
+							<div><b>Kiln</b><span class="to">South Gate · C</span></div>
+							<div class="when"><strong class="tnum">12 min</strong><span>On time</span></div>
+						</li>
+					</ul>
+					<div class="dock">
+						<button type="button" class="on">Board</button>
+						<button type="button">Lines</button>
+						<button type="button">Trip</button>
+						<button type="button">Alerts</button>
+					</div>
+				</div>
+			</div>
+		</figure>
+		<ul class="notes">
+			<li><b>Dock.</b> Below 960px the header links leave. The dock is fixed to the viewport’s bottom edge, full width, 56px, square, on the same paper. It is not inset and it has no radius.</li>
+			<li><b>Stack.</b> The columns become one: diagram and legend, next trains, trip, service note. The trip and the note sit under the trains, so a short phone shows the diagram and the first rows first.</li>
+			<li><b>Diagram.</b> The wide drawing is replaced by the compact one. Every route, ring, and tick stays. Ash Wharf, Harbor Steps, Glass Court, Kiln Yard, and Lantern keep their ticks and lose their names. The stroke stays 10px in the figure.</li>
+			<li><b>Type.</b> The station name goes from 32px to 28px. Times stay 22px. Body stays 16px. The 13px line is the floor for interface text.</li>
+			<li><b>Targets.</b> The dock, the rows, and the button are at least 44px. Bars, ticks, and rings are not targets. A coarse pointer has no hover-only state. Press does not move the control.</li>
+			<li><b>Width.</b> At 390px the inset is 16px and the compact drawing is the full column. Nothing scrolls sideways.</li>
+		</ul>
+	</div>
+</article>
+</body>
+</html>
