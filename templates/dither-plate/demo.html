@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plate — Dither Plate</title>
+<style>
+	:root {
+		--color-primary: #17180f;
+		--color-primary-foreground: #f3f1ea;
+		--color-surface: #f3f1ea;
+		--color-surface-foreground: #17180f;
+		--color-surface-raised: #dcd9d0;
+		--color-muted: #5a564c;
+		--color-accent: #2436d8;
+		--color-accent-foreground: #f3f1ea;
+		--color-danger: #9e1c14;
+		--color-border: #17180f;
+		--color-wing-pale: #c9a227;
+		--color-wing-mid: #5c7824;
+		--color-wing-deep: #2a3818;
+		--color-ink-cyan: #0c7eab;
+		--color-ink-crimson: #c41632;
+		--color-ink-chartreuse: #c5d63a;
+		--radius-sm: 0px;
+		--radius-md: 0px;
+		--radius-lg: 0px;
+		--radius-xl: 0px;
+		--radius-2xl: 0px;
+		--radius-full: 0px;
+		--shadow-sm: none;
+		--shadow-md: none;
+		--shadow-lg: none;
+		--shadow-focus: 0 0 0 2px #f3f1ea, 0 0 0 4px #17180f;
+		--cell-coarse: 10px;
+		--cell-fine: 6px;
+		--cell-bitmap: 8px;
+		--font-display: Impact, "Arial Black", "Noto Sans Display", "Liberation Sans", Arial, sans-serif;
+		--font-serif: Palatino, "Palatino Linotype", "Iowan Old Style", "Noto Serif Display", "Liberation Serif", Georgia, "Times New Roman", serif;
+		--font-mono: ui-monospace, "Cascadia Mono", "Liberation Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+		--duration-ui: 120ms;
+		--ease-ui: linear;
+	}
+	*, *::before, *::after { box-sizing: border-box; }
+	html, body { margin: 0; background: var(--color-surface); color: var(--color-surface-foreground); }
+	body {
+		font-family: var(--font-serif);
+		font-size: 17px;
+		line-height: 1.45;
+		-webkit-font-smoothing: antialiased;
+	}
+	h1, h2, h3, p, ul, figure { margin: 0; padding: 0; }
+	ul { list-style: none; }
+	button, input { font: inherit; color: inherit; }
+	button { background: transparent; border: 0; border-radius: 0; padding: 0; cursor: pointer; }
+	svg { display: block; max-width: 100%; height: auto; }
+	::selection { background: var(--color-primary); color: var(--color-primary-foreground); }
+	:focus { outline: none; }
+	:focus-visible { box-shadow: var(--shadow-focus); }
+	.sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	.mast, .cap, .meta, .foot, .mono, .kicker, .roman, .who, .lbl, .btn, .field, .jam b, .empty, figcaption {
+		font-family: var(--font-mono);
+		font-style: normal;
+		font-weight: 400;
+	}
+	.mast {
+		display: flex;
+		justify-content: space-between;
+		gap: 12px;
+		font-size: 12px;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		line-height: 1.4;
+	}
+	.mast b { font-weight: 400; }
+	.mast span, .who { color: var(--color-muted); }
+
+	.slice {
+		position: relative;
+		height: 0.8em;
+		font-family: var(--font-display);
+		font-weight: 800;
+		line-height: 0.8;
+		letter-spacing: -0.045em;
+		text-transform: uppercase;
+		color: var(--color-primary);
+	}
+	.slice span {
+		position: absolute;
+		left: 0;
+		top: 0;
+		white-space: nowrap;
+	}
+	.sheet-a .slice { font-size: clamp(52px, 14vw, 64px); }
+	.sheet-a .slice span:nth-child(1) { clip-path: inset(0 0 75% 0); transform: translateX(-4px); }
+	.sheet-a .slice span:nth-child(2) { clip-path: inset(25% 0 50% 0); transform: translateX(6px); }
+	.sheet-a .slice span:nth-child(3) { clip-path: inset(50% 0 25% 0); transform: translateX(-2px); }
+	.sheet-a .slice span:nth-child(4) { clip-path: inset(75% 0 0 0); transform: translateX(5px); }
+
+	.sheet-a, .sheet-b { background: var(--color-surface); }
+	.sheet-a, .sheet-b, .sheet-c { padding: 20px 16px 28px; }
+	.sheet-a .stage { margin-top: 18px; }
+	.sheet-a .moth { width: 100%; margin-top: 16px; }
+	.cap {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		margin-top: 18px;
+		font-size: 13px;
+		line-height: 1.45;
+		letter-spacing: 0.01em;
+	}
+	.sheet-b { padding-top: 48px; }
+	.sheet-b .copy { display: grid; gap: 10px; align-content: center; }
+	.kicker {
+		font-family: var(--font-display);
+		font-weight: 800;
+		font-size: 18px;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+	}
+	.vein {
+		font-family: var(--font-serif);
+		font-weight: 700;
+		font-size: clamp(72px, 18vw, 96px);
+		line-height: 0.8;
+		letter-spacing: -0.045em;
+	}
+	.stack { font-style: italic; font-weight: 700; font-size: clamp(26px, 6vw, 34px); line-height: 0.95; letter-spacing: -0.03em; }
+	.stack span { display: block; }
+	.sheet-b .cap { margin-top: 8px; }
+
+	.sheet-c {
+		background: var(--color-surface-raised);
+		margin-top: 28px;
+		display: grid;
+		gap: 22px;
+	}
+	.meta {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 14px 20px;
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		line-height: 1.35;
+	}
+	.roman {
+		font-size: 15px;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+	}
+	.firing {
+		font-style: italic;
+		font-weight: 700;
+		font-size: clamp(36px, 8vw, 48px);
+		line-height: 0.9;
+		letter-spacing: -0.03em;
+		margin-top: 6px;
+	}
+	.who { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 10px; }
+	.lock { width: min(100%, 520px); }
+	.foot {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 8px 16px;
+		font-size: 12px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	.guide { padding: 72px 16px 80px; max-width: 1080px; }
+	.guide h2 {
+		font-weight: 700;
+		font-size: clamp(32px, 6vw, 48px);
+		letter-spacing: -0.03em;
+		line-height: 1;
+		margin: 56px 0 14px;
+	}
+	.guide h2:first-child { margin-top: 0; }
+	.guide p, .guide li { max-width: 64ch; }
+	.guide p + p, .guide ul { margin-top: 12px; }
+	.guide li + li { margin-top: 8px; }
+	.guide li b { font-family: var(--font-mono); font-weight: 400; letter-spacing: 0.04em; }
+	.swatches { margin: 18px 0; }
+	.labels {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 28px;
+		margin-top: 8px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.controls { display: flex; flex-wrap: wrap; gap: 12px 16px; align-items: center; margin-top: 16px; }
+	.lbl { display: grid; gap: 6px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+	.field {
+		font-family: var(--font-mono);
+		font-size: 16px;
+		letter-spacing: 0;
+		text-transform: none;
+		min-height: 44px;
+		padding: 0 12px;
+		border: 1px solid var(--color-border);
+		border-radius: 0;
+		background: var(--color-surface);
+		width: min(220px, 100%);
+	}
+	.btn {
+		font-family: var(--font-mono);
+		font-size: 13px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		min-height: 44px;
+		padding: 0 16px;
+		background: var(--color-primary);
+		color: var(--color-primary-foreground);
+		border-radius: 0;
+		box-shadow: none;
+		transition: background var(--duration-ui) var(--ease-ui), color var(--duration-ui) var(--ease-ui);
+	}
+	.btn.quiet {
+		background: transparent;
+		color: var(--color-primary);
+		text-decoration: underline;
+		text-underline-offset: 4px;
+		padding: 0 4px;
+	}
+	.btn:disabled, .btn.quiet:disabled {
+		background: var(--color-surface);
+		color: var(--color-muted);
+		text-decoration: none;
+		box-shadow: inset 0 0 0 1px var(--color-muted);
+	}
+	.jam { margin-top: 16px; }
+	.jam b { color: var(--color-danger); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 400; }
+	.empty {
+		margin-top: 12px;
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-muted);
+	}
+	.compare { display: grid; gap: 28px; margin-top: 18px; }
+	figcaption {
+		font-size: 12px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		margin-top: 8px;
+	}
+	.cmp-off .fake {
+		background: #fff;
+		border-radius: 28px;
+		padding: 16px;
+		box-shadow: 8px 10px 0 #f3b6d8;
+		max-width: 320px;
+	}
+	.cmp-off .orb {
+		width: 72px;
+		height: 72px;
+		border-radius: 50%;
+		background: radial-gradient(circle at 35% 30%, #ffe08a, #ff5a3c 55%, #7a4bff);
+		filter: blur(1.5px);
+		opacity: 0.85;
+	}
+	.cmp-off .dots {
+		margin-top: 12px;
+		height: 48px;
+		background-image: radial-gradient(circle, #e2164a 1.3px, transparent 1.5px);
+		background-size: 7px 7px;
+	}
+	.cmp-off .pill {
+		display: inline-block;
+		margin-top: 12px;
+		padding: 8px 16px;
+		border-radius: 999px;
+		background: #5b4dff;
+		color: #fff;
+		font-family: var(--font-display);
+		font-size: 14px;
+	}
+	.cmp-off .caught { margin-top: 8px; color: #8a8494; font-family: var(--font-serif); }
+	.cmp-on .sample { display: grid; gap: 12px; justify-items: start; }
+	.cmp-on .plate {
+		width: 120px;
+		height: 36px;
+		background: var(--color-accent);
+	}
+	.cmp-on .tile { width: 88px; height: 88px; }
+	.mobile { display: grid; gap: 20px; margin-top: 16px; }
+	.device {
+		width: min(390px, 100%);
+		background: var(--color-primary);
+		padding: 8px;
+		border-radius: 0;
+	}
+	.screen { background: var(--color-surface); padding: 16px; }
+	.device .slice { font-size: 40px; height: 0.8em; }
+	.device .slice span:nth-child(1) { clip-path: inset(0 0 75% 0); transform: translateX(-3px); }
+	.device .slice span:nth-child(2) { clip-path: inset(25% 0 50% 0); transform: translateX(4px); }
+	.device .slice span:nth-child(3) { clip-path: inset(50% 0 25% 0); transform: translateX(-2px); }
+	.device .slice span:nth-child(4) { clip-path: inset(75% 0 0 0); transform: translateX(3px); }
+	.device .moth { width: 100%; margin-top: 10px; }
+	.device .cap { margin-top: 12px; font-size: 12px; }
+	.device .mast { font-size: 10px; letter-spacing: 0.12em; }
+	.notes { display: grid; gap: 8px; }
+	.notes li { max-width: 62ch; }
+
+	@media (min-width: 800px) {
+		.sheet-a {
+			display: flex;
+			flex-direction: column;
+			min-height: 960px;
+			padding: 28px 40px 32px;
+		}
+		.sheet-a .stage {
+			flex: 1;
+			display: grid;
+			grid-template-columns: minmax(240px, 0.78fr) minmax(0, 1.22fr);
+			align-items: center;
+			gap: 8px 28px;
+			margin-top: 12px;
+		}
+		.sheet-a .slice { font-size: clamp(76px, 7.2vw, 120px); }
+		.sheet-a .slice span:nth-child(1) { transform: translateX(-8px); }
+		.sheet-a .slice span:nth-child(2) { transform: translateX(11px); }
+		.sheet-a .slice span:nth-child(3) { transform: translateX(-4px); }
+		.sheet-a .slice span:nth-child(4) { transform: translateX(8px); }
+		.sheet-a .moth { width: 100%; margin-top: 0; }
+		.sheet-a .cap {
+			flex-direction: row;
+			justify-content: space-between;
+			margin-top: 8px;
+		}
+		.sheet-a .cap p:last-child { text-align: right; }
+		.sheet-b {
+			display: grid;
+			grid-template-columns: minmax(300px, 0.86fr) minmax(0, 1.14fr);
+			gap: 20px 36px;
+			align-items: center;
+			min-height: 860px;
+			padding: 88px 48px 48px;
+		}
+		.sheet-b .cap { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; }
+		.sheet-b .cap p:last-child { text-align: right; }
+		.vein { font-size: clamp(96px, 10vw, 164px); }
+		.stack { font-size: clamp(32px, 3.2vw, 46px); }
+		.kicker { font-size: 22px; }
+		.sheet-c {
+			grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+			grid-template-areas:
+				"meta meta"
+				"lock beast"
+				"foot foot";
+			gap: 24px 32px;
+			align-items: end;
+			min-height: 860px;
+			margin-top: 72px;
+			padding: 36px 48px 40px;
+		}
+		.sheet-c .meta { grid-area: meta; align-self: start; }
+		.sheet-c .lockup { grid-area: lock; }
+		.sheet-c .beast { grid-area: beast; }
+		.sheet-c .foot { grid-area: foot; }
+		.firing { font-size: 64px; }
+		.guide { padding: 96px 48px 96px; }
+		.compare { grid-template-columns: 1fr 1fr; align-items: start; }
+		.mobile { grid-template-columns: 390px minmax(0, 1fr); align-items: start; }
+	}
+	@media (max-width: 799px) {
+		.btn, .field { min-height: 48px; }
+	}
+	@media (hover: hover) and (pointer: fine) {
+		.btn:hover {
+			background: var(--color-surface);
+			color: var(--color-primary);
+			box-shadow: inset 0 0 0 2px var(--color-primary);
+		}
+		.btn.quiet:hover {
+			background: var(--color-primary);
+			color: var(--color-primary-foreground);
+			text-decoration: none;
+			box-shadow: none;
+		}
+		.btn:disabled:hover, .btn.quiet:disabled:hover {
+			background: var(--color-surface);
+			color: var(--color-muted);
+			box-shadow: inset 0 0 0 1px var(--color-muted);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.btn { transition: none; }
+	}
+</style>
+</head>
+<body>
+	<article class="sheet-a">
+		<header class="mast"><b>Plate</b><span>Press room</span><span>Sheet 14</span></header>
+		<div class="stage">
+			<h1 class="slice" aria-label="Vespera"><span>Vespera</span><span aria-hidden="true">Vespera</span><span aria-hidden="true">Vespera</span><span aria-hidden="true">Vespera</span></h1>
+			<svg class="moth" viewBox="0 0 800 680" role="img">
+		<title>Vespera selene, a moth in coarse four-ink dither</title>
+		<defs>
+			<pattern id="a-pale" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-pale)"/></pattern><pattern id="a-tail" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="10" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="30" y="10" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="30" y="30" width="10" height="10" fill="var(--color-wing-pale)"/></pattern><pattern id="a-hind" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="10" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="10" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="30" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="30" y="30" width="10" height="10" fill="var(--color-wing-mid)"/></pattern><pattern id="a-mid" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="10" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="10" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="30" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="30" y="30" width="10" height="10" fill="var(--color-wing-pale)"/></pattern><pattern id="a-core" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="10" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="0" y="10" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="10" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="10" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="10" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="30" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="30" width="10" height="10" fill="var(--color-wing-deep)"/></pattern><pattern id="a-body" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="10" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="10" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="10" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="10" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="30" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="30" width="10" height="10" fill="var(--color-wing-deep)"/></pattern>
+			<g id="a-wing">
+		<path d="M228 348C206 430 184 540 168 650C206 628 228 548 250 460C266 390 252 350 228 348Z" fill="var(--color-surface)"/><path d="M228 348C206 430 184 540 168 650C206 628 228 548 250 460C266 390 252 350 228 348Z" fill="url(#a-tail)" shape-rendering="crispEdges"/>
+		<path d="M368 214C292 268 196 286 132 338C100 372 154 404 214 370C258 392 318 358 350 324C382 286 394 248 368 214Z" fill="var(--color-surface)"/><path d="M368 214C292 268 196 286 132 338C100 372 154 404 214 370C258 392 318 358 350 324C382 286 394 248 368 214Z" fill="url(#a-pale)" shape-rendering="crispEdges"/>
+		<path d="M348 240C286 286 204 308 168 348C152 376 206 390 268 352C314 322 354 276 348 240Z" fill="var(--color-surface)"/><path d="M348 240C286 286 204 308 168 348C152 376 206 390 268 352C314 322 354 276 348 240Z" fill="url(#a-hind)" shape-rendering="crispEdges"/>
+		<path d="M385 188C330 62 210 18 108 58C38 86 12 156 48 208C18 250 62 286 124 272C108 312 176 324 232 286C286 330 352 292 378 236C396 214 400 196 385 188Z" fill="var(--color-surface)"/><path d="M385 188C330 62 210 18 108 58C38 86 12 156 48 208C18 250 62 286 124 272C108 312 176 324 232 286C286 330 352 292 378 236C396 214 400 196 385 188Z" fill="url(#a-pale)" shape-rendering="crispEdges"/>
+		<path d="M360 186C312 96 196 62 122 104C72 136 78 198 136 228C198 260 286 246 342 208C358 196 366 188 360 186Z" fill="var(--color-surface)"/><path d="M360 186C312 96 196 62 122 104C72 136 78 198 136 228C198 260 286 246 342 208C358 196 366 188 360 186Z" fill="url(#a-mid)" shape-rendering="crispEdges"/>
+		<path d="M318 184C268 128 186 118 150 162C128 192 172 230 242 224C292 220 328 200 318 184Z" fill="var(--color-surface)"/><path d="M318 184C268 128 186 118 150 162C128 192 172 230 242 224C292 220 328 200 318 184Z" fill="url(#a-core)" shape-rendering="crispEdges"/>
+		<circle cx="196" cy="156" r="30" fill="var(--color-primary)"/>
+		<circle cx="196" cy="156" r="14" fill="var(--color-surface)"/>
+		<circle cx="196" cy="156" r="5" fill="var(--color-primary)"/>
+		<path d="M372 150C312 86 236 46 164 26" fill="none" stroke="var(--color-primary)" stroke-width="4" stroke-linecap="square"/>
+		<rect x="148" y="16" width="22" height="12" fill="var(--color-primary)"/>
+	</g>
+		</defs>
+		<use href="#a-wing"/>
+		<use href="#a-wing" transform="translate(800,0) scale(-1,1)"/>
+		<ellipse cx="400" cy="248" rx="22" ry="74" fill="var(--color-primary)"/>
+		<ellipse cx="400" cy="168" rx="16" ry="20" fill="var(--color-primary)"/>
+		<ellipse cx="400" cy="292" rx="15" ry="38" fill="var(--color-surface)"/>
+		<ellipse cx="400" cy="292" rx="15" ry="38" fill="url(#a-body)" shape-rendering="crispEdges"/>
+	</svg>
+		</div>
+		<footer class="cap">
+			<p>Vespera selene<br>Four inks on one wing.<br>The eyespot is solid.<br>The tail stays the light plate.</p>
+			<p>vespera selene —<br>invented moth,<br>family Selinidae,<br>printed at Plate.</p>
+		</footer>
+	</article>
+
+	<article class="sheet-b">
+		<div class="copy">
+			<p class="kicker">Open</p>
+			<h2 class="vein">Vein</h2>
+			<p class="stack"><span>a spar that</span><span>keeps its blue</span><span>when the sheet</span><span>goes dark</span></p>
+		</div>
+		<svg class="crystal" viewBox="0 0 520 560" role="img">
+	<title>Kerrite, a spar in fine multi-color dither, with two flat blue plates</title>
+	<defs><pattern id="b-cyan" width="24" height="24" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="6" height="6" fill="var(--color-primary)"/><rect x="6" y="0" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="12" y="0" width="6" height="6" fill="var(--color-primary)"/><rect x="6" y="6" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="18" y="6" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="0" y="12" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="12" y="12" width="6" height="6" fill="var(--color-primary)"/><rect x="6" y="18" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="18" y="18" width="6" height="6" fill="var(--color-ink-cyan)"/></pattern><pattern id="b-lite" width="24" height="24" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="12" y="0" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="6" y="6" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="0" y="12" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="12" y="12" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="18" y="18" width="6" height="6" fill="var(--color-ink-cyan)"/></pattern><pattern id="b-hot" width="24" height="24" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="6" y="0" width="6" height="6" fill="var(--color-ink-chartreuse)"/><rect x="12" y="0" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="6" y="6" width="6" height="6" fill="var(--color-ink-chartreuse)"/><rect x="18" y="6" width="6" height="6" fill="var(--color-ink-chartreuse)"/><rect x="0" y="12" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="12" y="12" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="18" y="12" width="6" height="6" fill="var(--color-ink-chartreuse)"/><rect x="6" y="18" width="6" height="6" fill="var(--color-ink-chartreuse)"/><rect x="18" y="18" width="6" height="6" fill="var(--color-ink-chartreuse)"/></pattern><pattern id="b-mix" width="24" height="24" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="6" height="6" fill="var(--color-ink-chartreuse)"/><rect x="6" y="0" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="12" y="0" width="6" height="6" fill="var(--color-ink-chartreuse)"/><rect x="18" y="0" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="0" y="6" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="6" y="6" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="18" y="6" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="0" y="12" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="6" y="12" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="12" y="12" width="6" height="6" fill="var(--color-ink-chartreuse)"/><rect x="18" y="12" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="6" y="18" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="18" y="18" width="6" height="6" fill="var(--color-ink-cyan)"/></pattern><pattern id="b-ink" width="24" height="24" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="6" height="6" fill="var(--color-primary)"/><rect x="6" y="0" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="12" y="0" width="6" height="6" fill="var(--color-primary)"/><rect x="18" y="0" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="6" y="6" width="6" height="6" fill="var(--color-primary)"/><rect x="18" y="6" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="0" y="12" width="6" height="6" fill="var(--color-primary)"/><rect x="12" y="12" width="6" height="6" fill="var(--color-primary)"/><rect x="18" y="12" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="6" y="18" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="18" y="18" width="6" height="6" fill="var(--color-ink-crimson)"/></pattern></defs>
+	<rect x="300" y="8" width="220" height="168" fill="var(--color-accent)"/>
+	<polygon points="78,124 168,36 158,392 64,428" fill="var(--color-surface)"/><polygon points="78,124 168,36 158,392 64,428" fill="url(#b-ink)" shape-rendering="crispEdges"/>
+	<polygon points="168,36 262,104 252,368 158,392" fill="var(--color-surface)"/><polygon points="168,36 262,104 252,368 158,392" fill="url(#b-lite)" shape-rendering="crispEdges"/>
+	<polygon points="300,96 372,48 362,292 286,314" fill="var(--color-surface)"/><polygon points="300,96 372,48 362,292 286,314" fill="url(#b-cyan)" shape-rendering="crispEdges"/>
+	<polygon points="372,48 458,108 446,268 362,292" fill="var(--color-surface)"/><polygon points="372,48 458,108 446,268 362,292" fill="url(#b-hot)" shape-rendering="crispEdges"/>
+	<rect x="336" y="318" width="118" height="228" fill="var(--color-accent)"/>
+	<polygon points="148,168 246,96 232,448 124,478" fill="var(--color-surface)"/><polygon points="148,168 246,96 232,448 124,478" fill="url(#b-hot)" shape-rendering="crispEdges"/>
+	<polygon points="246,96 348,156 336,424 232,448" fill="var(--color-surface)"/><polygon points="246,96 348,156 336,424 232,448" fill="url(#b-mix)" shape-rendering="crispEdges"/>
+	<polygon points="188,250 252,196 246,492 176,514" fill="var(--color-surface)"/><polygon points="188,250 252,196 246,492 176,514" fill="url(#b-ink)" shape-rendering="crispEdges"/>
+	<polygon points="252,196 328,236 334,468 246,492" fill="var(--color-surface)"/><polygon points="252,196 328,236 334,468 246,492" fill="url(#b-mix)" shape-rendering="crispEdges"/>
+	<g fill="none" stroke="var(--color-primary)" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter">
+		<polyline points="168,36 158,392"/>
+		<polyline points="372,48 362,292"/>
+		<polyline points="246,96 232,448"/>
+		<polyline points="252,196 246,492"/>
+	</g>
+</svg>
+		<footer class="cap">
+			<p>Kerrite. Plate 07.<br>Four cells, two plates.</p>
+			<p>The plate is flat.<br>The crystal is cells.</p>
+		</footer>
+	</article>
+
+	<article class="sheet-c">
+		<div class="meta">
+			<p>Upper bed<br>Drying rack</p>
+			<p>18 April<br>21:30</p>
+			<p>Cellar<br>Type drawer</p>
+			<p>Ask the printer</p>
+		</div>
+		<div class="lockup">
+			<p class="roman">Second</p>
+			<h2 class="lock-title"><span class="sr">Kiln</span><svg class="lock" viewBox="0 0 430 156" role="img">
+	<title>Kiln. The N is built from the dither grid.</title>
+	<g fill="var(--color-primary)">
+		<polygon points="22,2 40,18 22,34 4,18"/>
+		<polygon points="12,22 32,22 32,120 12,120"/>
+		<polygon points="22,108 40,126 22,144 4,126"/>
+		<polygon points="32,40 86,6 100,24 52,54 32,48"/>
+		<polygon points="30,70 48,58 102,118 82,136 28,86"/>
+		<g transform="translate(118,0)">
+			<polygon points="22,2 38,16 22,30 6,16"/>
+			<polygon points="14,22 32,22 32,120 14,120"/>
+			<polygon points="22,108 38,126 22,144 6,126"/>
+		</g>
+		<g transform="translate(186,0)">
+			<polygon points="22,2 38,16 22,30 6,16"/>
+			<polygon points="14,22 32,22 32,108 14,108"/>
+			<polygon points="14,96 118,84 126,114 14,124"/>
+		</g>
+		<g transform="translate(328,24)" shape-rendering="crispEdges"><rect x="0" y="0" width="24" height="8"/><rect x="64" y="0" width="24" height="8"/><rect x="0" y="8" width="24" height="8"/><rect x="64" y="8" width="24" height="8"/><rect x="0" y="16" width="32" height="8"/><rect x="64" y="16" width="24" height="8"/><rect x="0" y="24" width="32" height="8"/><rect x="64" y="24" width="24" height="8"/><rect x="0" y="32" width="40" height="8"/><rect x="64" y="32" width="24" height="8"/><rect x="0" y="40" width="40" height="8"/><rect x="64" y="40" width="24" height="8"/><rect x="0" y="48" width="24" height="8"/><rect x="32" y="48" width="16" height="8"/><rect x="64" y="48" width="24" height="8"/><rect x="0" y="56" width="24" height="8"/><rect x="32" y="56" width="16" height="8"/><rect x="64" y="56" width="24" height="8"/><rect x="0" y="64" width="24" height="8"/><rect x="40" y="64" width="16" height="8"/><rect x="64" y="64" width="24" height="8"/><rect x="0" y="72" width="24" height="8"/><rect x="40" y="72" width="16" height="8"/><rect x="64" y="72" width="24" height="8"/><rect x="0" y="80" width="24" height="8"/><rect x="48" y="80" width="40" height="8"/><rect x="0" y="88" width="24" height="8"/><rect x="48" y="88" width="40" height="8"/><rect x="0" y="96" width="24" height="8"/><rect x="56" y="96" width="32" height="8"/><rect x="0" y="104" width="24" height="8"/><rect x="56" y="104" width="32" height="8"/><rect x="0" y="112" width="24" height="8"/><rect x="64" y="112" width="24" height="8"/></g>
+	</g>
+</svg></h2>
+			<p class="firing">firing</p>
+			<p class="who">Kiln ibis — invented beast, plate 03</p>
+		</div>
+		<svg class="beast" viewBox="0 0 660 470" role="img">
+	<title>Kiln ibis, an invented beast in one-bit dither</title>
+	<defs><pattern id="c-light" width="32" height="32" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="8" height="8" fill="var(--color-primary)"/><rect x="16" y="0" width="8" height="8" fill="var(--color-primary)"/><rect x="0" y="16" width="8" height="8" fill="var(--color-primary)"/><rect x="16" y="16" width="8" height="8" fill="var(--color-primary)"/></pattern><pattern id="c-mid" width="32" height="32" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="8" height="8" fill="var(--color-primary)"/><rect x="16" y="0" width="8" height="8" fill="var(--color-primary)"/><rect x="8" y="8" width="8" height="8" fill="var(--color-primary)"/><rect x="24" y="8" width="8" height="8" fill="var(--color-primary)"/><rect x="0" y="16" width="8" height="8" fill="var(--color-primary)"/><rect x="16" y="16" width="8" height="8" fill="var(--color-primary)"/><rect x="8" y="24" width="8" height="8" fill="var(--color-primary)"/><rect x="24" y="24" width="8" height="8" fill="var(--color-primary)"/></pattern><pattern id="c-dark" width="32" height="32" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="8" height="8" fill="var(--color-primary)"/><rect x="8" y="0" width="8" height="8" fill="var(--color-primary)"/><rect x="16" y="0" width="8" height="8" fill="var(--color-primary)"/><rect x="24" y="0" width="8" height="8" fill="var(--color-primary)"/><rect x="8" y="8" width="8" height="8" fill="var(--color-primary)"/><rect x="24" y="8" width="8" height="8" fill="var(--color-primary)"/><rect x="0" y="16" width="8" height="8" fill="var(--color-primary)"/><rect x="8" y="16" width="8" height="8" fill="var(--color-primary)"/><rect x="16" y="16" width="8" height="8" fill="var(--color-primary)"/><rect x="24" y="16" width="8" height="8" fill="var(--color-primary)"/><rect x="8" y="24" width="8" height="8" fill="var(--color-primary)"/><rect x="24" y="24" width="8" height="8" fill="var(--color-primary)"/></pattern></defs>
+	<path d="M468 214 L632 148 L598 184 L472 246 Z" fill="var(--color-surface-raised)"/><path d="M468 214 L632 148 L598 184 L472 246 Z" fill="url(#c-mid)" shape-rendering="crispEdges"/>
+	<path d="M478 246 L624 236 L588 274 L462 286 Z" fill="var(--color-surface-raised)"/><path d="M478 246 L624 236 L588 274 L462 286 Z" fill="url(#c-mid)" shape-rendering="crispEdges"/>
+	<path d="M448 292 L586 324 L542 356 L426 322 Z" fill="var(--color-surface-raised)"/><path d="M448 292 L586 324 L542 356 L426 322 Z" fill="url(#c-light)" shape-rendering="crispEdges"/>
+	<path d="M246 214 C320 168 430 162 498 206 C552 238 528 312 444 328 C356 346 274 318 240 272 C226 248 230 226 246 214 Z" fill="var(--color-surface-raised)"/><path d="M246 214 C320 168 430 162 498 206 C552 238 528 312 444 328 C356 346 274 318 240 272 C226 248 230 226 246 214 Z" fill="url(#c-light)" shape-rendering="crispEdges"/>
+	<path d="M268 218 C340 184 438 180 496 214 C468 242 380 252 308 236 C286 228 270 222 268 218 Z" fill="var(--color-surface-raised)"/><path d="M268 218 C340 184 438 180 496 214 C468 242 380 252 308 236 C286 228 270 222 268 218 Z" fill="url(#c-dark)" shape-rendering="crispEdges"/>
+	<path d="M176 118 C146 168 168 206 214 228 C246 244 236 262 258 270 L292 252 C274 232 286 206 252 172 C226 142 214 124 206 104 Z" fill="var(--color-surface-raised)"/><path d="M176 118 C146 168 168 206 214 228 C246 244 236 262 258 270 L292 252 C274 232 286 206 252 172 C226 142 214 124 206 104 Z" fill="url(#c-dark)" shape-rendering="crispEdges"/>
+	<path d="M168 78 C108 70 48 90 16 112 L30 128 C72 110 122 102 172 100 Z" fill="var(--color-primary)"/>
+	<ellipse cx="190" cy="90" rx="36" ry="30" fill="var(--color-primary)"/>
+	<polygon points="208,72 242,6 216,76" fill="var(--color-primary)"/>
+	<polygon points="216,80 274,26 230,96" fill="var(--color-primary)"/>
+	<polygon points="202,98 252,74 216,114" fill="var(--color-primary)"/>
+	<path d="M300 312 L328 308 L310 392 L268 446 L246 436 L284 378 L286 316 Z" fill="var(--color-primary)"/>
+	<polygon points="300,362 346,330 314,374" fill="var(--color-primary)"/>
+	<polygon points="246,436 214,454 244,448" fill="var(--color-primary)"/>
+	<polygon points="246,436 236,464 266,448" fill="var(--color-primary)"/>
+	<path d="M398 314 L424 306 L468 394 L530 444 L506 456 L434 396 L382 320 Z" fill="var(--color-primary)"/>
+	<polygon points="506,448 544,466 514,460" fill="var(--color-primary)"/>
+	<polygon points="506,448 496,470 522,456" fill="var(--color-primary)"/>
+	<rect x="172" y="78" width="16" height="16" fill="var(--color-surface-raised)"/>
+	<rect x="176" y="82" width="8" height="8" fill="var(--color-primary)"/>
+</svg>
+		<footer class="foot">
+			<p>Printed at Plate</p>
+			<p>The night list</p>
+			<p>©2026</p>
+		</footer>
+	</article>
+
+	<section class="guide">
+		<h2>01 — Registers</h2>
+		<p>Three sheets, three pictures. Sheet 14 is paper and a short palette: pale, mid, deep, and ink, cells at 10px. Sheet 07 is the same paper, cells at 6px, and two flat plates in the accent blue. The night sheet is pale gray and one ink, cells at 8px. A sheet does not borrow another sheet's ground.</p>
+		<div class="swatches"><svg class="matrix" viewBox="0 0 360 120" role="img">
+	<title>Three Bayer tiles. Coarse limited palette, fine multi-color, one-bit.</title>
+	<defs><pattern id="g-a" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="0" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="30" y="0" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="0" y="10" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="10" y="10" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="10" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="20" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="30" y="20" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="10" y="30" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="30" width="10" height="10" fill="var(--color-wing-mid)"/></pattern><pattern id="g-b" width="24" height="24" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="6" y="0" width="6" height="6" fill="var(--color-ink-chartreuse)"/><rect x="12" y="0" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="18" y="0" width="6" height="6" fill="var(--color-ink-chartreuse)"/><rect x="6" y="6" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="18" y="6" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="0" y="12" width="6" height="6" fill="var(--color-ink-cyan)"/><rect x="12" y="12" width="6" height="6" fill="var(--color-ink-crimson)"/><rect x="18" y="12" width="6" height="6" fill="var(--color-ink-chartreuse)"/><rect x="6" y="18" width="6" height="6" fill="var(--color-ink-chartreuse)"/><rect x="18" y="18" width="6" height="6" fill="var(--color-ink-cyan)"/></pattern><pattern id="g-c" width="32" height="32" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="8" height="8" fill="var(--color-primary)"/><rect x="16" y="0" width="8" height="8" fill="var(--color-primary)"/><rect x="8" y="8" width="8" height="8" fill="var(--color-primary)"/><rect x="24" y="8" width="8" height="8" fill="var(--color-primary)"/><rect x="0" y="16" width="8" height="8" fill="var(--color-primary)"/><rect x="16" y="16" width="8" height="8" fill="var(--color-primary)"/><rect x="8" y="24" width="8" height="8" fill="var(--color-primary)"/><rect x="24" y="24" width="8" height="8" fill="var(--color-primary)"/></pattern></defs>
+	<rect x="0" y="8" width="100" height="100" fill="var(--color-surface)"/>
+	<rect x="0" y="8" width="100" height="100" fill="url(#g-a)" shape-rendering="crispEdges"/>
+	<rect x="130" y="8" width="100" height="100" fill="var(--color-surface)"/>
+	<rect x="130" y="8" width="100" height="100" fill="url(#g-b)" shape-rendering="crispEdges"/>
+	<rect x="248" y="8" width="28" height="100" fill="var(--color-accent)"/>
+	<rect x="292" y="8" width="68" height="100" fill="var(--color-surface-raised)"/>
+	<rect x="292" y="8" width="68" height="100" fill="url(#g-c)" shape-rendering="crispEdges"/>
+</svg></div>
+		<div class="labels"><span>Coarse, four inks</span><span>Fine, plus a plate</span><span>One bit on gray</span></div>
+
+		<h2>02 — The cell</h2>
+		<p>The matrix is 4 by 4. A cell is on when its Bayer value sits under the threshold for that ink. Inks in one tile take different values, so two colors never share a square and never mix. The square does not grow. Empty cells are the ground. Nothing is blurred and nothing is set to a partial opacity.</p>
+		<p>Depth on these sheets is overlap of opaque shapes: a plate behind a crystal, a plate across a crystal, a wing painted over a tail. The shadow tokens are none.</p>
+
+		<h2>03 — Type and controls</h2>
+		<p>Vespera is the sliced display face. Vein is the sharp serif, with an italic stack under it. Kiln is drawn blackletter, and its N is the dither grid. Captions, the mast, and the night meta are mono. The press room's controls use the mono, square, with no radius and no shadow.</p>
+		<div class="controls">
+			<button class="btn" type="button">Pull a proof</button>
+			<button class="btn quiet" type="button">File the sheet</button>
+			<button class="btn" type="button" disabled>Out of ink</button>
+			<label class="lbl">Edition <input class="field" value="14" aria-label="Edition"></label>
+		</div>
+		<p class="jam"><b>Plate jam</b> — the cyan drum is empty.</p>
+		<p class="empty">The bed is empty.</p>
+
+		<h2>04 — Off the plate</h2>
+		<div class="compare">
+			<figure class="cmp-off">
+				<div class="fake">
+					<div class="orb"></div>
+					<div class="dots"></div>
+					<span class="pill">Saved</span>
+					<p class="caught">You're all caught up</p>
+				</div>
+				<figcaption>Blur, round dots, a pill</figcaption>
+			</figure>
+			<figure class="cmp-on">
+				<div class="sample">
+					<svg class="tile" viewBox="0 0 40 40" role="img" aria-label="A coarse Bayer tile">
+						<defs><pattern id="on-a" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="0" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="30" y="0" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="0" y="10" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="10" y="10" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="10" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="20" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="30" y="20" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="10" y="30" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="30" width="10" height="10" fill="var(--color-wing-mid)"/></pattern></defs>
+						<rect width="40" height="40" fill="var(--color-surface)"/>
+						<rect width="40" height="40" fill="url(#on-a)" shape-rendering="crispEdges"/>
+					</svg>
+					<div class="plate"></div>
+					<button class="btn" type="button">Pull a proof</button>
+					<p class="mono">Sheet 14 · four inks</p>
+				</div>
+				<figcaption>Squares, a flat plate, mono</figcaption>
+			</figure>
+		</div>
+
+		<h2>05 — 390 wide</h2>
+		<p>The frame is sheet 14 at a phone width. The name, the moth, and the notes stack. The moth keeps its ratio.</p>
+		<div class="mobile">
+			<div class="device">
+				<div class="screen">
+					<header class="mast"><b>Plate</b><span>Sheet 14</span></header>
+					<h2 class="slice" aria-label="Vespera"><span>Vespera</span><span aria-hidden="true">Vespera</span><span aria-hidden="true">Vespera</span><span aria-hidden="true">Vespera</span></h2>
+					<svg class="moth" viewBox="0 0 800 680" role="img">
+		<title>Vespera selene at phone width</title>
+		<defs>
+			<pattern id="p-pale" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-pale)"/></pattern><pattern id="p-tail" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="10" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="30" y="10" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="30" y="30" width="10" height="10" fill="var(--color-wing-pale)"/></pattern><pattern id="p-hind" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="10" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="10" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="30" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="30" y="30" width="10" height="10" fill="var(--color-wing-mid)"/></pattern><pattern id="p-mid" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="0" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="10" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="10" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="20" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="10" y="30" width="10" height="10" fill="var(--color-wing-pale)"/><rect x="30" y="30" width="10" height="10" fill="var(--color-wing-pale)"/></pattern><pattern id="p-core" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="10" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="0" y="10" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="10" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="10" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="10" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="30" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="30" width="10" height="10" fill="var(--color-wing-deep)"/></pattern><pattern id="p-body" width="40" height="40" patternUnits="userSpaceOnUse" patternContentUnits="userSpaceOnUse"><rect x="0" y="0" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="10" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="20" y="0" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="0" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="10" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="10" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="0" y="20" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="10" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="20" y="20" width="10" height="10" fill="var(--color-wing-deep)"/><rect x="30" y="20" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="10" y="30" width="10" height="10" fill="var(--color-wing-mid)"/><rect x="30" y="30" width="10" height="10" fill="var(--color-wing-deep)"/></pattern>
+			<g id="p-wing">
+		<path d="M228 348C206 430 184 540 168 650C206 628 228 548 250 460C266 390 252 350 228 348Z" fill="var(--color-surface)"/><path d="M228 348C206 430 184 540 168 650C206 628 228 548 250 460C266 390 252 350 228 348Z" fill="url(#p-tail)" shape-rendering="crispEdges"/>
+		<path d="M368 214C292 268 196 286 132 338C100 372 154 404 214 370C258 392 318 358 350 324C382 286 394 248 368 214Z" fill="var(--color-surface)"/><path d="M368 214C292 268 196 286 132 338C100 372 154 404 214 370C258 392 318 358 350 324C382 286 394 248 368 214Z" fill="url(#p-pale)" shape-rendering="crispEdges"/>
+		<path d="M348 240C286 286 204 308 168 348C152 376 206 390 268 352C314 322 354 276 348 240Z" fill="var(--color-surface)"/><path d="M348 240C286 286 204 308 168 348C152 376 206 390 268 352C314 322 354 276 348 240Z" fill="url(#p-hind)" shape-rendering="crispEdges"/>
+		<path d="M385 188C330 62 210 18 108 58C38 86 12 156 48 208C18 250 62 286 124 272C108 312 176 324 232 286C286 330 352 292 378 236C396 214 400 196 385 188Z" fill="var(--color-surface)"/><path d="M385 188C330 62 210 18 108 58C38 86 12 156 48 208C18 250 62 286 124 272C108 312 176 324 232 286C286 330 352 292 378 236C396 214 400 196 385 188Z" fill="url(#p-pale)" shape-rendering="crispEdges"/>
+		<path d="M360 186C312 96 196 62 122 104C72 136 78 198 136 228C198 260 286 246 342 208C358 196 366 188 360 186Z" fill="var(--color-surface)"/><path d="M360 186C312 96 196 62 122 104C72 136 78 198 136 228C198 260 286 246 342 208C358 196 366 188 360 186Z" fill="url(#p-mid)" shape-rendering="crispEdges"/>
+		<path d="M318 184C268 128 186 118 150 162C128 192 172 230 242 224C292 220 328 200 318 184Z" fill="var(--color-surface)"/><path d="M318 184C268 128 186 118 150 162C128 192 172 230 242 224C292 220 328 200 318 184Z" fill="url(#p-core)" shape-rendering="crispEdges"/>
+		<circle cx="196" cy="156" r="30" fill="var(--color-primary)"/>
+		<circle cx="196" cy="156" r="14" fill="var(--color-surface)"/>
+		<circle cx="196" cy="156" r="5" fill="var(--color-primary)"/>
+		<path d="M372 150C312 86 236 46 164 26" fill="none" stroke="var(--color-primary)" stroke-width="4" stroke-linecap="square"/>
+		<rect x="148" y="16" width="22" height="12" fill="var(--color-primary)"/>
+	</g>
+		</defs>
+		<use href="#p-wing"/>
+		<use href="#p-wing" transform="translate(800,0) scale(-1,1)"/>
+		<ellipse cx="400" cy="248" rx="22" ry="74" fill="var(--color-primary)"/>
+		<ellipse cx="400" cy="168" rx="16" ry="20" fill="var(--color-primary)"/>
+		<ellipse cx="400" cy="292" rx="15" ry="38" fill="var(--color-surface)"/>
+		<ellipse cx="400" cy="292" rx="15" ry="38" fill="url(#p-body)" shape-rendering="crispEdges"/>
+	</svg>
+					<footer class="cap">
+						<p>Vespera selene<br>Four inks on one wing.<br>The eyespot is solid.</p>
+						<p>family Selinidae,<br>printed at Plate.</p>
+					</footer>
+				</div>
+			</div>
+			<ul class="notes">
+				<li><b>Stack.</b> Below 800px each sheet is one column. Sheet 14 puts the sliced name above the moth and the captions under it, left aligned. The wide sheet's side-by-side lockup is gone, so the wing does not cover the name.</li>
+				<li><b>Drawings.</b> The moth, the crystal, and the beast go to the full column width and keep their aspect ratio. They are not cropped. Plates stay inside the crystal drawing, so they cannot cover the word Vein.</li>
+				<li><b>Night sheet.</b> Meta wraps. Then the lockup, the beast, and the footer. Pale gray still runs edge to edge.</li>
+				<li><b>Type.</b> The sliced name floors at 52px on the sheet and is 40px inside this frame. Vein floors at 72px. Mono captions stay 12 to 13px. Guide body stays 17px.</li>
+				<li><b>Targets.</b> Buttons and the edition field grow to 48px. Cells, plates, and eyespots are not targets. A coarse pointer has no hover-only state. The solid button's resting fill is the state.</li>
+				<li><b>Width.</b> Padding is 16px. Captions wrap inside it. Nothing scrolls sideways.</li>
+			</ul>
+		</div>
+	</section>
+</body>
+</html>

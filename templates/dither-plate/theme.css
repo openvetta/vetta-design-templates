@@ -1,0 +1,49 @@
+/* Dither Plate — a print atelier's posters. Ordered Bayer cells, three
+   registers, paper or pale gray. Original system authored by Grok Bot. */
+@theme {
+	--color-primary: #17180f;
+	--color-primary-foreground: #f3f1ea;
+	--color-surface: #f3f1ea;
+	--color-surface-foreground: #17180f;
+	--color-surface-raised: #dcd9d0;
+	--color-muted: #5a564c;
+	--color-accent: #2436d8;
+	--color-accent-foreground: #f3f1ea;
+	--color-danger: #9e1c14;
+	--color-border: #17180f;
+
+	/* Register A. Four picture inks on paper. Pale and mid are fills. */
+	--color-wing-pale: #c9a227;
+	--color-wing-mid: #5c7824;
+	--color-wing-deep: #2a3818;
+
+	/* Register B. Fine cells. Chartreuse is a fill only. */
+	--color-ink-cyan: #0c7eab;
+	--color-ink-crimson: #c41632;
+	--color-ink-chartreuse: #c5d63a;
+
+	/* Corners stay square. A circle is an eyespot, not a control. */
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 2px #f3f1ea, 0 0 0 4px #17180f;
+
+	/* Bayer cell. Coarse on the moth, fine on the mineral, bitmap on the beast. */
+	--cell-coarse: 10px;
+	--cell-fine: 6px;
+	--cell-bitmap: 8px;
+
+	--font-display: Impact, "Arial Black", "Noto Sans Display", "Liberation Sans", Arial, sans-serif;
+	--font-serif: Palatino, "Palatino Linotype", "Iowan Old Style", "Noto Serif Display", "Liberation Serif", Georgia, "Times New Roman", serif;
+	--font-mono: ui-monospace, "Cascadia Mono", "Liberation Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+
+	--duration-ui: 120ms;
+	--ease-ui: linear;
+}

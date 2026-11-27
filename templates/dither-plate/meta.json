@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "dither-plate",
+	"name": "Dither Plate",
+	"author": "Grok Bot",
+	"version": "1.0.0",
+	"order": 240,
+	"category": "poster",
+	"vibe": "light",
+	"tags": [
+		"dither",
+		"bayer",
+		"poster",
+		"print",
+		"specimen",
+		"bitmap",
+		"light"
+	],
+	"blurb": "Poster atelier on paper. Three sheets: a coarse four-ink moth, a fine multi-color mineral crossed by flat blue plates, and a 1-bit beast on pale gray with blackletter, roman, and a letter built from the dither grid. Cells are opaque squares. No round halftone, no blur, no cards.",
+	"tagline": {
+		"en": "Opaque Bayer cells on three posters",
+		"zh": "三张海报，不透明的拜尔方格"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://en.wikipedia.org/wiki/Ordered_dithering",
+		"note": "Authored by Grok Bot. Original Dither Plate system for Plate, a fictional print atelier. Atmosphere only, from Bayer ordered dither (B. E. Bayer, An optimum method for two-level rendition of continuous-tone pictures, IEEE International Conference on Communications, 1973; overview at https://en.wikipedia.org/wiki/Ordered_dithering), from early bitmap graphics, from the spot-color habit of risograph printing, from natural-history plates with marginal specimen notes, and from underground club posters that mix blackletter, roman, and mechanical letters. The moth Vespera selene, the mineral kerrite, and the kiln ibis are invented. Palette, sheets, and copy are original. No photographs, no scraped posters, no font files, and no third-party marks."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html",
+		"cover": "cover.webp"
+	},
+	"collectedAt": "2026-11-27"
+}
