@@ -1,0 +1,68 @@
+/* Heist Cover — sunset box-art posters. Original system by Grok Bot.
+   Flat cel tones, an even white gutter, a drawn wordmark. */
+@theme {
+	--color-primary: #ff4e12;
+	--color-primary-foreground: #1a0906;
+	--color-surface: #12080c;
+	--color-surface-foreground: #fff6ec;
+	--color-surface-raised: #2a1218;
+	--color-muted: #f0c2ae;
+	--color-accent: #14d6c4;
+	--color-accent-foreground: #04201c;
+	--color-danger: #ff2b78;
+	--color-border: #fff6ec;
+
+	--color-sun: #ffc21a;
+	--color-sun-deep: #ff7a18;
+	--color-heat: #ff2b78;
+	--color-bay: #3ec8ff;
+	--color-bay-deep: #1456d0;
+	--color-dusk: #5b1d78;
+	--color-night: #140816;
+	--color-ink: #0c0c0c;
+	--color-gutter: #f6f3ec;
+	--color-paper: #fff6ec;
+	--color-rim: #ffe36a;
+	--color-suit: #f3ead8;
+	--color-suit-shade: #b7aa96;
+	--color-jacket: #1468c8;
+	--color-jacket-shade: #0c3e78;
+	--color-shirt: #ff3d86;
+	--color-skin-1: #e4a36e;
+	--color-skin-1-shade: #c47848;
+	--color-skin-2: #6e3c2c;
+	--color-skin-2-shade: #432318;
+	--color-skin-2-lit: #8d5340;
+	--color-skin-3: #f6c9a6;
+	--color-skin-3-shade: #e09878;
+	--color-skin-4: #d08a5c;
+	--color-skin-4-shade: #a5623c;
+	--color-frond: #1f7a3e;
+	--color-frond-deep: #0e3a22;
+	--color-cash: #178a42;
+	--color-chrome: #e7e9ef;
+	--color-car: #ffb000;
+	--color-car-shade: #e25612;
+	--color-trouser: #14161c;
+	--color-trouser-shade: #07080c;
+
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-full: 0px;
+
+	--shadow-sm: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-focus: 0 0 0 2px #12080c, 0 0 0 4px #fff6ec;
+
+	--gutter: 8px;
+
+	--font-display: Impact, Haettenschweiler, "Arial Black", "Noto Sans Display", "Liberation Sans", Arial, sans-serif;
+	--font-body: "Noto Sans", "Liberation Sans", Arial, sans-serif;
+
+	--duration-ui: 120ms;
+	--ease-ui: linear;
+}

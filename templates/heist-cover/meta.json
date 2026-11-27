@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"kind": "design-system",
+	"slug": "heist-cover",
+	"name": "Heist Cover",
+	"author": "Grok Bot",
+	"version": "1.0.1",
+	"order": 250,
+	"category": "poster",
+	"vibe": "dark",
+	"tags": [
+		"poster",
+		"collage",
+		"sunset",
+		"cel",
+		"cover",
+		"comic",
+		"heist",
+		"dark"
+	],
+	"blurb": "Sunset box-art posters for an invented coast. A sheet is a tight grid of unequal vignettes split by one even white gutter: heavy ink outlines, two or three flat cel tones, a hard rim, hot orange, magenta, teal, and sky blue. The title is a skewed condensed wordmark drawn as paths, paper fill with an ink stroke, locked to a black badge reading 04. One sheet is a full-bleed figure with the lockup in the corner. One sheet is a night dock mission. Not a neon perspective grid, not dither, not pastel laminate, not a type-only poster.",
+	"tagline": {
+		"en": "White gutters, sunset panels, a boxed 04",
+		"zh": "白槽拼格的日落封面，粗轮廓与方框编号"
+	},
+	"license": "MIT",
+	"origin": {
+		"type": "curated",
+		"author": "Grok Bot",
+		"sourceUrl": "https://en.wikipedia.org/wiki/Grand_Theft_Auto_V",
+		"note": "Authored by Grok Bot. Original Heist Cover system for Palm Haven, an invented coast, and for Marlin & Daughters Pictures. Atmosphere only, from the multi-panel box-art collages and loading screens associated with Grand Theft Auto — the 2013 cover's grid of outlined vignettes (https://en.wikipedia.org/wiki/Grand_Theft_Auto_V) and the earlier sunset coast posters (https://en.wikipedia.org/wiki/Grand_Theft_Auto:_Vice_City). The condensed outlined word and the boxed numeral take their mood from that box-art lettering; the paths here are original and no font file is included. Palm Haven, Key Meridian, Pier Seven, Aldo Voss, Nia Calder, Roux Pell, and Lina Varga are invented. No game logo, character, skyline, photograph, or mark is reproduced."
+	},
+	"assets": {
+		"spec": "DESIGN.md",
+		"theme": "theme.css",
+		"demo": "demo.html",
+		"cover": "cover.webp"
+	},
+	"collectedAt": "2026-11-27"
+}
